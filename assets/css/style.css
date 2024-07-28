@@ -1,0 +1,155 @@
+a {
+    cursor: pointer;
+    color: inherit !important;
+    text-decoration: none;
+}
+
+.bg-accent {
+    background-color: #53443C;
+}
+
+.text-accent {
+    color: #53443C;
+}
+
+.rounded-18 {
+    border-radius: 18px !important;
+    padding: 10px 20px !important;
+}
+
+.navbar {
+    background-color: #f8f9fa;
+}
+
+.bg-light-gray {
+    background-color: #f8f9fa;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.fs-7 {
+    font-size: 0.875rem !important;
+}
+
+.popup-box {
+    background-color: white;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.navbar-item {
+    display: flex;
+    align-items: center;
+}
+
+.hero-slider-slide {
+    background-color: rgba(128, 128, 128, 0.299);
+    height: 500px;
+    padding: 40px;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-slider-slide::before {
+    content: '';
+    /* Required for pseudo-elements */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    /* Adjust the height as needed */
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.663), transparent);
+    /* White to transparent gradient */
+    z-index: 1;
+    /* Ensure it's above the background image but below the content */
+}
+
+.hero-slider .owl-stage-outer {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.chip {
+    padding: 5px 10px;
+    display: block;
+    width: fit-content;
+    font-size: 14px;
+    background-color: white;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.chip-sm {
+    padding: 3px 8px;
+    display: block;
+    width: fit-content;
+    font-size: 14px;
+    background-color: white;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.property-card {
+    height: 250px;
+    background-color: rgba(128, 128, 128, 0.296);
+    overflow: hidden;
+}
+
+.property-slider-slide {
+    background-color: rgba(128, 128, 128, 0.299);
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+}
+
+.circle-icon-container {
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.banner1 {
+    max-height: 400px;
+}
+
+.img-cover {
+    height: 500px;
+    object-fit: cover;
+    width: 100% !important;
+}
+
+.booking-card {
+    position: sticky !important;
+    top: 50px;
+}
+
+
+/* Date Range Picker */
+.daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker td.active.active,
+.daterangepicker td.active.active:hover {
+    background-color: #0dcaf0 !important;
+    color: white !important;
+}
+
+.daterangepicker td {
+    height: 50px !important;
+    width: 50px !important;
+    font-size: 14px !important;
+}
+
+.daterangepicker th {
+    font-size: 14px !important;
+}
+
+.daterangepicker .drp-calendar {
+    max-width: 370px !important;
+}
