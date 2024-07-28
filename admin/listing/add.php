@@ -2,8 +2,6 @@
 
 $RootPath = '/onlinestore';
 
-echo dirname(__FILE__);
-
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +14,10 @@ echo dirname(__FILE__);
 </head>
 
 <body>
-    
+
+    <!-- Navigation Bar Start -->
+    <?php include '../../components/NavigationBar.php'; ?>
+    <!-- Navigation Bar End -->
 
     <!-- Hero Slider Start  -->
     <section class="mt-3 container">

@@ -1,15 +1,16 @@
 <?php
 session_start();
 
-$RootPath = '/onlinestore';
+$RootPath = dirname(__FILE__) . '/..';
 
-include './includes/connection.php';
+include($RootPath . '/includes/connection.php');
 
 if (isset($_SESSION['email'])) {
   $email = $_SESSION['email'];
   $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
   $userData = $userStmt->fetch_assoc();
 }
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light justify-content-between align-items-center px-5">
@@ -27,10 +28,10 @@ if (isset($_SESSION['email'])) {
         <?php
         if (isset($userData['user_type_id'])) {
           if ($userData['user_type_id'] == 1) {
-            echo '<a href="' . $RootPath . '/admin/listing/add.php" class="d-block py-2 text-center text-dark text-decoration-none fs-7">Add Listing</a>';
+            echo '<a href="/onlinestore/admin/listing/add.php" class="d-block py-2 text-center text-dark text-decoration-none fs-7">Add Listing</a>';
           }
         } else {
-          echo '<a href="'.$RootPath.'/signin.php" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Log In</a>';
+          echo '<a href="/onlinestore/signin.php" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Log In</a>';
         }
         ?>
         <a href="#" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Settings</a>
