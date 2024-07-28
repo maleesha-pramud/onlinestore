@@ -11,6 +11,7 @@ if (isset($_GET['id'])) {
 
 $propertyStmt = Database::search("SELECT * FROM `properties` WHERE `id` = '$propertyId'");
 $propertyData = $propertyStmt->fetch_assoc();
+$images = explode(',', $propertyData['images']);
 
 $amenitiesStmt = Database::search("
     SELECT a.*
@@ -38,15 +39,15 @@ $amenitiesStmt = Database::search("
         <h1 class="py-4 fw-bold fs-1"><?php echo $propertyData['title'] ?></h1>
         <div class="row single-listing-image-wrapper">
             <div class="col">
-                <img src="./assets/images/slider/1.jpg" alt="" class="img-cover rounded-5">
+                <img src="./assets/images/properties/<?php echo $images[0] ?>" alt="" class="img-cover rounded-5">
             </div>
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <img src="./assets/images/slider/2.jpeg" alt="" class="img-cover rounded-5">
+                        <img src="./assets/images/properties/<?php echo $images[1] ?>" alt="" class="img-cover rounded-5">
                     </div>
                     <div class="col">
-                        <img src="./assets/images/slider/2.jpeg" alt="" class="img-cover rounded-5">
+                        <img src="./assets/images/properties/<?php echo $images[2] ?>" alt="" class="img-cover rounded-5">
                     </div>
                 </div>
             </div>

@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-$RootPath = dirname(__FILE__) . '/..';
-
-include($RootPath . '/includes/connection.php');
-
 if (isset($_SESSION['email'])) {
   $email = $_SESSION['email'];
   $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");

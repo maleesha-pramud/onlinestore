@@ -2,6 +2,8 @@
 
 $RootPath = '/onlinestore';
 
+include '../../includes/connection.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -19,8 +21,18 @@ $RootPath = '/onlinestore';
     <?php include '../../components/NavigationBar.php'; ?>
     <!-- Navigation Bar End -->
 
+    <?php
+    if (!isset($userData['email'])) {
+        header('Location: /onlinestore/signin.php');
+    }
+    ?>
+
     <!-- Hero Slider Start  -->
     <section class="mt-3 container">
+        <div class="mb-3">
+            <label for="images" class="form-label">Images</label>
+            <input type="file" class="form-control" id="images" name="images[]" multiple>
+        </div>
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title">
@@ -55,6 +67,22 @@ $RootPath = '/onlinestore';
                 </div>
             </div>
         </div>
+        <div class="mb-3">
+            <label for="amenities" class="form-label">Amenities</label>
+            <div class="row">
+                <?php
+                $amenitiesStmt = Database::search("SELECT * FROM `amenities`");
+                while ($amenity = $amenitiesStmt->fetch_assoc()) {
+                ?>
+                    <div class="col-2">
+                        <input type="checkbox" id="<?php echo $amenity['id'] ?>" name='amenities' class="form-check-input">
+                        <label for="<?php echo $amenity['id'] ?>" class="form-check-label"><?php echo $amenity['name'] ?></label>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+
+        <button onclick="addListing();" class="btn btn-info text-white float-end px-4 mb-5">Submit</button>
 
     </section>
     <!-- Hero Slider End  -->

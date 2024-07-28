@@ -20,4 +20,8 @@ class Database {
         Database::$connection->query($query);
     }
 
+    public static function getInsertedId() {
+        return Database::$connection->insert_id;
+    }
+
 }
