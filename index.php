@@ -1,5 +1,7 @@
 <?php
-    include './includes/connection.php';
+include './includes/connection.php';
+
+$propertiesStmt = Database::search("SELECT * FROM properties");
 ?>
 
 <!DOCTYPE html>
@@ -51,110 +53,31 @@
     <!-- Properties Start -->
     <section class="container mt-5">
         <div class="row g-4">
-            <div class="col-4">
-                <a href="./single-property.php?id=1">
-                    <div class="property-card rounded-4 position-relative">
-                        <div class="owl-carousel property-carousel">
-                            <div class="property-slider-slide" style="background-image: url('assets/images/slider/1.jpg');"></div>
-                            <div class="property-slider-slide" style="background-image: url('assets/images/slider/2.jpeg');"></div>
-                        </div>
-                        <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
-                            <div class="position-relative h-100 w-100">
-                                <div class="position-absolute bottom-0 z-2">
-                                    <span class="chip-sm"><i class="fa-solid fa-building me-1"></i> Apartment</span>
-                                    <span class="slider-title fs-5 d-block fw-bold">Waterside Apartment</span>
-                                    <span class="d-block fs-6">58 Water Street, B3 1BJ</span>
+            <?php while ($property = $propertiesStmt->fetch_assoc()) { ?>
+                <div class="col-4">
+                    <a href="./single-property.php?id=<?php echo $property['id'] ?>">
+                        <div class="property-card rounded-4 position-relative">
+                            <div class="owl-carousel property-carousel">
+                                <?php
+                                    $images = explode(',', $property['images']);
+                                    foreach ($images as $image) {
+                                ?>
+                                    <div class="property-slider-slide" style="background-image: url('assets/images/properties/<?php echo $image ?>');"></div>
+                                <?php } ?>
+                            </div>
+                            <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
+                                <div class="position-relative h-100 w-100">
+                                    <div class="position-absolute bottom-0 z-2">
+                                        <span class="chip-sm"><i class="fa-solid fa-building me-1"></i> Apartment</span>
+                                        <span class="slider-title fs-5 d-block fw-bold"><?php echo $property['title'] ?></span>
+                                        <span class="d-block fs-6">58 Water Street, B3 1BJ</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-4">
-                <div class="property-card rounded-4 position-relative">
-                    <div class="owl-carousel property-carousel">
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/3.jpg');"></div>
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/4.jpg');"></div>
-                    </div>
-                    <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
-                        <div class="position-relative h-100 w-100">
-                            <div class="position-absolute bottom-0 z-2">
-                                <span class="chip-sm"><i class="fa-solid fa-home me-1"></i> House</span>
-                                <span class="slider-title fs-5 d-block fw-bold">Country House</span>
-                                <span class="d-block fs-6">22 Country Road, C4 5D6</span>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="property-card rounded-4 position-relative">
-                    <div class="owl-carousel property-carousel">
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/5.jpg');"></div>
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/6.jpg');"></div>
-                    </div>
-                    <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
-                        <div class="position-relative h-100 w-100">
-                            <div class="position-absolute bottom-0 z-2">
-                                <span class="chip-sm"><i class="fa-solid fa-tree me-1"></i> Cottage</span>
-                                <span class="slider-title fs-5 d-block fw-bold">Lakeside Cottage</span>
-                                <span class="d-block fs-6">78 Lake Avenue, E7 8FG</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="property-card rounded-4 position-relative">
-                    <div class="owl-carousel property-carousel">
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/7.jpg');"></div>
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/8.jpg');"></div>
-                    </div>
-                    <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
-                        <div class="position-relative h-100 w-100">
-                            <div class="position-absolute bottom-0 z-2">
-                                <span class="chip-sm"><i class="fa-solid fa-building-columns me-1"></i> Mansion</span>
-                                <span class="slider-title fs-5 d-block fw-bold">Grand Mansion</span>
-                                <span class="d-block fs-6">99 Luxury Lane, G1 2HI</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="property-card rounded-4 position-relative">
-                    <div class="owl-carousel property-carousel">
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/9.jpg');"></div>
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/10.jpg');"></div>
-                    </div>
-                    <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
-                        <div class="position-relative h-100 w-100">
-                            <div class="position-absolute bottom-0 z-2">
-                                <span class="chip-sm"><i class="fa-solid fa-bed me-1"></i> Hotel</span>
-                                <span class="slider-title fs-5 d-block fw-bold">City Hotel</span>
-                                <span class="d-block fs-6">11 Urban Street, J4 5KL</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="property-card rounded-4 position-relative">
-                    <div class="owl-carousel property-carousel">
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/11.jpg');"></div>
-                        <div class="property-slider-slide" style="background-image: url('assets/images/slider/12.jpg');"></div>
-                    </div>
-                    <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
-                        <div class="position-relative h-100 w-100">
-                            <div class="position-absolute bottom-0 z-2">
-                                <span class="chip-sm"><i class="fa-solid fa-house-user me-1"></i> Studio Apartment</span>
-                                <span class="slider-title fs-5 d-block fw-bold">Urban Studio</span>
-                                <span class="d-block fs-6">32 City Center, K5 6LM</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php } ?>
         </div>
     </section>
     <!-- Properties End -->

@@ -63,7 +63,7 @@ $amenitiesStmt = Database::search("
     <!-- Header End -->
 
     <!-- Property Details Start -->
-    <section class="container">
+    <section class="container mb-5">
         <div class="row">
 
             <!-- Details Start -->
@@ -101,11 +101,17 @@ $amenitiesStmt = Database::search("
                 <div class="card border-0 booking-card">
                     <div class="card-body bg-light-gray rounded-5 d-flex flex-column align-items-center justify-content-center shadow py-4">
                         <h5 class="card-title">Check Availability</h5>
-                        <div class="my-3">
-                            <label class="form-label d-block">Select Date Range</label>
-                            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" class="px-3 py-2 border-1 border-secondary rounded-2" />
+                        <div class="d-flex gap-3">
+                            <div class="my-3">
+                                <label class="form-label d-block">Check-in Date</label>
+                                <input type="date" id="checkIn" class="px-3 py-2 border-1 border-secondary rounded-2" />
+                            </div>
+                            <div class="my-3">
+                                <label class="form-label d-block">Check-out Date</label>
+                                <input type="date" id="checkOut" class="px-3 py-2 border-1 border-secondary rounded-2" />
+                            </div>
                         </div>
-                        <a href="#" class="btn btn-info text-white shadow-sm">Book Now</a>
+                        <button onclick="checkAvailability(<?php echo $propertyData['id'] ?>)" class="btn btn-info text-white shadow-sm">Book Now</button>
                     </div>
                 </div>
             </div>
@@ -117,13 +123,7 @@ $amenitiesStmt = Database::search("
 
     <?php include 'components/script.php'; ?>
     <script>
-        $(function() {
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left'
-            }, function(start, end, label) {
-                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-            });
-        });
+
     </script>
 
 </body>

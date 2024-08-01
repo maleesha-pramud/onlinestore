@@ -149,3 +149,24 @@ function addListing() {
     req.open('POST', '/onlinestore/lib/add-listing-process.php', true);
     req.send(form);
 }
+
+function checkAvailability(listingId) {
+    var checkIn = document.getElementById('checkIn').value;
+    var checkOut = document.getElementById('checkOut').value;
+
+    var form = new FormData();
+    form.append('listingId', listingId);
+    form.append('checkIn', checkIn);
+    form.append('checkOut', checkOut);
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (req.readyState == 4 && req.status == 200) {
+            var response = req.responseText;
+            alert(response);
+        }
+    }
+
+    req.open('POST', '/onlinestore/lib/check-availability-process.php', true);
+    req.send(form);
+}
