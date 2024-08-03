@@ -27,65 +27,84 @@ include '../../includes/connection.php';
     }
     ?>
 
-    <!-- Hero Slider Start  -->
-    <section class="mt-3 container">
-        <div class="mb-3">
-            <label for="images" class="form-label">Images</label>
-            <input type="file" class="form-control" id="images" name="images[]" multiple>
-        </div>
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title">
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="description" name="description" id="description"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address">
-        </div>
-        <div class="mb-3 row">
-            <div class="col row">
-                <div class="col mb-3">
-                    <label for="guests" class="form-label">Guests</label>
-                    <input type="number" class="form-control" id="guests">
-                </div>
-                <div class="col mb-3">
-                    <label for="bedrooms" class="form-label">Bed Rooms</label>
-                    <input type="number" class="form-control" id="bedrooms">
-                </div>
+    <section class="d-flex content-wrapper">
+
+        <?php include '../../components/AdminSidebar.php'; ?>
+
+        <!-- Hero section Start  -->
+        <section class="mt-3 px-5 col-10">
+            <div class="mb-3">
+                <label for="images" class="form-label">Images</label>
+                <input type="file" class="form-control" id="images" name="images[]" multiple>
             </div>
-            <div class="col mb-3 row">
-                <div class="col mb-3">
-                    <label for="beds" class="form-label">Beds</label>
-                    <input type="number" class="form-control" id="beds">
-                </div>
-                <div class="col mb-3">
-                    <label for="bathrooms" class="form-label">Bath Rooms</label>
-                    <input type="number" class="form-control" id="bathrooms">
-                </div>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title">
             </div>
-        </div>
-        <div class="mb-3">
-            <label for="amenities" class="form-label">Amenities</label>
-            <div class="row">
-                <?php
-                $amenitiesStmt = Database::search("SELECT * FROM `amenities`");
-                while ($amenity = $amenitiesStmt->fetch_assoc()) {
-                ?>
-                    <div class="col-2">
-                        <input type="checkbox" id="<?php echo $amenity['id'] ?>" name='amenities' class="form-check-input">
-                        <label for="<?php echo $amenity['id'] ?>" class="form-check-label"><?php echo $amenity['name'] ?></label>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category">
+                    <?php
+                    $categoriesStmt = Database::search("SELECT * FROM `categories`");
+                    while ($category = $categoriesStmt->fetch_assoc()) {
+                    ?>
+                        <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="description" name="description" id="description"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3 d-flex gap-3">
+                <div class="col d-flex gap-3">
+                    <div class="col mb-3">
+                        <label for="guests" class="form-label">Guests</label>
+                        <input type="number" class="form-control" id="guests">
                     </div>
-                <?php } ?>
+                    <div class="col mb-3">
+                        <label for="bedrooms" class="form-label">Bed Rooms</label>
+                        <input type="number" class="form-control" id="bedrooms">
+                    </div>
+                </div>
+                <div class="col mb-3 d-flex gap-3">
+                    <div class="col mb-3">
+                        <label for="beds" class="form-label">Beds</label>
+                        <input type="number" class="form-control" id="beds">
+                    </div>
+                    <div class="col mb-3">
+                        <label for="bathrooms" class="form-label">Bath Rooms</label>
+                        <input type="number" class="form-control" id="bathrooms">
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="amenities" class="form-label">Amenities</label>
+                <div class="d-flex">
+                    <?php
+                    $amenitiesStmt = Database::search("SELECT * FROM `amenities`");
+                    while ($amenity = $amenitiesStmt->fetch_assoc()) {
+                    ?>
+                        <div class="col-2">
+                            <input type="checkbox" id="<?php echo $amenity['id'] ?>" name='amenities' class="form-check-input">
+                            <label for="<?php echo $amenity['id'] ?>" class="form-check-label"><?php echo $amenity['name'] ?></label>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="basePrice" class="form-label">Base Price &#40;LKR&#41;</label>
+                <input type="number" class="form-control" id="basePrice">
+            </div>
 
-        <button onclick="addListing();" class="btn btn-info text-white float-end px-4 mb-5">Submit</button>
-
+            <button onclick="addListing();" class="btn btn-info text-white float-end px-4 mb-5">Submit</button>
+        </section>
+        <!-- Hero section End  -->
     </section>
-    <!-- Hero Slider End  -->
 
     <?php include '../../components/script.php'; ?>
     <script src="../../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>
@@ -95,9 +114,9 @@ include '../../includes/connection.php';
     <script>
         $(document).ready(function() {
             $(".hero-slider").owlCarousel({
-                items: 1, // Set the number of items to show at once
-                loop: true, // Enable infinite loop
-                dots: false // Hide pagination dots
+                items: 1,
+                loop: true,
+                dots: false
             });
 
 
@@ -105,9 +124,9 @@ include '../../includes/connection.php';
         });
 
         $(".property-carousel").owlCarousel({
-            items: 1, // Adjust this as needed for the second carousel
-            loop: true, // Enable infinite loop
-            dots: true // Show dots for the second carousel, adjust as needed
+            items: 1,
+            loop: true,
+            dots: true
         });
     </script>
 </body>

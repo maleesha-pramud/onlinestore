@@ -122,9 +122,6 @@ $amenitiesStmt = Database::search("
 
 
     <?php include 'components/script.php'; ?>
-    <script>
-
-    </script>
 
 </body>
 

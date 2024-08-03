@@ -126,16 +126,16 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
     <script>
         $(document).ready(function() {
             $(".hero-slider").owlCarousel({
-                items: 1, // Set the number of items to show at once
-                loop: true, // Enable infinite loop
-                dots: false // Hide pagination dots
+                items: 1,
+                loop: true, 
+                dots: false 
             });
         });
 
         $(".property-carousel").owlCarousel({
-            items: 1, // Adjust this as needed for the second carousel
-            loop: true, // Enable infinite loop
-            dots: true // Show dots for the second carousel, adjust as needed
+            items: 1, 
+            loop: true, 
+            dots: true 
         });
     </script>
 </body>

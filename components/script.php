@@ -1,8 +1,9 @@
-<?php 
-  $RootPath = '/onlinestore';
+<?php
+$RootPath = '/onlinestore';
 ?>
 
 <script src="<?php echo $RootPath; ?>/assets/js/jquery.min.js"></script>
+<script src="<?php echo $RootPath; ?>/assets/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script src="<?php echo $RootPath; ?>/assets/js/owl.carousel.min.js"></script>

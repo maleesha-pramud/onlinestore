@@ -5,7 +5,11 @@ a {
 }
 
 .bg-accent {
-    background-color: #53443C;
+    background-color: #53443C !important;
+}
+
+.bg-accent2 {
+    background-color: #a38776 !important;
 }
 
 .text-accent {
@@ -17,7 +21,7 @@ a {
     padding: 10px 20px !important;
 }
 
-.navbar {
+.bg-midGray {
     background-color: #f8f9fa;
 }
 
@@ -163,4 +167,16 @@ a {
 
 .daterangepicker .drp-calendar {
     max-width: 370px !important;
+}
+
+
+/* Dashboard Styles */
+.content-wrapper {
+    max-width: 100vw;
+}
+
+.admin-sidebar {
+    position: sticky !important;
+    top: 0px;
+    height: 100vh;
 }

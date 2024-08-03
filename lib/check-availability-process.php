@@ -29,7 +29,5 @@ foreach ($bookings as $booking) {
 }
 
 if ($isAvailable) {
-  echo "Available";
-} else {
-  echo "Not Available";
+  echo "success";
 }

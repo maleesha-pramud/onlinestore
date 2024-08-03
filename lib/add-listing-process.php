@@ -5,6 +5,7 @@ include '../includes/connection.php';
 $RootFilePath = dirname(__FILE__);
 
 $title = $_POST['title'];
+$category = $_POST['category'];
 $description = $_POST['description'];
 $address = $_POST['address'];
 $guests = $_POST['guests'];
@@ -12,10 +13,10 @@ $bedrooms = $_POST['bedrooms'];
 $beds = $_POST['beds'];
 $bathrooms = $_POST['bathrooms'];
 $images = $_FILES['images'];
-$amenities = $_POST['amenities'];
+$amenities = isset($_POST['amenities']) ? $_POST['amenities'] : [];
+$basePrice = $_POST['basePrice'];
 
-
-// save images to the images folder and get the paths. then convert that to string to save in the mysql database
+// Save images to the images folder and get the paths, then convert that to a string to save in the MySQL database
 $imagePaths = [];
 foreach ($images['tmp_name'] as $key => $tmp_name) {
   $name = uniqid() . ".jpg";
@@ -26,13 +27,11 @@ foreach ($images['tmp_name'] as $key => $tmp_name) {
 }
 $imagePathsString = implode(',', $imagePaths);
 
-
-
-
-
-
+// Validate input fields
 if (empty($title)) {
   echo ("Title is required");
+} elseif (empty($category)) {
+  echo ("Category is required");
 } elseif (empty($description)) {
   echo ("Description is required");
 } elseif (empty($address)) {
@@ -45,18 +44,22 @@ if (empty($title)) {
   echo ("Number of beds is required");
 } elseif (empty($bathrooms)) {
   echo ("Number of bathrooms is required");
+} elseif (empty($basePrice)) {
+  echo ("Base price is required");
+} elseif (empty($imagePaths)) {
+  echo ("At least one image is required");
 } else {
-
-  Database::iud("INSERT INTO `properties` (`title`, `description`, `address`, `guests`, `bedrooms`, `beds`, `bathrooms`, `images`) VALUES ('$title', '$description', '$address', '$guests', '$bedrooms', '$beds', '$bathrooms', '$imagePathsString')");
+  // Insert property into the database
+  Database::iud("INSERT INTO `properties` (`title`, `categories_id`, `description`, `address`, `guests`, `bedrooms`, `beds`, `bathrooms`, `images`, `base_price`) VALUES ('$title', '$category', '$description', '$address', '$guests', '$bedrooms', '$beds', '$bathrooms', '$imagePathsString', '$basePrice')");
 
   $propertyId = Database::getInsertedId();
 
+  // Insert amenities if they exist
   if (!empty($amenities)) {
     foreach ($amenities as $amenity) {
       Database::iud("INSERT INTO `properties_has_amenities` (`properties_id`, `amenities_id`) VALUES ('$propertyId', '$amenity')");
     }
   }
-
 
   echo ("success");
 }

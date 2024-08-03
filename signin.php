@@ -1,3 +1,18 @@
+<?php
+
+$email = "";
+$password = "";
+
+if (isset($_COOKIE["email"])) {
+    $email = $_COOKIE["email"];
+}
+
+if (isset($_COOKIE["password"])) {
+    $password = $_COOKIE["password"];
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="white">
 
@@ -17,19 +32,6 @@
                             <h2 class="text-center">Sign In</h2>
                         </div>
 
-                        <?php
-                        $email = "";
-                        $password = "";
-
-                        if (isset($_COOKIE["email"])) {
-                            $email = $_COOKIE["email"];
-                        }
-
-                        if (isset($_COOKIE["password"])) {
-                            $password = $_COOKIE["password"];
-                        }
-                        ?>
-
                         <div class="col-12 mb-3">
                             <label for="email" class="form-label">User Name/Email Address</label>
                             <input type="text" id="email2" class="form-control border-secondary" value="<?php echo ($email) ?>" />
@@ -41,9 +43,7 @@
                         </div>
 
                         <div class="form-check col-12 mb-3">
-                            <input type="checkbox" id="remember-me" class="form-check-input" <?php if (isset($_COOKIE["email"])) {
-                                                                                                    echo "checked";
-                                                                                                } ?>>
+                            <input type="checkbox" id="remember-me" class="form-check-input" <?php if (isset($_COOKIE["email"])) { echo "checked"; } ?>>
                             <label for="remember-me" class="form-check-label border-secondary">Remember Me</label>
                         </div>
 

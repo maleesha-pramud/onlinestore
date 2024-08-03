@@ -9,7 +9,7 @@ if (isset($_SESSION['email'])) {
 
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-light justify-content-between align-items-center px-5">
+<nav class="navbar bg-midGray navbar-expand-lg navbar-light justify-content-between align-items-center px-5">
   <a class="navbar-brand" href="/onlinestore/index.php">STAY LANKA</a>
   <ul class="list-unstyled d-flex gap-5 mb-0">
     <li class="navbar-item">Board Room</li>
