@@ -177,27 +177,6 @@ function addListing() {
     }
 }
 
-function addCategory() {
-    var name = document.getElementById('name').value;
-
-    var form = new FormData();
-    form.append('name', name);
-
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-            var response = req.responseText;
-            alert(response);
-            // if (response == 'success') {
-            //     window.location.href = '/onlinestore/';
-            // }
-        }
-    }
-
-    req.open('POST', '/onlinestore/lib/add-category-process.php', true);
-    req.send(form);
-}
-
 function editCategory() {
     var id = document.getElementById('id').value;
     var name = document.getElementById('name').value;
@@ -252,4 +231,9 @@ function checkAvailability(listingId) {
 
     req.open('POST', '/onlinestore/lib/check-availability-process.php', true);
     req.send(form);
+}
+
+function inputImage() {
+    var input = document.getElementById('imageInput');
+    input.click();
 }

@@ -59,8 +59,8 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
                         <div class="property-card rounded-4 position-relative">
                             <div class="owl-carousel property-carousel">
                                 <?php
-                                    $images = explode(',', $property['images']);
-                                    foreach ($images as $image) {
+                                $images = explode(',', $property['images']);
+                                foreach ($images as $image) {
                                 ?>
                                     <div class="property-slider-slide" style="background-image: url('assets/images/properties/<?php echo $image ?>');"></div>
                                 <?php } ?>
@@ -68,7 +68,15 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
                             <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
                                 <div class="position-relative h-100 w-100">
                                     <div class="position-absolute bottom-0 z-2">
-                                        <span class="chip-sm"><i class="fa-solid fa-building me-1"></i> Apartment</span>
+                                        <span class="chip-sm">
+                                            <?php
+                                            $categoryId = $property['categories_id'];
+                                            $categoryStmt = Database::search('SELECT * FROM categories WHERE id = ' . $categoryId);
+                                            $category = $categoryStmt->fetch_assoc();
+                                            ?>
+                                            <img src="assets/images/categories/<?php echo $category['image'] ?>" height='14' width='14' />
+                                            <?php echo $category['name']; ?>
+                                        </span>
                                         <span class="slider-title fs-5 d-block fw-bold"><?php echo $property['title'] ?></span>
                                         <span class="d-block fs-6">58 Water Street, B3 1BJ</span>
                                     </div>
@@ -127,15 +135,15 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
         $(document).ready(function() {
             $(".hero-slider").owlCarousel({
                 items: 1,
-                loop: true, 
-                dots: false 
+                loop: true,
+                dots: false
             });
         });
 
         $(".property-carousel").owlCarousel({
-            items: 1, 
-            loop: true, 
-            dots: true 
+            items: 1,
+            loop: true,
+            dots: true
         });
     </script>
 </body>

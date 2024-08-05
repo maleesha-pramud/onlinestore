@@ -24,7 +24,7 @@ if (isset($_SESSION['email'])) {
         <?php
         if (isset($userData['user_type_id'])) {
           if ($userData['user_type_id'] == 1) {
-            echo '<a href="/onlinestore/admin/listing/add.php" class="d-block py-2 text-center text-dark text-decoration-none fs-7">Add Listing</a>';
+            echo '<a href="/onlinestore/admin/dashboard.php" class="d-block py-2 text-center text-dark text-decoration-none fs-7">Dashboard</a>';
           }
         } else {
           echo '<a href="/onlinestore/signin.php" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Log In</a>';

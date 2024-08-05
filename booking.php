@@ -44,7 +44,7 @@ $images = explode(',', $propertyData['images']);
             </div>
         </div>
         <div class="card shadow-sm p-4">
-            <form action="booking-process.php" method="POST">
+            <div>
                 <div class="d-flex gap-3 w-100">
                     <div class="mb-3 col">
                         <label for="firstName" class="form-label">First Name</label>
@@ -77,13 +77,90 @@ $images = explode(',', $propertyData['images']);
                     <label for="note" class="form-label">Note</label>
                     <textarea class="form-control" id="note" name="note" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+                <button onclick="checkoutPayment()" type="submit" class="btn btn-md btn-primary">Procceed to Pay</button>
+            </div>
         </div>
     </section>
     <!-- Header End -->
 
     <?php include 'components/script.php'; ?>
+    <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
+    <script>
+        function checkoutPayment() {
+            var fname = document.getElementById('firstName');
+            var lname = document.getElementById('lastName');
+            var nic = document.getElementById('nic');
+            var contact = document.getElementById('contact');
+            var guests = document.getElementById('guests');
+            var email = document.getElementById('email');
+            var note = document.getElementById('note');
+
+            var formData = new FormData();
+            formData.append('firstName', fname.value);
+            formData.append('lastName', lname.value);
+            formData.append('nic', nic.value);
+            formData.append('contact', contact.value);
+            formData.append('guests', guests.value);
+            formData.append('email', email.value);
+            formData.append('note', note.value);
+
+
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (req.readyState == 4 && req.status == 200) {
+                    var response = JSON.parse(req.responseText);
+                    if (response.success) {
+                        var payment = {
+                            "sandbox": true,
+                            "merchant_id": "1227844", // Replace your Merchant ID
+                            "return_url": undefined, // Important
+                            "cancel_url": undefined, // Important
+                            "notify_url": "http://sample.com/notify",
+                            "order_id": response.order_id,
+                            "items": response.items,
+                            "amount": response.amount,
+                            "currency": "LKR",
+                            "hash": response.hash,
+                            "first_name": response.first_name,
+                            "last_name": response.last_name,
+                            "email": response.email,
+                            "phone": response.phone,
+                            "address": response.address,
+                            "city": response.city,
+                            "country": response.country,
+                            "delivery_address": response.delivery_address,
+                            "delivery_city": response.delivery_city,
+                            "delivery_country": response.delivery_country,
+                            "custom_1": "",
+                            "custom_2": ""
+                        };
+
+                        payhere.startPayment(payment);
+
+                        payhere.onCompleted = function onCompleted(orderId) {
+                            console.log("Payment completed. OrderID:" + orderId);
+                            // Note: validate the payment and show success or failure page to the customer
+                        };
+
+                        payhere.onDismissed = function onDismissed() {
+                            // Note: Prompt user to pay again or show an error page
+                            console.log("Payment dismissed");
+                        };
+
+                        payhere.onError = function onError(error) {
+                            // Note: show an error page
+                            console.log("Error:" + error);
+                        };
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                }
+            };
+
+            req.open('POST', '/onlinestore/lib/checkout-process.php', true);
+            req.send(formData);
+        }
+    </script>
 
 </body>
 

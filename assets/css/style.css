@@ -1,3 +1,8 @@
+:root {
+    --accent: #53443C;
+    --midGray2: #bdbbbb;
+}
+
 a {
     cursor: pointer;
     color: inherit !important;
@@ -179,4 +184,26 @@ a {
     position: sticky !important;
     top: 0px;
     height: 100vh;
+}
+
+
+/* Image Input */
+#file-input-div {
+    height: 200px;
+    width: 200px;
+    border: 2px dashed var(--midGray2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#filePreview {
+    height: 200px;
+    width: 200px;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 2px dashed var(--midGray2);
+    cursor: pointer;
 }
