@@ -57,8 +57,8 @@ include '../includes/connection.php';
               <th scope="col">Check-In</th>
               <th scope="col">Check-Out</th>
               <th scope="col">Guests</th>
+              <th scope="col">Contact</th>
               <th scope="col">Total Price</th>
-              <th scope="col" class="text-end">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -69,11 +69,8 @@ include '../includes/connection.php';
                 <td><?php echo $booking['checkIn'] ?></td>
                 <td><?php echo $booking['checkOut'] ?></td>
                 <td><?php echo $booking['guests'] ?></td>
+                <td><?php echo $booking['contact'] ?></td>
                 <td><?php echo number_format($booking['total_price'], 2) ?></td>
-                <td class="text-end">
-                  <a href="/onlinestore/listing/edit.php?id=<?php echo $booking['id'] ?>" class="btn btn-info text-white">Edit</a>
-                  <button onclick="deleteListing(<?php echo $booking['id']; ?>)" class="btn btn-danger text-white">Delete</button>
-                </td>
               </tr>
             <?php } ?>
           </tbody>
