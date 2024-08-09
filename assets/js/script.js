@@ -238,7 +238,7 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
 
     PostRequest('/onlinestore/lib/checkout-process.php', formData, function (response, error) {
         if (error) {
-            alert('Error: ' + error.message);
+            alert(error);
             console.log(error);
             return;
         }
@@ -291,18 +291,22 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
 function booking(formData) {
     PostRequest('/onlinestore/lib/booking-process.php', formData, function (response, error) {
         if (error) {
-            alert('Error: ' + error.message);
+            alert(error);
             console.log(error);
             return;
         }
 
-        alert(response.message);
+        if (response.status) {
+            window.location.href = '/onlinestore/';
+        } else {
+            alert(response.message);
+        }
     })
 }
 
 
 // Listing Management
-function addListing() {
+function addListing(userId) {
     var title = document.getElementById('title').value;
     var category = document.getElementById('category').value;
     const description = tinymce.get('description').getContent();
@@ -340,6 +344,7 @@ function addListing() {
         alert('Please enter the base price');
     } else {
         var form = new FormData();
+        form.append('userId', userId);
         form.append('title', title);
         form.append('category', category);
         form.append('description', description);

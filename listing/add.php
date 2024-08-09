@@ -115,7 +115,7 @@ if (isset($_SESSION['email'])) {
                 <input type="number" class="form-control" id="basePrice">
             </div>
 
-            <button onclick="addListing();" class="btn btn-info text-white float-end px-4 mb-5">Submit</button>
+            <button onclick="addListing(<?php echo $userData['id']; ?>);" class="btn btn-info text-white float-end px-4 mb-5">Submit</button>
         </section>
         <!-- Hero section End  -->
     </section>

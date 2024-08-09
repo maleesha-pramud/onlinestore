@@ -30,12 +30,13 @@ $hash = strtoupper(
 
 // Prepare the response
 $response = [
+  'status' => true,
   'message' => 'success',
   'success' => true,
   'order_id' => $order_id,
   'items' => 'Booking for ' . $guests . ' guests',
   'amount' => $amount,
-  'hash' => $hash, 
+  'hash' => $hash,
   'first_name' => $firstName,
   'last_name' => $lastName,
   'email' => $email,

@@ -4,6 +4,7 @@ include '../includes/connection.php';
 
 $RootFilePath = dirname(__FILE__);
 
+$userId = $_POST['userId'];
 $title = $_POST['title'];
 $category = $_POST['category'];
 $description = $_POST['description'];
@@ -60,7 +61,7 @@ if (empty($title)) {
   exit();
 } else {
   // Insert property into the database
-  Database::iud("INSERT INTO `properties` (`title`, `categories_id`, `description`, `address`, `guests`, `bedrooms`, `beds`, `bathrooms`, `images`, `base_price`) VALUES ('$title', '$category', '$description', '$address', '$guests', '$bedrooms', '$beds', '$bathrooms', '$imagePathsString', '$basePrice')");
+  Database::iud("INSERT INTO `properties` (`title`, `categories_id`, `description`, `address`, `guests`, `bedrooms`, `beds`, `bathrooms`, `images`, `base_price`, `users_id`) VALUES ('$title', '$category', '$description', '$address', '$guests', '$bedrooms', '$beds', '$bathrooms', '$imagePathsString', '$basePrice', '$userId')");
 
   $propertyId = Database::getInsertedId();
 

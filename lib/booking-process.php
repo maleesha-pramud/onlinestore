@@ -23,7 +23,8 @@ $BookingStmt = Database::iud("INSERT INTO `bookings` (`checkIn`,`checkOut`,`firs
 
 // Prepare the response 
 $response = [
-    'message' => 'success',
+    'status' => true,
+    'message' => 'Booked Successfully',
 ];
 
 
