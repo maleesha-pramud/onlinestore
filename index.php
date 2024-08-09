@@ -68,13 +68,13 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
                             <div class="position-absolute top-0 left-0 h-100 w-100 p-3">
                                 <div class="position-relative h-100 w-100">
                                     <div class="position-absolute bottom-0 z-2">
-                                        <span class="chip-sm">
+                                        <span class="chip-sm d-flex align-items-center gap-1">
                                             <?php
                                             $categoryId = $property['categories_id'];
                                             $categoryStmt = Database::search('SELECT * FROM categories WHERE id = ' . $categoryId);
                                             $category = $categoryStmt->fetch_assoc();
                                             ?>
-                                            <img src="assets/images/categories/<?php echo $category['image'] ?>" height='14' width='14' />
+                                            <img src="assets/images/categories/<?php echo $category['image'] ?>" height='16' width='16' />
                                             <?php echo $category['name']; ?>
                                         </span>
                                         <span class="slider-title fs-5 d-block fw-bold"><?php echo $property['title'] ?></span>

@@ -111,7 +111,7 @@ $amenitiesStmt = Database::search("
                                 <input type="date" id="checkOut" class="px-3 py-2 border-1 border-secondary rounded-2" />
                             </div>
                         </div>
-                        <button onclick="checkAvailability(<?php echo $propertyData['id'] ?>)" class="btn btn-info text-white shadow-sm">Book Now</button>
+                        <button onclick="checkAvailability(<?php echo $propertyData['id'] ?>, <?php echo $propertyData['base_price'] ?>)" class="btn btn-info text-white shadow-sm">Book Now</button>
                     </div>
                 </div>
             </div>

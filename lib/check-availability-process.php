@@ -30,4 +30,6 @@ foreach ($bookings as $booking) {
 
 if ($isAvailable) {
   echo "success";
+} else {
+  echo "This property is not available for the selected dates";
 }

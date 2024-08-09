@@ -33,7 +33,7 @@ $isCategoryPath = ($currentPath === $targetPathCategory);
         </div>
       </div>
       <!-- Category Management -->
-      <div class="accordion-item">
+      <!-- <div class="accordion-item">
         <h2 class="accordion-header" id="flush-headingTwo">
           <button class="accordion-button bg-accent2 text-white <?php echo $isCategoryPath ? '' : 'collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="<?php echo $isCategoryPath ? 'true' : 'false'; ?>" aria-controls="flush-collapseTwo">
             Category Management
@@ -61,7 +61,8 @@ $isCategoryPath = ($currentPath === $targetPathCategory);
             </a>
           </div>
         </div>
-      </div>
+      </div> -->
+
     </div>
   </div>
 </div>

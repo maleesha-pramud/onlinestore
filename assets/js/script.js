@@ -1,3 +1,51 @@
+function PostRequest(path, formData, callback) {
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (req.readyState == 4) {
+            if (req.status === 200) {
+                var response = JSON.parse(req.responseText);
+                if (response.status) {
+                    callback(response);
+                } else {
+                    console.log(response);
+                    callback(null, response.message);
+                }
+            } else {
+                callback(null, 'Request failed with status: ' + req.status);
+            }
+        }
+    };
+
+    req.open('POST', path, true);
+    req.send(formData);
+}
+
+function GetRequest(path, formData, callback) {
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (req.readyState == 4) {
+            if (req.status === 200) {
+                var response = JSON.parse(req.responseText);
+                if (response.status) {
+                    callback(response);
+                } else {
+                    console.log(response);
+                    callback(null, response.message);
+                }
+            } else {
+                callback(null, new Error('Request failed with status: ' + req.status));
+            }
+        }
+    };
+
+    // Convert formData to query string
+    var queryString = new URLSearchParams(formData).toString();
+    var urlWithParams = path + '?' + queryString;
+
+    req.open('GET', urlWithParams);
+    req.send();
+}
+
 function changeView() {
     document.getElementById('signinBox').classList.toggle('d-none');
     document.getElementById('signupBox').classList.toggle('d-none');
@@ -43,28 +91,27 @@ function signIn() {
     form.append('password', password);
     form.append('rememberMe', rememberMe);
 
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-            var response = req.responseText;
-            if (response == 'success') {
-                if (rememberMe) {
-                    var d = new Date();
-                    d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000)); // Set cookie to expire in 30 days
-                    var expires = "expires=" + d.toUTCString();
-                    document.cookie = "email=" + email + ";" + expires;
-                    document.cookie = "password=" + password + ";" + expires;
-                }
-                window.location.href = '/onlinestore/';
-            } else {
-                document.getElementById('errorMsg2').innerHTML = response;
-                document.getElementById('errorMsgDiv2').classList.remove('d-none');
-            }
+    PostRequest('./lib/signin-process.php', form, function (response, error) {
+        if (error) {
+            document.getElementById('errorMsg2').innerHTML = error;
+            document.getElementById('errorMsgDiv2').classList.remove('d-none');
+            return;
         }
-    }
 
-    req.open('POST', './lib/signin-process.php', true);
-    req.send(form);
+        if (response.status) {
+            if (rememberMe) {
+                var d = new Date();
+                d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000)); // Set cookie to expire in 30 days
+                var expires = "expires=" + d.toUTCString();
+                document.cookie = "email=" + email + ";" + expires;
+                document.cookie = "password=" + password + ";" + expires;
+            }
+            window.location.href = '/onlinestore/';
+        } else {
+            document.getElementById('errorMsg2').innerHTML = response.message;
+            document.getElementById('errorMsgDiv2').classList.remove('d-none');
+        }
+    });
 }
 
 function forgotPassword() {
@@ -95,18 +142,166 @@ function resetPassword() {
     form.append('cPassword', cPassword);
     form.append('vcode', vcode);
 
+    PostRequest('./lib/reset-password-process.php', form, function (response, error) {
+        if (error) {
+            alert(error);
+            return;
+        }
+
+        if (response.status) {
+            window.location.href = '/onlinestore/signin.php';
+        } else {
+            alert(response.message);
+        }
+    });
+}
+
+function checkAvailability(listingId, price) {
+    var checkIn = document.getElementById('checkIn').value;
+    var checkOut = document.getElementById('checkOut').value;
+
+    if (!checkIn) {
+        alert('Please Enter the Check In date')
+        return;
+    } else if (!checkOut) {
+        alert('Please Enter the Check Out date')
+        return;
+    }
+
+    var form = new FormData();
+    form.append('listingId', listingId);
+    form.append('checkIn', checkIn);
+    form.append('checkOut', checkOut);
+
     var req = new XMLHttpRequest();
     req.onreadystatechange = function () {
         if (req.readyState == 4 && req.status == 200) {
             var response = req.responseText;
-            alert(response);
+            if (response === 'success') {
+                window.location.href = '/onlinestore/booking.php?id=' + listingId + '&checkIn=' + checkIn + '&checkOut=' + checkOut;
+            } else {
+                alert(response);
+            }
         }
     }
 
-    req.open('POST', './lib/reset-password-process.php', true);
+    req.open('POST', '/onlinestore/lib/check-availability-process.php', true);
     req.send(form);
 }
 
+function inputImage() {
+    var input = document.getElementById('imageInput');
+    input.click();
+}
+
+function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
+    var fname = document.getElementById('firstName').value;
+    var lname = document.getElementById('lastName').value;
+    var nic = document.getElementById('nic').value;
+    var contact = document.getElementById('contact').value;
+    var guests = document.getElementById('guests').value;
+    var email = document.getElementById('email').value;
+    var specialRequests = document.getElementById('specialRequests').value;
+
+    if (!fname) {
+        alert("First name is required.");
+        return;
+    } else if (lname === "") {
+        alert("Last name is required.");
+        return;
+    } else if (nic === "") {
+        alert("NIC is required.");
+        return;
+    } else if (contact === "" || !/^\d+$/.test(contact)) {
+        alert("Valid contact number is required.");
+        return;
+    } else if (guests === "" || !/^\d+$/.test(guests)) {
+        alert("Guests count must be a valid number.");
+        return;
+    } else if (email === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Valid email address is required.");
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append('checkIn', checkIn);
+    formData.append('checkOut', checkOut);
+    formData.append('firstName', fname);
+    formData.append('lastName', lname);
+    formData.append('nic', nic);
+    formData.append('contact', contact);
+    formData.append('guests', guests);
+    formData.append('email', email);
+    formData.append('specialRequests', specialRequests);
+    formData.append('propertyId', propertyId);
+    formData.append('totalPrice', totalPrice);
+
+    PostRequest('/onlinestore/lib/checkout-process.php', formData, function (response, error) {
+        if (error) {
+            alert('Error: ' + error.message);
+            console.log(error);
+            return;
+        }
+        var payment = {
+            "sandbox": true,
+            "merchant_id": "1227844", // Replace your Merchant ID
+            "return_url": undefined, // Important
+            "cancel_url": undefined, // Important
+            "notify_url": "http://sample.com/notify",
+            "order_id": response.order_id,
+            "items": response.items,
+            "amount": response.amount,
+            "currency": "LKR",
+            "hash": response.hash,
+            "first_name": response.first_name,
+            "last_name": response.last_name,
+            "email": response.email,
+            "phone": response.phone,
+            "address": response.address,
+            "city": response.city,
+            "country": response.country,
+            "delivery_address": response.delivery_address,
+            "delivery_city": response.delivery_city,
+            "delivery_country": response.delivery_country,
+            "custom_1": "",
+            "custom_2": ""
+        };
+
+        payhere.startPayment(payment);
+
+        payhere.onCompleted = function onCompleted(orderId) {
+            formData.append('orderId', orderId);
+            console.log("Payment completed. OrderID:" + orderId);
+            booking(formData);
+            // Note: validate the payment and show success or failure page to the customer
+        };
+
+        payhere.onDismissed = function onDismissed() {
+            // Note: Prompt user to pay again or show an error page
+            console.log("Payment dismissed");
+        };
+
+        payhere.onError = function onError(error) {
+            // Note: show an error page
+            console.log("Error:" + error);
+        };
+    });
+}
+
+function booking(formData) {
+    PostRequest('/onlinestore/lib/booking-process.php', formData, function (response, error) {
+        if (error) {
+            alert('Error: ' + error.message);
+            console.log(error);
+            return;
+        }
+
+        alert(response.message);
+    })
+}
+
+
+// Listing Management
 function addListing() {
     var title = document.getElementById('title').value;
     var category = document.getElementById('category').value;
@@ -161,22 +356,47 @@ function addListing() {
             }
         }
 
-        var req = new XMLHttpRequest();
-        req.onreadystatechange = function () {
-            if (req.readyState == 4 && req.status == 200) {
-                var response = req.responseText;
-                alert(response);
-                if (response == 'success') {
-                    window.location.href = '/onlinestore/';
-                }
+        PostRequest('./lib/add-listing-process.php', form, function (response, error) {
+            if (error) {
+                alert(error);
+                return;
             }
-        }
 
-        req.open('POST', '/onlinestore/lib/add-listing-process.php', true);
-        req.send(form);
+            if (response.status) {
+                window.location.href = '/onlinestore/';
+            } else {
+                alert(response.message);
+                console.log(response);
+            }
+        });
     }
 }
 
+
+// Category Management
+function addCategory() {
+    var name = document.getElementById('name').value;
+    var image = document.getElementById('imageInput').files[0];
+
+    var form = new FormData();
+    form.append('name', name);
+    form.append('image', image);
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (req.readyState == 4 && req.status == 200) {
+            var response = req.responseText;
+            if (response == 'success') {
+                window.location.href = '/onlinestore/admin/category/list.php';
+            }else {
+                alert(response);
+            }
+        }
+    }
+
+    req.open('POST', '/onlinestore/lib/add-category-process.php', true);
+    req.send(form);
+}
 function editCategory() {
     var id = document.getElementById('id').value;
     var name = document.getElementById('name').value;
@@ -199,41 +419,20 @@ function editCategory() {
     req.open('POST', '/onlinestore/lib/edit-category-process.php', true);
     req.send(form);
 }
-
-function checkAvailability(listingId) {
-    var checkIn = document.getElementById('checkIn').value;
-    var checkOut = document.getElementById('checkOut').value;
-
-    if (!checkIn) {
-        alert('Please Enter the Check In date')
-        return;
-    } else if (!checkOut) {
-        alert('Please Enter the Check Out date')
-        return;
-    }
-
+function deleteCategory(id) {
     var form = new FormData();
-    form.append('listingId', listingId);
-    form.append('checkIn', checkIn);
-    form.append('checkOut', checkOut);
+    form.append('id', id);
 
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-            var response = req.responseText;
-            if (response === 'success') {
-                window.location.href = '/onlinestore/booking.php?id=' + listingId
-            } else {
-                alert(response);
-            }
+    GetRequest('/onlinestore/lib/delete-category-process.php', form, function (response, error) {
+        if (error) {
+            alert(error);
+            console.log(error);
+            return;
         }
-    }
 
-    req.open('POST', '/onlinestore/lib/check-availability-process.php', true);
-    req.send(form);
-}
-
-function inputImage() {
-    var input = document.getElementById('imageInput');
-    input.click();
+        if(response.status) {
+            location.reload();
+        }
+        alert(response.message);
+    });
 }

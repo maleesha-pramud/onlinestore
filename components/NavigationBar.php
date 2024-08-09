@@ -20,18 +20,25 @@ if (isset($_SESSION['email'])) {
       <i class="fa-regular fa-user"></i>
       <i class="fa-solid fa-bars"></i>
       <!-- Popup Start -->
-      <div class="popup-menu position-absolute end-0 popup-box mt-2 rounded-4" style="display: none;">
+      <div class="popup-menu position-absolute end-0 popup-box mt-2 rounded-4 px-4 py-3" style="display: none;">
         <?php
         if (isset($userData['user_type_id'])) {
-          if ($userData['user_type_id'] == 1) {
-            echo '<a href="/onlinestore/admin/dashboard.php" class="d-block py-2 text-center text-dark text-decoration-none fs-7">Dashboard</a>';
+          if ($userData['user_type_id'] != 3) {
+            if ($userData['user_type_id'] == 1) {
+              echo '<a href="/onlinestore/admin/dashboard.php" class="d-block py-2 text-dark text-decoration-none fs-7">Dashboard</a>';
+            } else {
+              echo '<a href="/onlinestore/producer/dashboard.php" class="d-block py-2 text-dark text-decoration-none fs-7">Dashboard</a>';
+            }
           }
+        ?>
+          <a href="#" class="d-block py-2 text-dark text-decoration-none fs-7">Settings</a>
+          <a href="#" class="d-block py-2 text-dark text-decoration-none fs-7">Account</a>
+          <a href="/onlinestore/logout.php" class="d-block py-2 text-dark text-decoration-none fs-7">Logout</a>
+        <?php
         } else {
-          echo '<a href="/onlinestore/signin.php" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Log In</a>';
+          echo '<a href="/onlinestore/signin.php" class="d-block py-2 text-dark text-decoration-none fs-7">Log In</a>';
         }
         ?>
-        <a href="#" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Settings</a>
-        <a href="#" class="d-block py-2 px-5 text-dark text-decoration-none fs-7">Account</a>
       </div>
       <!-- Popup End -->
     </li>

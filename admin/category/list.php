@@ -54,7 +54,7 @@ include '../../includes/connection.php';
               <td><?php echo $category['id'] ?></td>
               <td class="text-end">
                 <a href="/onlinestore/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-info text-white">Edit</a>
-                <a href="/onlinestore/admin/category/delete.php?id=<?php echo $category['id'] ?>" class="btn btn-danger text-white">Delete</a>
+                <div onclick="deleteCategory(<?php echo $category['id'] ?>)" class="btn btn-danger text-white">Delete</div>
               </td>
             </tr>
           <?php } ?>
@@ -74,8 +74,8 @@ include '../../includes/connection.php';
     $(document).ready(function() {
       $(".hero-slider").owlCarousel({
         items: 1,
-        loop: true, 
-        dots: false 
+        loop: true,
+        dots: false
       });
 
 
@@ -83,9 +83,9 @@ include '../../includes/connection.php';
     });
 
     $(".property-carousel").owlCarousel({
-      items: 1, 
-      loop: true, 
-      dots: true 
+      items: 1,
+      loop: true,
+      dots: true
     });
   </script>
 </body>

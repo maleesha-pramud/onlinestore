@@ -1,6 +1,6 @@
 <?php
 
-include 'connection.php';
+include '../includes/connection.php';
 
 $fname = $_POST['fname'];
 $lname = $_POST['lname'];

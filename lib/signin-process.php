@@ -8,19 +8,33 @@ $email = $_POST['email'];
 $password = $_POST['password'];
 $rememberMe = $_POST['rememberMe'];
 
+header('Content-Type: application/json');
+
 if (empty($email)) {
-    echo ("Email is required");
+    echo json_encode([
+        "message" => "Email is required",
+        "status" => false,
+    ]);
 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo ("Email is not valid");
+    echo json_encode([
+        "message" => "Email is not valid",
+        "status" => false,
+    ]);
 } else if (empty($password)) {
-    echo ("Password is required");
+    echo json_encode([
+        "message" => "Password is required",
+        "status" => false,
+    ]);
 } else if (strlen($password) < 5) {
-    echo ("Password is too short");
+    echo json_encode([
+        "message" => "Password is too short",
+        "status" => false,
+    ]);
 } else {
 
     $rs = Database::search("SELECT * FROM `users` WHERE `email` = '$email' AND `password` = '$password'");
     if ($rs->num_rows == 0) {
-        echo ("User does not exist");
+        echo json_encode(["message" => "User does not exist"]);
         return;
     }
 
@@ -34,5 +48,5 @@ if (empty($email)) {
 
     $_SESSION['email'] = $email;
     $_SESSION['password'] = $password;
-    echo ("success");
+    echo json_encode(["message" => "success", "status" => true]);
 }

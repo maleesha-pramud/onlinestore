@@ -2,7 +2,7 @@
 
 $RootPath = '/onlinestore';
 
-include '../../includes/connection.php';
+include '../includes/connection.php';
 
 ?>
 
@@ -10,15 +10,15 @@ include '../../includes/connection.php';
 <html lang="en">
 
 <head>
-    <?php include '../../components/head.php'; ?>
-    <link rel="stylesheet" href="../../assets/libraries/RichTextEditor/richtext.min.css" />
+    <?php include '../components/head.php'; ?>
+    <link rel="stylesheet" href="../assets/libraries/RichTextEditor/richtext.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 </head>
 
 <body>
 
     <!-- Navigation Bar Start -->
-    <?php include '../../components/NavigationBar.php'; ?>
+    <?php include '../components/NavigationBar.php'; ?>
     <!-- Navigation Bar End -->
 
     <?php
@@ -29,7 +29,7 @@ include '../../includes/connection.php';
 
     <section class="d-flex content-wrapper">
 
-        <?php include '../../components/AdminSidebar.php'; ?>
+        <?php include '../components/AdminSidebar.php'; ?>
 
         <!-- Hero section Start  -->
         <section class="mt-3 px-5 col-10">
@@ -106,8 +106,8 @@ include '../../includes/connection.php';
         <!-- Hero section End  -->
     </section>
 
-    <?php include '../../components/script.php'; ?>
-    <script src="../../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>
+    <?php include '../components/script.php'; ?>
+    <script src="../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
 

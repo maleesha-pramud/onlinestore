@@ -6,18 +6,16 @@ $RootFilePath = dirname(__FILE__);
 
 $merchant_id = '1227844';
 $order_id = uniqid();
-$amount = 110; // This should be dynamically set based on the form data or other logic
 $currency = 'LKR';
 $merchant_secret = 'MzI2MTAyMzMwODExMjkxMDI3OTU0MTE5MDQ5NjE5MTMzNzgxNjAzMg==';
 
 // Retrieve form data
-$first_name = $_POST['firstName'];
-$last_name = $_POST['lastName'];
-$nic = $_POST['nic'];
+$firstName = $_POST['firstName'];
+$lastName = $_POST['lastName'];
 $contact = $_POST['contact'];
 $guests = $_POST['guests'];
 $email = $_POST['email'];
-$note = $_POST['note'];
+$amount = $_POST['totalPrice'];
 
 // Generate the hash
 $hash = strtoupper(
@@ -32,13 +30,14 @@ $hash = strtoupper(
 
 // Prepare the response
 $response = [
+  'message' => 'success',
   'success' => true,
   'order_id' => $order_id,
   'items' => 'Booking for ' . $guests . ' guests',
   'amount' => $amount,
   'hash' => $hash,
-  'first_name' => $first_name,
-  'last_name' => $last_name,
+  'first_name' => $firstName,
+  'last_name' => $lastName,
   'email' => $email,
   'phone' => $contact,
   'address' => 'N/A', // Add address if available

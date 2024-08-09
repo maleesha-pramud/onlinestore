@@ -2,6 +2,7 @@
 
 include './includes/connection.php';
 
+// Return to home page if id is undefined
 if (isset($_GET['id'])) {
     $propertyId = $_GET['id'];
 } else {
@@ -9,9 +10,25 @@ if (isset($_GET['id'])) {
     exit();
 }
 
+$checkIn = $_GET['checkIn'];
+$checkOut = $_GET['checkOut'];
+
+// Calculate the date count
+$date1 = new DateTime($checkIn);
+$date2 = new DateTime($checkOut);
+$dateDifferenceObj = $date1->diff($date2);
+$dateCount = $dateDifferenceObj->days;
+
+// Fetching the property details
 $propertyStmt = Database::search("SELECT * FROM `properties` WHERE `id` = '$propertyId'");
 $propertyData = $propertyStmt->fetch_assoc();
+
+// Convert value list string to array
 $images = explode(',', $propertyData['images']);
+
+// Calculate Total Price Based on date count and base price
+$totalPrice = $propertyData['base_price'] * $dateCount;
+$totalPriceFormatted = number_format(($propertyData['base_price'] * $dateCount), 2);
 
 ?>
 
@@ -39,7 +56,8 @@ $images = explode(',', $propertyData['images']);
                     <h3 class="fw-bold"><?php echo $propertyData['title']; ?></h3>
                     <p class="text-muted"><?php echo $propertyData['address']; ?></p>
                     <p class="text-muted"><?php echo $propertyData['description']; ?></p>
-                    <p class="text-muted fw-bold fs-3">Base Price: <?php echo $propertyData['base_price']; ?> LKR</p>
+                    <p class="text-muted fw-bold fs-5 mb-0">Base Price: <?php echo number_format($propertyData['base_price'], 2); ?> LKR</p>
+                    <p class="text-muted fw-bold fs-3">Total Price: <?php echo $totalPriceFormatted; ?> LKR</p>
                 </div>
             </div>
         </div>
@@ -74,94 +92,17 @@ $images = explode(',', $propertyData['images']);
                     <input type="email" class="form-control" id="email" name="email" required>
                 </div>
                 <div class="mb-3">
-                    <label for="note" class="form-label">Note</label>
-                    <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                    <label for="specialRequests" class="form-label">Special Requests</label>
+                    <textarea class="form-control" id="specialRequests" name="specialRequests" rows="3"></textarea>
                 </div>
-                <button onclick="checkoutPayment()" type="submit" class="btn btn-md btn-primary">Procceed to Pay</button>
+                <button onclick="checkoutPayment('<?php echo $checkIn ?>','<?php echo $checkOut ?>',<?php echo $propertyId ?>,<?php echo $totalPrice ?>)" type="submit" class="btn btn-md btn-primary">Procceed to Pay</button>
             </div>
         </div>
     </section>
     <!-- Header End -->
 
-    <?php include 'components/script.php'; ?>
     <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
-    <script>
-        function checkoutPayment() {
-            var fname = document.getElementById('firstName');
-            var lname = document.getElementById('lastName');
-            var nic = document.getElementById('nic');
-            var contact = document.getElementById('contact');
-            var guests = document.getElementById('guests');
-            var email = document.getElementById('email');
-            var note = document.getElementById('note');
-
-            var formData = new FormData();
-            formData.append('firstName', fname.value);
-            formData.append('lastName', lname.value);
-            formData.append('nic', nic.value);
-            formData.append('contact', contact.value);
-            formData.append('guests', guests.value);
-            formData.append('email', email.value);
-            formData.append('note', note.value);
-
-
-            var req = new XMLHttpRequest();
-            req.onreadystatechange = function() {
-                if (req.readyState == 4 && req.status == 200) {
-                    var response = JSON.parse(req.responseText);
-                    if (response.success) {
-                        var payment = {
-                            "sandbox": true,
-                            "merchant_id": "1227844", // Replace your Merchant ID
-                            "return_url": undefined, // Important
-                            "cancel_url": undefined, // Important
-                            "notify_url": "http://sample.com/notify",
-                            "order_id": response.order_id,
-                            "items": response.items,
-                            "amount": response.amount,
-                            "currency": "LKR",
-                            "hash": response.hash,
-                            "first_name": response.first_name,
-                            "last_name": response.last_name,
-                            "email": response.email,
-                            "phone": response.phone,
-                            "address": response.address,
-                            "city": response.city,
-                            "country": response.country,
-                            "delivery_address": response.delivery_address,
-                            "delivery_city": response.delivery_city,
-                            "delivery_country": response.delivery_country,
-                            "custom_1": "",
-                            "custom_2": ""
-                        };
-
-                        payhere.startPayment(payment);
-
-                        payhere.onCompleted = function onCompleted(orderId) {
-                            console.log("Payment completed. OrderID:" + orderId);
-                            // Note: validate the payment and show success or failure page to the customer
-                        };
-
-                        payhere.onDismissed = function onDismissed() {
-                            // Note: Prompt user to pay again or show an error page
-                            console.log("Payment dismissed");
-                        };
-
-                        payhere.onError = function onError(error) {
-                            // Note: show an error page
-                            console.log("Error:" + error);
-                        };
-                    } else {
-                        alert('Error: ' + response.message);
-                    }
-                }
-            };
-
-            req.open('POST', '/onlinestore/lib/checkout-process.php', true);
-            req.send(formData);
-        }
-    </script>
-
+    <?php include 'components/script.php'; ?>
 </body>
 
 </html>

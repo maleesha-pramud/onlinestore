@@ -85,29 +85,6 @@ include '../../includes/connection.php';
       }
       reader.readAsDataURL(file);
     })
-
-    function addCategory() {
-      var name = document.getElementById('name').value;
-      var image = document.getElementById('imageInput').files[0];
-
-      var form = new FormData();
-      form.append('name', name);
-      form.append('image', image);
-
-      var req = new XMLHttpRequest();
-      req.onreadystatechange = function() {
-        if (req.readyState == 4 && req.status == 200) {
-          var response = req.responseText;
-          alert(response);
-          // if (response == 'success') {
-          //     window.location.href = '/onlinestore/';
-          // }
-        }
-      }
-
-      req.open('POST', '/onlinestore/lib/add-category-process.php', true);
-      req.send(form);
-    }
   </script>
 </body>
 
