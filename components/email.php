@@ -1,7 +1,7 @@
 <table style="width: 100%; font-family: sans-serif;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center"> 
         <table style="max-width: 600px;">
           <tr>
             <td align="center">

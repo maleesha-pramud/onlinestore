@@ -4,6 +4,12 @@ $RootPath = '/onlinestore';
 
 include '../includes/connection.php';
 
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+    $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
+    $userData = $userStmt->fetch_assoc();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -29,13 +35,21 @@ include '../includes/connection.php';
 
     <section class="d-flex content-wrapper">
 
-        <?php include '../components/AdminSidebar.php'; ?>
+
+        <?php
+        if ($userData['user_type_id'] == 1) {
+            include '../components/AdminSidebar.php';
+        } else {
+            include '../components/ProducerSidebar.php';
+        }
+        ?>
 
         <!-- Hero section Start  -->
-        <section class="mt-3 px-5 col-10">
+        <section class="mt-3 px-3 px-lg-5 col-10">
             <div class="mb-3">
                 <label for="images" class="form-label">Images</label>
                 <input type="file" class="form-control" id="images" name="images[]" multiple>
+                <div class="text-warning mt-2">You can only upload up to 3 images.</div>
             </div>
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
@@ -60,8 +74,8 @@ include '../includes/connection.php';
                 <label for="address" class="form-label">Address</label>
                 <input type="text" class="form-control" id="address">
             </div>
-            <div class="mb-3 d-flex gap-3">
-                <div class="col d-flex gap-3">
+            <div class="mb-3 d-flex gap-3 flex-wrap">
+                <div class="col-12 col-md d-flex gap-3 flex-wrap">
                     <div class="col mb-3">
                         <label for="guests" class="form-label">Guests</label>
                         <input type="number" class="form-control" id="guests">
@@ -71,7 +85,7 @@ include '../includes/connection.php';
                         <input type="number" class="form-control" id="bedrooms">
                     </div>
                 </div>
-                <div class="col mb-3 d-flex gap-3">
+                <div class="col-12 col-md mb-3 d-flex gap-3 flex-wrap">
                     <div class="col mb-3">
                         <label for="beds" class="form-label">Beds</label>
                         <input type="number" class="form-control" id="beds">
@@ -84,12 +98,12 @@ include '../includes/connection.php';
             </div>
             <div class="mb-3">
                 <label for="amenities" class="form-label">Amenities</label>
-                <div class="d-flex">
+                <div class="d-flex flex-wrap">
                     <?php
                     $amenitiesStmt = Database::search("SELECT * FROM `amenities`");
                     while ($amenity = $amenitiesStmt->fetch_assoc()) {
                     ?>
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <input type="checkbox" id="<?php echo $amenity['id'] ?>" name='amenities' class="form-check-input">
                             <label for="<?php echo $amenity['id'] ?>" class="form-check-label"><?php echo $amenity['name'] ?></label>
                         </div>
@@ -118,9 +132,13 @@ include '../includes/connection.php';
                 loop: true,
                 dots: false
             });
+        });
 
-
-            $('.description').richText();
+        tinymce.init({
+            selector: '.description',
+            plugins: 'advlist autolink lists link charmap print preview hr anchor pagebreak',
+            toolbar_mode: 'floating',
+            height: 500
         });
 
         $(".property-carousel").owlCarousel({

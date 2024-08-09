@@ -101,7 +101,7 @@ if (isset($_COOKIE["password"])) {
                             <label for="password" class="form-label">Password</label>
                             <input type="password" id="password" class="form-control border-secondary" />
                         </div>
-
+ 
                         <div class="col-12 text-center">
                             <p>Already have an account? <a onclick="changeView()">Sign In</a></p>
                         </div>

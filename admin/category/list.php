@@ -11,8 +11,6 @@ include '../../includes/connection.php';
 
 <head>
   <?php include '../../components/head.php'; ?>
-  <link rel="stylesheet" href="../../assets/libraries/RichTextEditor/richtext.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 </head>
 
 <body>
@@ -22,7 +20,7 @@ include '../../includes/connection.php';
   <!-- Navigation Bar End -->
 
   <?php
-  if (!isset($userData['email'])) {
+  if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
     header('Location: /onlinestore/signin.php');
   }
 
@@ -35,31 +33,33 @@ include '../../includes/connection.php';
     <?php include '../../components/AdminSidebar.php'; ?>
 
     <!-- Hero section Start  -->
-    <section class="mt-3 px-5 col-10">
+    <section class="mt-3 px-3 px-lg-5 col-10">
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Category Name</th>
-            <th scope="col">Category ID</th>
-            <th scope="col" class="text-end">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php while ($category = $categoriesStmt->fetch_assoc()) { ?>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
             <tr>
-              <th scope="row">1</th>
-              <td><?php echo $category['name'] ?></td>
-              <td><?php echo $category['id'] ?></td>
-              <td class="text-end">
-                <a href="/onlinestore/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-info text-white">Edit</a>
-                <div onclick="deleteCategory(<?php echo $category['id'] ?>)" class="btn btn-danger text-white">Delete</div>
-              </td>
+              <th scope="col">#</th>
+              <th scope="col">Category Name</th>
+              <th scope="col">Category ID</th>
+              <th scope="col" class="text-end">Action</th>
             </tr>
-          <?php } ?>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <?php while ($category = $categoriesStmt->fetch_assoc()) { ?>
+              <tr>
+                <th scope="row">1</th>
+                <td><?php echo $category['name'] ?></td>
+                <td><?php echo $category['id'] ?></td>
+                <td class="text-end">
+                  <a href="/onlinestore/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-info text-white">Edit</a>
+                  <div onclick="deleteCategory(<?php echo $category['id'] ?>)" class="btn btn-danger text-white">Delete</div>
+                </td>
+              </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
 
     </section>
     <!-- Hero section End  -->

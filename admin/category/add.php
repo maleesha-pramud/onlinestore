@@ -11,8 +11,6 @@ include '../../includes/connection.php';
 
 <head>
   <?php include '../../components/head.php'; ?>
-  <link rel="stylesheet" href="../../assets/libraries/RichTextEditor/richtext.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 </head>
 
 <body>
@@ -22,7 +20,7 @@ include '../../includes/connection.php';
   <!-- Navigation Bar End -->
 
   <?php
-  if (!isset($userData['email'])) {
+  if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
     header('Location: /onlinestore/signin.php');
   }
   ?>
@@ -32,7 +30,7 @@ include '../../includes/connection.php';
     <?php include '../../components/AdminSidebar.php'; ?>
 
     <!-- Hero section Start  -->
-    <section class="mt-3 px-5 col-10">
+    <section class="mt-3 px-3 px-lg-5 col-10">
 
       <div class="mb-3">
         <label for="name" class="form-label">Category Name</label>

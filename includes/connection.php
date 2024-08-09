@@ -15,7 +15,7 @@ class Database {
         return $rs;
     }
 
-    public static function iud($query) {
+    public static function iud($query) { 
         Database::setUpConnection();
         Database::$connection->query($query);
     }

@@ -37,16 +37,16 @@ $amenitiesStmt = Database::search("
     <!-- Header Start -->
     <section class="container">
         <h1 class="py-4 fw-bold fs-1"><?php echo $propertyData['title'] ?></h1>
-        <div class="row single-listing-image-wrapper">
-            <div class="col">
+        <div class="row gap-3 gap-md-0 single-listing-image-wrapper">
+            <div class="col-12 col-md-6">
                 <img src="./assets/images/properties/<?php echo $images[0] ?>" alt="" class="img-cover rounded-5">
             </div>
-            <div class="col">
-                <div class="row">
-                    <div class="col">
+            <div class="col-12 col-md-6">
+                <div class="row h-100">
+                    <div class="col-6">
                         <img src="./assets/images/properties/<?php echo $images[1] ?>" alt="" class="img-cover rounded-5">
                     </div>
-                    <div class="col">
+                    <div class="col-6">
                         <img src="./assets/images/properties/<?php echo $images[2] ?>" alt="" class="img-cover rounded-5">
                     </div>
                 </div>
@@ -67,16 +67,16 @@ $amenitiesStmt = Database::search("
         <div class="row">
 
             <!-- Details Start -->
-            <div class="col-8">
+            <div class="col-12 col-md-8">
 
                 <!-- Amenities Start -->
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-12">
                         <h3 class="text-4xl fw-bold mt-4 mb-4">Amenities</h3>
                         <div class="row">
 
                             <?php while ($amenity = $amenitiesStmt->fetch_assoc()) { ?>
-                                <div class="col-3">
+                                <div class="col-6 col-md-3">
                                     <i class="<?php echo $amenity['icon_cls'] ?>"></i>
                                     <p><?php echo $amenity['name'] ?></p>
                                 </div>
@@ -97,11 +97,11 @@ $amenitiesStmt = Database::search("
             <!-- Details End -->
 
             <!-- Booking Start -->
-            <div class="col-4 position-relative">
+            <div class="col-12 col-md-4 position-relative">
                 <div class="card border-0 booking-card">
                     <div class="card-body bg-light-gray rounded-5 d-flex flex-column align-items-center justify-content-center shadow py-4">
                         <h5 class="card-title">Check Availability</h5>
-                        <div class="d-flex gap-3">
+                        <div class="d-flex gap-3 flex-wrap">
                             <div class="my-3">
                                 <label class="form-label d-block">Check-in Date</label>
                                 <input type="date" id="checkIn" class="px-3 py-2 border-1 border-secondary rounded-2" />

@@ -5,7 +5,7 @@ include '../includes/connection.php';
 $fname = $_POST['fname'];
 $lname = $_POST['lname'];
 $mobile = $_POST['mobile'];
-$email = $_POST['email'];
+$email = $_POST['email']; 
 $password = $_POST['password'];
 
 if (empty($fname)) {

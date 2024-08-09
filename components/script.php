@@ -9,4 +9,4 @@ $RootPath = '/onlinestore';
 <script src="<?php echo $RootPath; ?>/assets/js/owl.carousel.min.js"></script>
 <script src="https://kit.fontawesome.com/58cb4002a7.js" crossorigin="anonymous"></script>
 <script src="<?php echo $RootPath; ?>/assets/js/script.js"></script>
-<script src="<?php echo $RootPath; ?>/assets/js/ui-script.js"></script>
+<script src="<?php echo $RootPath; ?>/assets/js/ui-script.js"></script> 

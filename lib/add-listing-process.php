@@ -29,25 +29,35 @@ $imagePathsString = implode(',', $imagePaths);
 
 // Validate input fields
 if (empty($title)) {
-  echo ("Title is required");
+  echo json_encode(["status" => false, "message" => "Title is required"]);
+  exit();
 } elseif (empty($category)) {
-  echo ("Category is required");
+  echo json_encode(["status" => false, "message" => "Category is required"]);
+  exit();
 } elseif (empty($description)) {
-  echo ("Description is required");
+  echo json_encode(["status" => false, "message" => "Description is required"]);
+  exit();
 } elseif (empty($address)) {
-  echo ("Address is required");
+  echo json_encode(["status" => false, "message" => "Address is required"]);
+  exit();
 } elseif (empty($guests)) {
-  echo ("Number of guests is required");
+  echo json_encode(["status" => false, "message" => "Number of guests is required"]);
+  exit();
 } elseif (empty($bedrooms)) {
-  echo ("Number of bedrooms is required");
+  echo json_encode(["status" => false, "message" => "Number of bedrooms is required"]);
+  exit();
 } elseif (empty($beds)) {
-  echo ("Number of beds is required");
+  echo json_encode(["status" => false, "message" => "Number of beds is required"]);
+  exit();
 } elseif (empty($bathrooms)) {
-  echo ("Number of bathrooms is required");
+  echo json_encode(["status" => false, "message" => "Number of bathrooms is required"]);
+  exit();
 } elseif (empty($basePrice)) {
-  echo ("Base price is required");
+  echo json_encode(["status" => false, "message" => "Base price is required"]);
+  exit();
 } elseif (empty($imagePaths)) {
-  echo ("At least one image is required");
+  echo json_encode(["status" => false, "message" => "At least one image is required"]);
+  exit();
 } else {
   // Insert property into the database
   Database::iud("INSERT INTO `properties` (`title`, `categories_id`, `description`, `address`, `guests`, `bedrooms`, `beds`, `bathrooms`, `images`, `base_price`) VALUES ('$title', '$category', '$description', '$address', '$guests', '$bedrooms', '$beds', '$bathrooms', '$imagePathsString', '$basePrice')");
@@ -61,5 +71,5 @@ if (empty($title)) {
     }
   }
 
-  echo ("success");
+  echo json_encode(["status" => true, "message" => "Property added successfully"]);
 }

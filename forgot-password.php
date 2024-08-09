@@ -13,7 +13,7 @@
                 <div class="row card shadow rounded-18">
                     <div class="card-body">
                         <div class="col-12 mb-3">
-                            <h2 class="text-center">Forgot Password</h2>
+                            <h2 class="text-center">Forgot Password</h2> 
                         </div>
 
                         <div class="col-12 mb-3">

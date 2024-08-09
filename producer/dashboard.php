@@ -22,7 +22,7 @@ include '../includes/connection.php';
   <!-- Navigation Bar End -->
 
   <?php
-  if (!isset($userData['email'])) {
+  if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 2) {
     header('Location: /onlinestore/signin.php');
   }
 
@@ -30,42 +30,43 @@ include '../includes/connection.php';
   $userCount = Database::search("SELECT * FROM users");
   ?>
 
-  <section class="d-flex content-wrapper">
+  <section class="d-flex flex-column flex-md-row content-wrapper">
 
     <?php include '../components/ProducerSidebar.php'; ?>
 
-    <div class="container mt-4">
-      <div class="">
-        <div class="card border-0 mb-3">
-          <div class="d-flex gap-4 text-white">
-            <div class="card-body bg-success">
-              <h5 class="card-title">Active Properties</h5>
-              <p class="card-text"><?php echo $propertyCount->num_rows; ?></p>
-            </div>
+    <div class="col container mt-4 flex-grow-1">
+      <div class="row">
+        <div class="col-12 mb-3">
+          <div class="card border-0">
+            <div class="d-flex flex-column flex-md-row gap-4 text-white">
+              <div class="card-body bg-success">
+                <h5 class="card-title">Active Properties</h5>
+                <p class="card-text"><?php echo $propertyCount->num_rows; ?></p>
+              </div>
 
-            <div class="card-body bg-danger">
-              <h5 class="card-title">Inactive Properties</h5>
-              <p class="card-text"><?php echo $propertyCount->num_rows; ?></p>
+              <div class="card-body bg-danger">
+                <h5 class="card-title">Inactive Properties</h5>
+                <p class="card-text"><?php echo $propertyCount->num_rows; ?></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="card border-0">
+            <div class="d-flex flex-column flex-md-row gap-4 text-white">
+              <div class="card-body bg-secondary">
+                <h5 class="card-title">Guests Count</h5>
+                <p class="card-text"><?php echo $userCount->num_rows; ?></p>
+              </div>
+
+              <div class="card-body bg-primary">
+                <h5 class="card-title">Suppliers Count</h5>
+                <p class="card-text"><?php echo $userCount->num_rows; ?></p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="">
-        <div class="card border-0 mb-3">
-          <div class="d-flex gap-4 text-white">
-            <div class="card-body bg-secondary">
-              <h5 class="card-title">Guests Count</h5>
-              <p class="card-text"><?php echo $userCount->num_rows; ?></p>
-            </div>
-
-            <div class="card-body bg-primary">
-              <h5 class="card-title">Suppliers Count</h5>
-              <p class="card-text"><?php echo $userCount->num_rows; ?></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     </div>
 
   </section>

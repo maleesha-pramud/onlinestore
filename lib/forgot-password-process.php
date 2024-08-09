@@ -11,7 +11,7 @@ require "../mail/SMTP.php";
 require "../mail/Exception.php";
 
 $email = $_POST['email'];
-
+ 
 if (empty($email)) {
     echo ("Email is required");
 } else {

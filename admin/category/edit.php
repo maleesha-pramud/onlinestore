@@ -15,8 +15,6 @@ $category = Database::search($categoryQuery)->fetch_assoc();
 
 <head>
   <?php include '../../components/head.php'; ?>
-  <link rel="stylesheet" href="../../assets/libraries/RichTextEditor/richtext.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 </head>
 
 <body>
@@ -26,7 +24,7 @@ $category = Database::search($categoryQuery)->fetch_assoc();
   <!-- Navigation Bar End -->
 
   <?php
-  if (!isset($userData['email'])) {
+  if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
     header('Location: /onlinestore/signin.php');
   }
   ?>
@@ -36,11 +34,22 @@ $category = Database::search($categoryQuery)->fetch_assoc();
     <?php include '../../components/AdminSidebar.php'; ?>
 
     <!-- Hero section Start  -->
-    <section class="mt-3 px-5 col-10">
+    <section class="mt-3 px-3 px-lg-5 col-10">
 
       <div class="mb-3">
         <label for="name" class="form-label">Category Name</label>
         <input type="text" class="form-control" id="name" value="<?php echo $category['name']; ?>">
+      </div>
+      <div class="mb-3">
+        <?php if (!empty($category['image'])): ?>
+          <img src="../../assets/images/categories/<?php echo $category['image']; ?>" id="filePreview" class="img-fluid mt-2" onclick="inputImage();" />
+        <?php else: ?>
+          <div id="file-input-div" onclick="inputImage();">
+            Select an Image
+          </div>
+          <img src='' id='filePreview' class='img-fluid mt-2 d-none' onclick="inputImage();" />
+        <?php endif; ?>
+        <input type="file" class="form-control d-none" id="imageInput" />
       </div>
 
       <input type="hidden" class="d-none" id="id" value="<?php echo $category['id']; ?>">
@@ -72,6 +81,17 @@ $category = Database::search($categoryQuery)->fetch_assoc();
       loop: true,
       dots: true
     });
+
+    document.getElementById('imageInput').addEventListener('change', function() {
+      var file = this.files[0];
+      var reader = new FileReader();
+      reader.onload = function() {
+        document.getElementById('filePreview').src = reader.result;
+        document.getElementById('filePreview').classList.remove('d-none');
+        document.getElementById('file-input-div').classList.add('d-none');
+      }
+      reader.readAsDataURL(file);
+    })
   </script>
 </body>
 

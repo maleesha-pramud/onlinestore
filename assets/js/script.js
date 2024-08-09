@@ -156,7 +156,7 @@ function resetPassword() {
     });
 }
 
-function checkAvailability(listingId, price) {
+function checkAvailability(listingId) {
     var checkIn = document.getElementById('checkIn').value;
     var checkOut = document.getElementById('checkOut').value;
 
@@ -305,7 +305,7 @@ function booking(formData) {
 function addListing() {
     var title = document.getElementById('title').value;
     var category = document.getElementById('category').value;
-    var description = document.getElementById('description').value;
+    const description = tinymce.get('description').getContent();
     var address = document.getElementById('address').value;
     var guests = document.getElementById('guests').value;
     var bedrooms = document.getElementById('bedrooms').value;
@@ -332,8 +332,10 @@ function addListing() {
         alert('Please enter the number of beds');
     } else if (!bathrooms) {
         alert('Please enter the number of bathrooms');
-    } else if (images.length === 0) {
-        alert('Please select at least one image');
+    } else if (images.length < 3) {
+        alert('Please select three images');
+    } else if (images.length > 3) {
+        alert('Please select only three images');
     } else if (!basePrice) {
         alert('Please enter the base price');
     } else {
@@ -356,7 +358,7 @@ function addListing() {
             }
         }
 
-        PostRequest('./lib/add-listing-process.php', form, function (response, error) {
+        PostRequest('/onlinestore/lib/add-listing-process.php', form, function (response, error) {
             if (error) {
                 alert(error);
                 return;
@@ -371,53 +373,143 @@ function addListing() {
         });
     }
 }
+function editListing(propertyId) {
+    var title = document.getElementById('title').value;
+    var category = document.getElementById('category').value;
+    const description = tinymce.get('description').getContent();
+    var address = document.getElementById('address').value;
+    var guests = document.getElementById('guests').value;
+    var bedrooms = document.getElementById('bedrooms').value;
+    var beds = document.getElementById('beds').value;
+    var bathrooms = document.getElementById('bathrooms').value;
+    var amenities = document.getElementsByName('amenities');
+    var basePrice = document.getElementById('basePrice').value;
 
+    // Validate the values before appending to FormData
+    if (!title) {
+        alert('Please enter a title');
+    } else if (!category) {
+        alert('Please select a category');
+    } else if (!description) {
+        alert('Please enter a description');
+    } else if (!address) {
+        alert('Please enter an address');
+    } else if (!guests) {
+        alert('Please enter the number of guests');
+    } else if (!bedrooms) {
+        alert('Please enter the number of bedrooms');
+    } else if (!beds) {
+        alert('Please enter the number of beds');
+    } else if (!bathrooms) {
+        alert('Please enter the number of bathrooms');
+    } else if (!basePrice) {
+        alert('Please enter the base price');
+    } else {
+        var form = new FormData();
+        form.append('title', title);
+        form.append('category', category);
+        form.append('description', description);
+        form.append('address', address);
+        form.append('guests', guests);
+        form.append('bedrooms', bedrooms);
+        form.append('beds', beds);
+        form.append('bathrooms', bathrooms);
+        form.append('basePrice', basePrice);
+        form.append('propertyId', propertyId);
+        for (var i = 0; i < amenities.length; i++) {
+            if (amenities[i].checked) {
+                form.append('amenities[]', amenities[i].id);
+            }
+        }
+
+        PostRequest('/onlinestore/lib/edit-listing-process.php', form, function (response, error) {
+            if (error) {
+                alert(error);
+                return;
+            }
+
+            if (response.status) {
+                window.location.href = '/onlinestore/';
+            } else {
+                alert(response.message);
+                console.log(response);
+            }
+        });
+    }
+}
+function deleteListing(id) {
+    var form = new FormData();
+    form.append('id', id);
+
+    GetRequest('/onlinestore/lib/delete-listing-process.php', form, function (response, error) {
+        if (error) {
+            alert(error);
+            console.log(error);
+            return;
+        }
+
+        if (response.status) {
+            location.reload();
+        } else {
+            alert(response.message);
+        }
+    });
+}
 
 // Category Management
 function addCategory() {
     var name = document.getElementById('name').value;
-    var image = document.getElementById('imageInput').files[0];
+    var imageInput = document.getElementById('imageInput');
+    var image = null;
+
+    if (imageInput.files.length > 0) {
+        image = imageInput.files[0];
+    } else {
+        alert('Please select an image');
+        return;
+    }
 
     var form = new FormData();
     form.append('name', name);
     form.append('image', image);
 
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-            var response = req.responseText;
-            if (response == 'success') {
+    PostRequest('/onlinestore/lib/add-category-process.php', form, function (response, error) {
+        if (response) {
+            if (response.status) {
                 window.location.href = '/onlinestore/admin/category/list.php';
-            }else {
-                alert(response);
+            } else {
+                alert(response.message);
             }
+        } else {
+            alert(error);
         }
-    }
-
-    req.open('POST', '/onlinestore/lib/add-category-process.php', true);
-    req.send(form);
+    });
 }
 function editCategory() {
     var id = document.getElementById('id').value;
     var name = document.getElementById('name').value;
+    var imageInput = document.getElementById('imageInput');
 
     var form = new FormData();
     form.append('id', id);
     form.append('name', name);
 
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-            var response = req.responseText;
-            alert(response);
-            // if (response == 'success') {
-            //     window.location.href = '/onlinestore/';
-            // }
-        }
+    // Check if a new image has been selected
+    if (imageInput.files.length > 0) {
+        form.append('image', imageInput.files[0]);
     }
 
-    req.open('POST', '/onlinestore/lib/edit-category-process.php', true);
-    req.send(form);
+    PostRequest('/onlinestore/lib/edit-category-process.php', form, function (response, error) {
+        if (response) {
+            if (response.status) {
+                window.location.href = '/onlinestore/admin/category/list.php';
+            } else {
+                alert(response.message);
+            }
+        } else {
+            alert(error);
+        }
+    });
 }
 function deleteCategory(id) {
     var form = new FormData();
@@ -430,9 +522,10 @@ function deleteCategory(id) {
             return;
         }
 
-        if(response.status) {
+        if (response.status) {
             location.reload();
+        } else {
+            alert(response.message);
         }
-        alert(response.message);
     });
 }

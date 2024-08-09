@@ -22,7 +22,7 @@ if (empty($password) || empty($cPassword)) {
   echo json_encode([
     "message" => "Please resend a forgot password request",
     "status" => false,
-  ]);
+  ]); 
 } else {
   $rs = Database::search("SELECT * FROM `users` WHERE `vcode` = '$vcode'");
   if ($rs->num_rows == 0) {

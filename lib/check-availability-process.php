@@ -14,7 +14,7 @@ while ($row = $bookingsStmt->fetch_assoc()) {
 
 $isAvailable = true;
 
-foreach ($bookings as $booking) {
+foreach ($bookings as $booking) { 
   $existingCheckIn = $booking['checkIn'];
   $existingCheckOut = $booking['checkOut'];
 

@@ -21,7 +21,7 @@ $orderId = $_POST['orderId'];
 $BookingStmt = Database::iud("INSERT INTO `bookings` (`checkIn`,`checkOut`,`first_name`,`last_name`,`nic`,`contact`,`guests`,`email`,`special_requests`,`properties_id`,`total_price`,`order_id`) VALUES ('$checkIn','$checkOut','$firstName','$lastName','$nic','$contact','$guests','$email','$specialRequests','$propertyId','$totalPrice','$orderId')");
 
 
-// Prepare the response
+// Prepare the response 
 $response = [
     'message' => 'success',
 ];

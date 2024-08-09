@@ -22,7 +22,7 @@ $dateCount = $dateDifferenceObj->days;
 // Fetching the property details
 $propertyStmt = Database::search("SELECT * FROM `properties` WHERE `id` = '$propertyId'");
 $propertyData = $propertyStmt->fetch_assoc();
-
+ 
 // Convert value list string to array
 $images = explode(',', $propertyData['images']);
 

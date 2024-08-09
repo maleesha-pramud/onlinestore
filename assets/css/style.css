@@ -129,6 +129,7 @@ a {
 .circle-icon-container {
     height: 35px;
     width: 35px;
+    min-width: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -176,18 +177,6 @@ a {
 }
 
 
-/* Dashboard Styles */
-.content-wrapper {
-    max-width: 100vw;
-}
-
-.admin-sidebar {
-    position: sticky !important;
-    top: 0px;
-    height: 100vh;
-}
-
-
 /* Image Input */
 #file-input-div {
     height: 200px;
@@ -207,4 +196,81 @@ a {
     object-fit: cover;
     border: 2px dashed var(--midGray2);
     cursor: pointer;
+}
+
+.image-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.property-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+
+
+
+.content-wrapper {
+    max-width: 100vw;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.admin-sidebar {
+    position: sticky !important;
+    top: 0px;
+    height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        height: auto;
+        padding-bottom: 30px;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .content-wrapper section {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+
+.single-listing-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 767.98px) {
+    .single-listing-image-wrapper .col {
+        margin-bottom: 15px;
+    }
+
+    .single-listing-image-wrapper .row .col {
+        margin-bottom: 0;
+    }
+
+    .single-listing-image-wrapper .row .col img {
+        margin-bottom: 15px;
+    }
+
+    .booking-card {
+        margin-top: 20px;
+    }
 }

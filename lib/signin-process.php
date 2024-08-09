@@ -25,7 +25,7 @@ if (empty($email)) {
         "message" => "Password is required",
         "status" => false,
     ]);
-} else if (strlen($password) < 5) {
+} else if (strlen($password) < 5) { 
     echo json_encode([
         "message" => "Password is too short",
         "status" => false,

@@ -54,7 +54,7 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
     <section class="container mt-5">
         <div class="row g-4">
             <?php while ($property = $propertiesStmt->fetch_assoc()) { ?>
-                <div class="col-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <a href="./single-property.php?id=<?php echo $property['id'] ?>">
                         <div class="property-card rounded-4 position-relative">
                             <div class="owl-carousel property-carousel">
@@ -92,39 +92,41 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
 
 
     <section class="mt-5 bg-accent">
-        <div class="d-flex">
-            <div class="col d-flex align-items-center justify-content-center text-white text-center">
-                <div>
-                    <p class="fw-thin fs-2 m-0">FIND YOUR</p>
-                    <p class="fw-bold fs-1 m-0">DREAM STAY</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 d-flex align-items-center justify-content-center text-white text-center">
+                    <div class="pt-4 pt-lg-0">
+                        <p class="fw-thin fs-2 m-0">FIND YOUR</p>
+                        <p class="fw-bold fs-1 m-0">DREAM STAY</p>
 
-                    <div class="row mt-5">
-                        <!-- Phone Start -->
-                        <div class="col d-flex align-items-center gap-2">
-                            <div class="circle-icon-container">
-                                <i class="fa-solid fa-phone text-accent"></i>
+                        <div class="row mt-5">
+                            <!-- Phone Start -->
+                            <div class="col-12 col-md-6 d-flex align-items-center gap-2 mb-3 mb-md-0">
+                                <div class="circle-icon-container">
+                                    <i class="fa-solid fa-phone text-accent"></i>
+                                </div>
+                                <div>
+                                    <p class="m-0 fw-bold">+94-70-154-9092</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="m-0 fw-bold">+94-70-154-9092</p>
-                            </div>
-                        </div>
-                        <!-- Phone End -->
+                            <!-- Phone End -->
 
-                        <!-- Email Start -->
-                        <div class="col d-flex align-items-center gap-2">
-                            <div class="circle-icon-container">
-                                <i class="fa-solid fa-envelope-open-text text-accent"></i>
+                            <!-- Email Start -->
+                            <div class="col-12 col-md-6 d-flex align-items-center gap-2">
+                                <div class="circle-icon-container">
+                                    <i class="fa-solid fa-envelope-open-text text-accent"></i>
+                                </div>
+                                <div>
+                                    <p class="m-0 fw-bold">maleeshapramud9@gmail.com</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="m-0 fw-bold">maleeshapramud9@gmail.com</p>
-                            </div>
+                            <!-- Email End -->
                         </div>
-                        <!-- Email End -->
                     </div>
                 </div>
-            </div>
-            <div class="col p-5">
-                <img src="./assets/images/banner/banner1.png" alt="" class="img-fluid banner1" />
+                <div class="col-lg-6 p-5">
+                    <img src="./assets/images/banner/banner1.png" alt="" class="img-fluid banner1" />
+                </div>
             </div>
         </div>
     </section>
@@ -136,14 +138,20 @@ $propertiesStmt = Database::search("SELECT * FROM properties");
             $(".hero-slider").owlCarousel({
                 items: 1,
                 loop: true,
-                dots: false
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: 10000,
+                autoplayHoverPause: true
             });
         });
 
         $(".property-carousel").owlCarousel({
             items: 1,
             loop: true,
-            dots: true
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true
         });
     </script>
 </body>
