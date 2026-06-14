@@ -12,5 +12,5 @@ if (isset($_COOKIE['password'])) {
 }
 
 // Redirect to another page
-header('Location: /onlinestore');
+header('Location: /');
 exit;

@@ -1,5 +1,5 @@
 <?php
-$RootPath = '/onlinestore';
+$RootPath = '';
 ?>
 
 <script src="<?php echo $RootPath; ?>/assets/js/jquery.min.js"></script>

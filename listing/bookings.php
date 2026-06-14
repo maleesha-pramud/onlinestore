@@ -1,6 +1,6 @@
 <?php
 
-$RootPath = '/onlinestore';
+$RootPath = '/';
 
 include '../includes/connection.php';
 
@@ -21,7 +21,7 @@ include '../includes/connection.php';
 
   <?php
   if (!isset($userData['email'])) {
-    header('Location: /onlinestore/signin.php');
+    header('Location: /signin.php');
   }
 
   $userId = $userData['id'];

@@ -1,6 +1,6 @@
 <?php
 
-$RootPath = '/onlinestore';
+$RootPath = '/';
 
 include '../../includes/connection.php';
 
@@ -21,7 +21,7 @@ include '../../includes/connection.php';
 
   <?php
   if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
-    header('Location: /onlinestore/signin.php');
+    header('Location: /signin.php');
   }
 
   $categoriesStmt = Database::search("SELECT * FROM categories");
@@ -52,7 +52,7 @@ include '../../includes/connection.php';
                 <td><?php echo $category['name'] ?></td>
                 <td><?php echo $category['id'] ?></td>
                 <td class="text-end">
-                  <a href="/onlinestore/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-info text-white">Edit</a>
+                  <a href="/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-info text-white">Edit</a>
                   <div onclick="deleteCategory(<?php echo $category['id'] ?>)" class="btn btn-danger text-white">Delete</div>
                 </td>
               </tr>

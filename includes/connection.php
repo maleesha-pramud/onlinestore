@@ -5,7 +5,7 @@ class Database {
 
     public static function setUpConnection() {
         if (!isset(Database::$connection)) {
-            Database::$connection = new mysqli('localhost', 'root', 'maleesha@2005', 'online_store', 3306);
+            Database::$connection = new mysqli('host.docker.internal', 'root', 'maleesha@2005', 'online_store', 3306);
         }
     }
 

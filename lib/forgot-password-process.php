@@ -59,7 +59,7 @@ if (empty($email)) {
                             <h1 style="font-size: 25px; font-weight: bold; line-height: 45px;">Reset Your Password</h1>
                             <p style="margin-bottom: 25px;">You can reset your password by clicking this button</p>
                             <div>
-                                <a href="http://localhost/onlinestore/reset-password.php?code=' . $vcode . '" style="display: inline-block; background-color: blue; color: white; border-radius: 8px; padding: 15px; text-decoration: none;">
+                                <a href="http://localhost/reset-password.php?code=' . $vcode . '" style="display: inline-block; background-color: blue; color: white; border-radius: 8px; padding: 15px; text-decoration: none;">
                                     <span>Reset Password</span>
                                 </a>
                             </div>

@@ -6,7 +6,7 @@ include './includes/connection.php';
 if (isset($_GET['id'])) {
     $propertyId = $_GET['id'];
 } else {
-    header('location: /onlinestore');
+    header('location: /');
     exit();
 }
 

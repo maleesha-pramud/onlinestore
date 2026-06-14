@@ -1,6 +1,6 @@
 <?php
 
-$RootPath = '/onlinestore';
+$RootPath = '/';
 
 include '../../includes/connection.php';
 
@@ -25,7 +25,7 @@ $category = Database::search($categoryQuery)->fetch_assoc();
 
   <?php
   if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
-    header('Location: /onlinestore/signin.php');
+    header('Location: /signin.php');
   }
   ?>
 

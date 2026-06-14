@@ -1,6 +1,6 @@
 <?php
 
-$RootPath = '/onlinestore';
+$RootPath = '/';
 
 include '../includes/connection.php';
 
@@ -23,7 +23,7 @@ include '../includes/connection.php';
 
   <?php
   if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 2) {
-    header('Location: /onlinestore/signin.php');
+    header('Location: /signin.php');
   }
 
   $propertyCount = Database::search("SELECT * FROM properties");

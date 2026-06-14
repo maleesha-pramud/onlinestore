@@ -1,6 +1,6 @@
 <?php
 
-$RootPath = '/onlinestore';
+$RootPath = '/';
 
 include '../includes/connection.php';
 
@@ -38,7 +38,7 @@ $images = explode(',', $property['images']);
 
     <?php
     if (!isset($userData['email'])) {
-        header('Location: /onlinestore/signin.php');
+        header('Location: /signin.php');
     }
     ?>
 

@@ -106,7 +106,7 @@ function signIn() {
                 document.cookie = "email=" + email + ";" + expires;
                 document.cookie = "password=" + password + ";" + expires;
             }
-            window.location.href = '/onlinestore/';
+            window.location.href = '/';
         } else {
             document.getElementById('errorMsg2').innerHTML = response.message;
             document.getElementById('errorMsgDiv2').classList.remove('d-none');
@@ -149,7 +149,7 @@ function resetPassword() {
         }
 
         if (response.status) {
-            window.location.href = '/onlinestore/signin.php';
+            window.location.href = '/signin.php';
         } else {
             alert(response.message);
         }
@@ -178,14 +178,14 @@ function checkAvailability(listingId) {
         if (req.readyState == 4 && req.status == 200) {
             var response = req.responseText;
             if (response === 'success') {
-                window.location.href = '/onlinestore/booking.php?id=' + listingId + '&checkIn=' + checkIn + '&checkOut=' + checkOut;
+                window.location.href = '/booking.php?id=' + listingId + '&checkIn=' + checkIn + '&checkOut=' + checkOut;
             } else {
                 alert(response);
             }
         }
     }
 
-    req.open('POST', '/onlinestore/lib/check-availability-process.php', true);
+    req.open('POST', '/lib/check-availability-process.php', true);
     req.send(form);
 }
 
@@ -236,7 +236,7 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
     formData.append('propertyId', propertyId);
     formData.append('totalPrice', totalPrice);
 
-    PostRequest('/onlinestore/lib/checkout-process.php', formData, function (response, error) {
+    PostRequest('/lib/checkout-process.php', formData, function (response, error) {
         if (error) {
             alert(error);
             console.log(error);
@@ -289,7 +289,7 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
 }
 
 function booking(formData) {
-    PostRequest('/onlinestore/lib/booking-process.php', formData, function (response, error) {
+    PostRequest('/lib/booking-process.php', formData, function (response, error) {
         if (error) {
             alert(error);
             console.log(error);
@@ -297,7 +297,7 @@ function booking(formData) {
         }
 
         if (response.status) {
-            window.location.href = '/onlinestore/';
+            window.location.href = '/';
         } else {
             alert(response.message);
         }
@@ -363,14 +363,14 @@ function addListing(userId) {
             }
         }
 
-        PostRequest('/onlinestore/lib/add-listing-process.php', form, function (response, error) {
+        PostRequest('/lib/add-listing-process.php', form, function (response, error) {
             if (error) {
                 alert(error);
                 return;
             }
 
             if (response.status) {
-                window.location.href = '/onlinestore/';
+                window.location.href = '/';
             } else {
                 alert(response.message);
                 console.log(response);
@@ -427,14 +427,14 @@ function editListing(propertyId) {
             }
         }
 
-        PostRequest('/onlinestore/lib/edit-listing-process.php', form, function (response, error) {
+        PostRequest('/lib/edit-listing-process.php', form, function (response, error) {
             if (error) {
                 alert(error);
                 return;
             }
 
             if (response.status) {
-                window.location.href = '/onlinestore/';
+                window.location.href = '/';
             } else {
                 alert(response.message);
                 console.log(response);
@@ -446,7 +446,7 @@ function deleteListing(id) {
     var form = new FormData();
     form.append('id', id);
 
-    GetRequest('/onlinestore/lib/delete-listing-process.php', form, function (response, error) {
+    GetRequest('/lib/delete-listing-process.php', form, function (response, error) {
         if (error) {
             alert(error);
             console.log(error);
@@ -478,10 +478,10 @@ function addCategory() {
     form.append('name', name);
     form.append('image', image);
 
-    PostRequest('/onlinestore/lib/add-category-process.php', form, function (response, error) {
+    PostRequest('/lib/add-category-process.php', form, function (response, error) {
         if (response) {
             if (response.status) {
-                window.location.href = '/onlinestore/admin/category/list.php';
+                window.location.href = '/admin/category/list.php';
             } else {
                 alert(response.message);
             }
@@ -504,10 +504,10 @@ function editCategory() {
         form.append('image', imageInput.files[0]);
     }
 
-    PostRequest('/onlinestore/lib/edit-category-process.php', form, function (response, error) {
+    PostRequest('/lib/edit-category-process.php', form, function (response, error) {
         if (response) {
             if (response.status) {
-                window.location.href = '/onlinestore/admin/category/list.php';
+                window.location.href = '/admin/category/list.php';
             } else {
                 alert(response.message);
             }
@@ -520,7 +520,7 @@ function deleteCategory(id) {
     var form = new FormData();
     form.append('id', id);
 
-    GetRequest('/onlinestore/lib/delete-category-process.php', form, function (response, error) {
+    GetRequest('/lib/delete-category-process.php', form, function (response, error) {
         if (error) {
             alert(error);
             console.log(error);

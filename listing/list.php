@@ -1,6 +1,6 @@
 <?php
 
-$RootPath = '/onlinestore';
+$RootPath = '/';
 
 include '../includes/connection.php';
 
@@ -21,7 +21,7 @@ include '../includes/connection.php';
 
   <?php
   if (!isset($userData['email'])) {
-    header('Location: /onlinestore/signin.php');
+    header('Location: /signin.php');
   }
 
   $userId = $userData['id'];
@@ -73,7 +73,7 @@ include '../includes/connection.php';
                 <td><?php echo $property['bathrooms'] ?></td>
                 <td><?php echo number_format($property['base_price'], 2) ?></td>
                 <td class="text-end">
-                  <a href="/onlinestore/listing/edit.php?id=<?php echo $property['id'] ?>" class="btn btn-info text-white">Edit</a>
+                  <a href="/listing/edit.php?id=<?php echo $property['id'] ?>" class="btn btn-info text-white">Edit</a>
                   <button onclick="deleteListing(<?php echo $property['id']; ?>)" class="btn btn-danger text-white">Delete</button>
                 </td>
               </tr>

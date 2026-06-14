@@ -1,7 +1,7 @@
 <?php
 $currentPath = $_SERVER['REQUEST_URI'];
-$targetPathProperty = '/onlinestore/listing/add.php';
-$targetPathsCategory = ['/onlinestore/admin/category/add.php', '/onlinestore/admin/category/list.php'];
+$targetPathProperty = '/listing/add.php';
+$targetPathsCategory = ['/admin/category/add.php', '/admin/category/list.php'];
 $isPropertyPath = ($currentPath === $targetPathProperty);
 $isCategoryPath = in_array($currentPath, $targetPathsCategory);
 ?>

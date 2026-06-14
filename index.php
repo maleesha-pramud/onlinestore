@@ -1,4 +1,5 @@
 <?php
+session_start();
 include './includes/connection.php';
 
 $propertiesStmt = Database::search("SELECT * FROM properties");

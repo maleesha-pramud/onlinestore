@@ -1,5 +1,5 @@
 <?php 
-  $RootPath = '/onlinestore';
+  $RootPath = '';
 ?>
 
 <meta charset="UTF-8">
