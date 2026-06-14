@@ -1,108 +1,88 @@
 <?php
-
-$RootPath = '/';
-
+session_start();
 include '../includes/connection.php';
 
+// Auth check
+if (!isset($_SESSION['email'])) {
+    header('Location: /signin.php');
+    exit();
+} else {
+    $email = $_SESSION['email'];
+    $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
+    $userData = $userStmt->fetch_assoc();
+}
+
+$userId = $userData['id'];
+$userType = $userData['user_type_id'];
+
+$bookingsStmt = null;
+if ($userType == 1) { // Admin
+    $bookingsStmt = Database::search("SELECT * FROM bookings ORDER BY checkIn DESC");
+} else { // Producer
+    $bookingsStmt = Database::search("SELECT b.* FROM bookings b JOIN properties p ON b.properties_id = p.id WHERE p.users_id = $userId ORDER BY b.checkIn DESC");
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <?php include '../components/head.php'; ?>
+    <?php include '../components/head.php'; ?>
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
 </head>
-
 <body>
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <?php 
+            if ($userType == 1) {
+                include '../components/AdminSidebar.php';
+            } else {
+                include '../components/ProducerSidebar.php';
+            }
+            ?>
+        </aside>
+        <main class="dashboard-main">
+            <div class="page-header">
+                <h1>Manage Bookings</h1>
+                <p class="text-secondary">View and manage reservations for your properties.</p>
+            </div>
 
-  <!-- Navigation Bar Start -->
-  <?php include '../components/NavigationBar.php'; ?>
-  <!-- Navigation Bar End -->
-
-  <?php
-  if (!isset($userData['email'])) {
-    header('Location: /signin.php');
-  }
-
-  $userId = $userData['id'];
-
-  $bookingsStmt = null;
-  if ($userId == 1) {
-    $bookingsStmt = Database::search("SELECT * FROM bookings");
-  } else {
-    $bookingsStmt = Database::search("SELECT b.*, p.users_id FROM bookings b, properties p WHERE b.properties_id = p.id AND p.users_id = $userId");
-  }
-
-  ?>
-
-  <section class="d-flex content-wrapper">
-
-    <?php
-    if ($userId == 1) {
-      include '../components/AdminSidebar.php';
-    } else {
-      include '../components/ProducerSidebar.php';
-    }
-    ?>
-
-    <!-- Hero section Start  -->
-    <section class="mt-3 px-3 px-lg-5 col-10">
-
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">User Name</th>
-              <th scope="col">Check-In</th>
-              <th scope="col">Check-Out</th>
-              <th scope="col">Guests</th>
-              <th scope="col">Contact</th>
-              <th scope="col">Total Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php while ($booking = $bookingsStmt->fetch_assoc()) { ?>
-              <tr>
-                <th scope="row">1</th>
-                <td><?php echo ($booking['first_name'] . ' ' . $booking['last_name']) ?></td>
-                <td><?php echo $booking['checkIn'] ?></td>
-                <td><?php echo $booking['checkOut'] ?></td>
-                <td><?php echo $booking['guests'] ?></td>
-                <td><?php echo $booking['contact'] ?></td>
-                <td><?php echo number_format($booking['total_price'], 2) ?></td>
-              </tr>
-            <?php } ?>
-          </tbody>
-        </table>
-      </div>
-
-    </section>
-    <!-- Hero section End  -->
-  </section>
-
-  <?php include '../components/script.php'; ?>
-  <script src="../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>
-  <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-
-
-  <script>
-    $(document).ready(function() {
-      $(".hero-slider").owlCarousel({
-        items: 1,
-        loop: true,
-        dots: false
-      });
-
-      $('.description').richText();
-    });
-
-    $(".property-carousel").owlCarousel({
-      items: 1,
-      loop: true,
-      dots: true
-    });
-  </script>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Guest Name</th>
+                            <th>Dates</th>
+                            <th>Guests</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($bookingsStmt->num_rows > 0) {
+                            while ($booking = $bookingsStmt->fetch_assoc()) { ?>
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold"><?php echo htmlspecialchars($booking['first_name'] . ' ' . $booking['last_name']); ?></div>
+                                        <div class="small text-secondary"><?php echo htmlspecialchars($booking['email']); ?></div>
+                                    </td>
+                                    <td>
+                                        <div><?php echo date("M d", strtotime($booking['checkIn'])); ?> - <?php echo date("M d, Y", strtotime($booking['checkOut'])); ?></div>
+                                    </td>
+                                    <td><?php echo $booking['guests']; ?></td>
+                                    <td class="fw-bold">$<?php echo number_format($booking['total_price'], 2); ?></td>
+                                    <td><span class="badge bg-success-soft text-success">Confirmed</span></td>
+                                </tr>
+                            <?php }
+                        } else { ?>
+                            <tr>
+                                <td colspan="5" class="text-center py-4">No bookings found.</td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <?php include '../components/script.php'; ?>
 </body>
-
 </html>

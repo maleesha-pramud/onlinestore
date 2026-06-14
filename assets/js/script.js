@@ -316,7 +316,7 @@ function addListing(userId) {
     var beds = document.getElementById('beds').value;
     var bathrooms = document.getElementById('bathrooms').value;
     var images = document.getElementById('images').files;
-    var amenities = document.getElementsByName('amenities');
+    var amenities = document.getElementsByName('amenities[]');
     var basePrice = document.getElementById('basePrice').value;
 
     // Validate the values before appending to FormData
@@ -336,10 +336,8 @@ function addListing(userId) {
         alert('Please enter the number of beds');
     } else if (!bathrooms) {
         alert('Please enter the number of bathrooms');
-    } else if (images.length < 3) {
-        alert('Please select three images');
-    } else if (images.length > 3) {
-        alert('Please select only three images');
+    } else if (images.length === 0) {
+        alert('Please select at least one image');
     } else if (!basePrice) {
         alert('Please enter the base price');
     } else {
@@ -359,7 +357,7 @@ function addListing(userId) {
         }
         for (var i = 0; i < amenities.length; i++) {
             if (amenities[i].checked) {
-                form.append('amenities[]', amenities[i].id);
+                form.append('amenities[]', amenities[i].value);
             }
         }
 
@@ -387,8 +385,10 @@ function editListing(propertyId) {
     var bedrooms = document.getElementById('bedrooms').value;
     var beds = document.getElementById('beds').value;
     var bathrooms = document.getElementById('bathrooms').value;
-    var amenities = document.getElementsByName('amenities');
+    var amenities = document.getElementsByName('amenities[]');
     var basePrice = document.getElementById('basePrice').value;
+    var keptImages = document.getElementById('kept-images').value;
+    var newImages = document.getElementById('images').files;
 
     // Validate the values before appending to FormData
     if (!title) {
@@ -409,6 +409,8 @@ function editListing(propertyId) {
         alert('Please enter the number of bathrooms');
     } else if (!basePrice) {
         alert('Please enter the base price');
+    } else if (!keptImages && newImages.length === 0) {
+        alert('Please select at least one image');
     } else {
         var form = new FormData();
         form.append('title', title);
@@ -421,9 +423,15 @@ function editListing(propertyId) {
         form.append('bathrooms', bathrooms);
         form.append('basePrice', basePrice);
         form.append('propertyId', propertyId);
+        form.append('keptImages', keptImages);
+        
+        for (var i = 0; i < newImages.length; i++) {
+            form.append('newImages[]', newImages[i]);
+        }
+        
         for (var i = 0; i < amenities.length; i++) {
             if (amenities[i].checked) {
-                form.append('amenities[]', amenities[i].id);
+                form.append('amenities[]', amenities[i].value);
             }
         }
 
@@ -434,13 +442,25 @@ function editListing(propertyId) {
             }
 
             if (response.status) {
-                window.location.href = '/';
+                window.location.href = '/listing/list.php';
             } else {
                 alert(response.message);
                 console.log(response);
             }
         });
     }
+}
+
+function removeExistingImage(btn) {
+    const wrapper = btn.closest('.current-image-wrapper');
+    const imageName = wrapper.getAttribute('data-image-name');
+    const keptImagesInput = document.getElementById('kept-images');
+    
+    let images = keptImagesInput.value.split(',');
+    images = images.filter(img => img !== imageName && img !== "");
+    
+    keptImagesInput.value = images.join(',');
+    wrapper.remove();
 }
 function deleteListing(id) {
     var form = new FormData();

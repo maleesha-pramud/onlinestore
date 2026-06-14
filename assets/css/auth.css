@@ -1,0 +1,32 @@
+.auth-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header .brand {
+    font-size: 1.8rem;
+    font-weight: var(--font-bold);
+    color: var(--primary-text-color);
+}
+
+.auth-header p {
+    color: var(--secondary-text-color);
+    font-size: 1rem;
+}

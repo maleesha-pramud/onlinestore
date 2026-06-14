@@ -1,113 +1,91 @@
 <?php
-
-$RootPath = '/';
-
+session_start();
 include '../includes/connection.php';
 
+// Auth check
+if (!isset($_SESSION['email'])) {
+    header('Location: /signin.php');
+    exit();
+} else {
+    $email = $_SESSION['email'];
+    $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
+    $userData = $userStmt->fetch_assoc();
+}
+
+$userId = $userData['id'];
+$userType = $userData['user_type_id'];
+
+$propertiesStmt = null;
+if ($userType == 1) { // Admin
+    $propertiesStmt = Database::search("SELECT * FROM properties");
+} else { // Producer
+    $propertiesStmt = Database::search("SELECT * FROM properties WHERE `users_id` = $userId");
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <?php include '../components/head.php'; ?>
+    <?php include '../components/head.php'; ?>
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
 </head>
-
 <body>
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <?php 
+            if ($userType == 1) {
+                include '../components/AdminSidebar.php';
+            } else {
+                include '../components/ProducerSidebar.php';
+            }
+            ?>
+        </aside>
+        <main class="dashboard-main">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <h1>My Properties</h1>
+                <a href="/listing/add.php" class="btn btn-primary">Add New Property</a>
+            </div>
 
-  <!-- Navigation Bar Start -->
-  <?php include '../components/NavigationBar.php'; ?>
-  <!-- Navigation Bar End -->
-
-  <?php
-  if (!isset($userData['email'])) {
-    header('Location: /signin.php');
-  }
-
-  $userId = $userData['id'];
-
-  $propertiesStmt = null;
-  if ($userId == 1) {
-    $propertiesStmt = Database::search("SELECT * FROM properties");
-  } else {
-    $propertiesStmt = Database::search("SELECT * FROM properties WHERE `users_id` = $userId");
-  }
-
-  ?>
-
-  <section class="d-flex content-wrapper">
-
-    <?php
-    if ($userId == 1) {
-      include '../components/AdminSidebar.php';
-    } else {
-      include '../components/ProducerSidebar.php';
-    }
-    ?>
-
-    <!-- Hero section Start  -->
-    <section class="mt-3 px-3 px-lg-5 col-10">
-
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Property title</th>
-              <th scope="col">Guests</th>
-              <th scope="col">Bedrooms</th>
-              <th scope="col">Beds</th>
-              <th scope="col">Bathrooms</th>
-              <th scope="col">Base Price (LKR)</th>
-              <th scope="col" class="text-end">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php while ($property = $propertiesStmt->fetch_assoc()) { ?>
-              <tr>
-                <th scope="row">1</th>
-                <td><?php echo $property['title'] ?></td>
-                <td><?php echo $property['guests'] ?></td>
-                <td><?php echo $property['bedrooms'] ?></td>
-                <td><?php echo $property['beds'] ?></td>
-                <td><?php echo $property['bathrooms'] ?></td>
-                <td><?php echo number_format($property['base_price'], 2) ?></td>
-                <td class="text-end">
-                  <a href="/listing/edit.php?id=<?php echo $property['id'] ?>" class="btn btn-info text-white">Edit</a>
-                  <button onclick="deleteListing(<?php echo $property['id']; ?>)" class="btn btn-danger text-white">Delete</button>
-                </td>
-              </tr>
-            <?php } ?>
-          </tbody>
-        </table>
-      </div>
-
-    </section>
-    <!-- Hero section End  -->
-  </section>
-
-  <?php include '../components/script.php'; ?>
-  <script src="../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>
-  <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-
-
-  <script>
-    $(document).ready(function() {
-      $(".hero-slider").owlCarousel({
-        items: 1,
-        loop: true,
-        dots: false
-      });
-
-      $('.description').richText();
-    });
-
-    $(".property-carousel").owlCarousel({
-      items: 1,
-      loop: true,
-      dots: true
-    });
-  </script>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($propertiesStmt->num_rows > 0) {
+                            while ($property = $propertiesStmt->fetch_assoc()) { ?>
+                                <tr>
+                                    <td><?php echo $property['title']; ?></td>
+                                    <td>
+                                        <?php
+                                        $categoryId = $property['categories_id'];
+                                        $categoryStmt = Database::search('SELECT name FROM categories WHERE id = ' . $categoryId);
+                                        $category = $categoryStmt->fetch_assoc();
+                                        echo $category['name'];
+                                        ?>
+                                    </td>
+                                    <td>$<?php echo number_format($property['base_price']); ?> / night</td>
+                                    <td class="action-links">
+                                        <a href="/listing/edit.php?id=<?php echo $property['id']; ?>">Edit</a>
+                                        <a href="#" onclick="deleteListing(<?php echo $property['id']; ?>)" class="text-danger">Delete</a>
+                                    </td>
+                                </tr>
+                            <?php }
+                        } else { ?>
+                            <tr>
+                                <td colspan="4" class="text-center">No properties found.</td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <?php include '../components/script.php'; ?>
 </body>
-
 </html>

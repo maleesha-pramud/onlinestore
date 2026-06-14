@@ -1,0 +1,80 @@
+.property-header h1 {
+    font-size: 2.25rem;
+    font-weight: var(--font-bold);
+}
+
+.property-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+}
+
+.image-gallery {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.5rem;
+    height: 450px;
+    margin-top: 1.5rem;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery-item {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.gallery-item:first-child {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.3s ease;
+}
+
+.gallery-item:hover img {
+    filter: brightness(0.8);
+}
+
+#btn-show-all {
+    z-index: 10;
+    border-radius: 8px;
+    padding: 6px 15px;
+}
+
+#btn-show-all:hover {
+    background-color: #f7f7f7;
+}
+
+.property-details .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+}
+
+.booking-card {
+    padding: 1.5rem;
+    position: sticky;
+    top: 100px;
+}

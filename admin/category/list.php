@@ -1,8 +1,22 @@
 <?php
+session_start();
+include '../../includes/connection.php';
+
+// Auth check
+if (!isset($_SESSION['email'])) {
+  header('Location: /signin.php');
+  exit();
+} else {
+  $email = $_SESSION['email'];
+  $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
+  $userData = $userStmt->fetch_assoc();
+  if ($userData['user_type_id'] != 1) {
+    header('Location: /index.php');
+    exit();
+  }
+}
 
 $RootPath = '/';
-
-include '../../includes/connection.php';
 
 ?>
 
@@ -11,59 +25,72 @@ include '../../includes/connection.php';
 
 <head>
   <?php include '../../components/head.php'; ?>
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
 </head>
 
 <body>
 
-  <!-- Navigation Bar Start -->
-  <?php include '../../components/NavigationBar.php'; ?>
-  <!-- Navigation Bar End -->
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <?php include '../../components/AdminSidebar.php'; ?>
+    </aside>
 
-  <?php
-  if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
-    header('Location: /signin.php');
-  }
+    <main class="dashboard-main">
+      <header class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="mb-1">Category Management</h2>
+          <p class="text-muted">Manage your property categories</p>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+          <a href="/admin/category/add.php" class="btn btn-primary">
+            <i class="fa-solid fa-plus me-2"></i>Add New Category
+          </a>
+        </div>
+      </header>
 
-  $categoriesStmt = Database::search("SELECT * FROM categories");
+      <?php
+      $categoriesStmt = Database::search("SELECT * FROM categories");
+      ?>
 
-  ?>
-
-  <section class="d-flex content-wrapper">
-
-    <?php include '../../components/AdminSidebar.php'; ?>
-
-    <!-- Hero section Start  -->
-    <section class="mt-3 px-3 px-lg-5 col-10">
-
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Category Name</th>
-              <th scope="col">Category ID</th>
-              <th scope="col" class="text-end">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php while ($category = $categoriesStmt->fetch_assoc()) { ?>
-              <tr>
-                <th scope="row">1</th>
-                <td><?php echo $category['name'] ?></td>
-                <td><?php echo $category['id'] ?></td>
-                <td class="text-end">
-                  <a href="/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-info text-white">Edit</a>
-                  <div onclick="deleteCategory(<?php echo $category['id'] ?>)" class="btn btn-danger text-white">Delete</div>
-                </td>
-              </tr>
-            <?php } ?>
-          </tbody>
-        </table>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Category Name</th>
+                  <th scope="col">Category ID</th>
+                  <th scope="col" class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php 
+                $count = 1;
+                while ($category = $categoriesStmt->fetch_assoc()) { ?>
+                  <tr>
+                    <th scope="row"><?php echo $count++; ?></th>
+                    <td><?php echo $category['name'] ?></td>
+                    <td><span class="badge bg-light text-dark">#<?php echo $category['id'] ?></span></td>
+                    <td class="text-end">
+                      <div class="d-flex justify-content-end gap-2">
+                        <a href="/admin/category/edit.php?id=<?php echo $category['id'] ?>" class="btn btn-sm btn-outline-info">
+                          <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <button onclick="deleteCategory(<?php echo $category['id'] ?>)" class="btn btn-sm btn-outline-danger">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <?php } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-
-    </section>
-    <!-- Hero section End  -->
-  </section>
+    </main>
+  </div>
 
   <?php include '../../components/script.php'; ?>
   <script src="../../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>

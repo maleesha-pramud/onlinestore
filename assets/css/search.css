@@ -1,0 +1,37 @@
+.search-layout {
+    display: flex;
+    gap: 2rem;
+}
+
+.filter-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.filter-card {
+    padding: 1.5rem;
+    position: sticky;
+    top: 100px; /* Offset for the sticky navbar */
+}
+
+.filter-group {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.5rem;
+}
+
+.filter-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.filter-title {
+    font-weight: var(--font-semibold);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.search-results {
+    flex-grow: 1;
+}

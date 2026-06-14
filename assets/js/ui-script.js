@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   // Toggle the popup display
   window.navbarMenuToggle = function() {
-    popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+    if (popup) {
+      popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+    }
   }
 
   // Hide the popup when clicking outside
   window.onclick = function(event) {
-    if (!li.contains(event.target) && popup.style.display === 'block') {
+    if (li && popup && !li.contains(event.target) && popup.style.display === 'block') {
       popup.style.display = 'none';
     }
   }

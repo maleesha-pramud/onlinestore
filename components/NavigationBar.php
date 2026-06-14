@@ -1,53 +1,56 @@
 <?php
-
 if (isset($_SESSION['email'])) {
   $email = $_SESSION['email'];
   $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
   $userData = $userStmt->fetch_assoc();
 }
-
-$categoriesStmt = Database::search("SELECT * FROM `categories`");
-
 ?>
 
-<nav class="navbar bg-midGray navbar-expand-lg navbar-light justify-content-between align-items-center px-5">
-  <a class="navbar-brand" href="/index.php">ApeBordima.LK</a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-      <?php while ($category = $categoriesStmt->fetch_assoc()) { ?>
-        <li class="nav-item">
-          <a class="nav-link" href="/search.php?id=<?php echo $category['id'] ?>"><?php echo $category['name'] ?></a>
-        </li>
-      <?php } ?>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fa-regular fa-user"></i>
-          <i class="fa-solid fa-bars"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <?php
-          if (isset($userData['user_type_id'])) {
-            if ($userData['user_type_id'] != 3) {
-              if ($userData['user_type_id'] == 1) {
-                echo '<li><a class="dropdown-item" href="/admin/dashboard.php">Dashboard</a></li>';
-              } else {
-                echo '<li><a class="dropdown-item" href="/producer/dashboard.php">Dashboard</a></li>';
-              }
-            }
-          ?>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Account</a></li>
-            <li><a class="dropdown-item" href="/logout.php">Logout</a></li>
-          <?php
-          } else {
-            echo '<li><a class="dropdown-item" href="/signin.php">Log In</a></li>';
-          }
-          ?>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
+<header class="main-header">
+    <div class="container">
+        <nav class="main-nav">
+            <a class="nav-brand" href="/index.php">
+                ApeBordima.LK
+            </a>
+
+            <form action="/search.php" method="GET" class="nav-search">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" name="q" placeholder="Search destinations, properties..." class="search-input" value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+
+            <div class="nav-user-menu">
+                <?php if (!isset($userData['user_type_id']) || $userData['user_type_id'] == 3) { ?>
+                    <a href="/signup.php" class="nav-link-host">Become a host</a>
+                <?php } ?>
+                <div class="nav-dropdown">
+                    <button class="dropdown-toggle-btn">
+                        <i class="fa-solid fa-bars"></i>
+                        <i class="fa-solid fa-user-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <?php
+                        if (isset($userData['user_type_id'])) {
+                            if ($userData['user_type_id'] == 1) {
+                                echo '<li><a class="dropdown-item bold" href="/admin/dashboard.php">Admin Dashboard</a></li>';
+                                echo '<li><a class="dropdown-item" href="/listing/bookings.php">Manage Bookings</a></li>';
+                            } else if ($userData['user_type_id'] == 2) {
+                                echo '<li><a class="dropdown-item bold" href="/producer/dashboard.php">Host Dashboard</a></li>';
+                                echo '<li><a class="dropdown-item" href="/listing/bookings.php">Manage Bookings</a></li>';
+                            } else {
+                                echo '<li><a class="dropdown-item" href="/my-bookings.php">My Bookings</a></li>';
+                            }
+                            echo '<li><a class="dropdown-item" href="#">Account Settings</a></li>';
+                            echo '<div class="dropdown-divider"></div>';
+                            echo '<li><a class="dropdown-item" href="/logout.php">Log Out</a></li>';
+                        } else {
+                            echo '<li><a class="dropdown-item bold" href="/signin.php">Log In</a></li>';
+                            echo '<li><a class="dropdown-item" href="/signup.php">Sign Up</a></li>';
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

@@ -1,97 +1,111 @@
 <?php
-
-$RootPath = '/';
-
+session_start();
 include '../includes/connection.php';
 
+// Auth check
+if (!isset($_SESSION['email'])) {
+    header('Location: /signin.php');
+    exit();
+} else {
+    $email = $_SESSION['email'];
+    $userStmt = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
+    $userData = $userStmt->fetch_assoc();
+    if ($userData['user_type_id'] != 1) {
+        header('Location: /index.php');
+        exit();
+    }
+}
+
+// Data fetching
+$propertyCount = Database::search("SELECT * FROM properties")->num_rows;
+$userCount = Database::search("SELECT * FROM users WHERE user_type_id = 3")->num_rows;
+$producerCount = Database::search("SELECT * FROM users WHERE user_type_id = 2")->num_rows;
+$bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <?php include '../components/head.php'; ?>
-  <link rel="stylesheet" href="../assets/libraries/RichTextEditor/richtext.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <?php include '../components/head.php'; ?>
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
 </head>
-
 <body>
-
-  <!-- Navigation Bar Start -->
-  <?php include '../components/NavigationBar.php'; ?>
-  <!-- Navigation Bar End -->
-
-  <?php
-  if (!isset($userData['user_type_id']) || $userData['user_type_id'] != 1) {
-    header('Location: /signin.php');
-  }
-
-  $propertyCount = Database::search("SELECT * FROM properties");
-  $userCount = Database::search("SELECT * FROM users");
-  ?>
-
-  <section class="d-flex flex-column flex-md-row content-wrapper">
-
-    <?php include '../components/AdminSidebar.php'; ?>
-
-    <div class="col container mt-4 flex-grow-1">
-      <div class="row">
-        <div class="col-12 mb-3">
-          <div class="card border-0">
-            <div class="d-flex flex-column flex-md-row gap-4 text-white">
-              <div class="card-body bg-success">
-                <h5 class="card-title">Active Properties</h5>
-                <p class="card-text"><?php echo $propertyCount->num_rows; ?></p>
-              </div>
-
-              <div class="card-body bg-danger">
-                <h5 class="card-title">Inactive Properties</h5>
-                <p class="card-text"><?php echo $propertyCount->num_rows; ?></p>
-              </div>
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <?php include '../components/AdminSidebar.php'; ?>
+        </aside>
+        <main class="dashboard-main">
+            <div class="page-header">
+                <h1>Admin Dashboard</h1>
+                <p class="text-secondary">Welcome back, <?php echo $userData['fname']; ?>!</p>
             </div>
-          </div>
-        </div>
-        <div class="col-12 mb-3">
-          <div class="card border-0">
-            <div class="d-flex flex-column flex-md-row gap-4 text-white">
-              <div class="card-body bg-secondary">
-                <h5 class="card-title">Guests Count</h5>
-                <p class="card-text"><?php echo $userCount->num_rows; ?></p>
-              </div>
 
-              <div class="card-body bg-primary">
-                <h5 class="card-title">Suppliers Count</h5>
-                <p class="card-text"><?php echo $userCount->num_rows; ?></p>
-              </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card h-100">
+                        <h3 class="stat-title">Total Properties</h3>
+                        <p class="stat-value"><?php echo $propertyCount; ?></p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card h-100">
+                        <h3 class="stat-title">Total Bookings</h3>
+                        <p class="stat-value"><?php echo $bookingCount; ?></p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card h-100">
+                        <h3 class="stat-title">Registered Users</h3>
+                        <p class="stat-value"><?php echo $userCount; ?></p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card h-100">
+                        <h3 class="stat-title">Property Hosts</h3>
+                        <p class="stat-value"><?php echo $producerCount; ?></p>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
+
+            <div class="mt-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                     <h2 class="section-title mb-0">Recent Bookings</h2>
+                     <a href="#" class="btn btn-primary">View All</a>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Property ID</th>
+                                <th>Total Price</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example Row -->
+                            <tr>
+                                <td>#12345</td>
+                                <td>John Doe</td>
+                                <td>PROP56</td>
+                                <td>$350.00</td>
+                                <td><span class="badge bg-success-soft text-success">Confirmed</span></td>
+                            </tr>
+                             <tr>
+                                <td>#12346</td>
+                                <td>Jane Smith</td>
+                                <td>PROP78</td>
+                                <td>$500.00</td>
+                                <td><span class="badge bg-warning-soft text-warning">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
     </div>
-
-  </section>
-
-  <?php include '../components/script.php'; ?>
-  <script src="../assets/libraries/RichTextEditor/jquery.richtext.min.js"></script>
-  <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-
-  <script>
-    $(document).ready(function() {
-      $(".hero-slider").owlCarousel({
-        items: 1,
-        loop: true,
-        dots: false
-      });
-
-      $('.description').richText();
-    });
-
-    $(".property-carousel").owlCarousel({
-      items: 1,
-      loop: true,
-      dots: true
-    });
-  </script>
+    <?php include '../components/script.php'; ?>
 </body>
-
 </html>
