@@ -73,7 +73,7 @@ $bookingCount = Database::search("SELECT b.* FROM bookings b JOIN properties p O
                             <!-- Example Row -->
                             <tr>
                                 <td>Waterside Apartment</td>
-                                <td>$250.00 / night</td>
+                                <td>LKR 250.00 / night</td>
                                 <td><span class="badge bg-success-soft text-success">Active</span></td>
                                 <td class="action-links">
                                     <a href="#">Edit</a>
@@ -82,7 +82,7 @@ $bookingCount = Database::search("SELECT b.* FROM bookings b JOIN properties p O
                             </tr>
                              <tr>
                                 <td>Ebony Suite</td>
-                                <td>$400.00 / night</td>
+                                <td>LKR 400.00 / night</td>
                                 <td><span class="badge bg-warning-soft text-warning">Pending Review</span></td>
                                 <td class="action-links">
                                     <a href="#">Edit</a>

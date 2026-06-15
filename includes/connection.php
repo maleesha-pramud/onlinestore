@@ -20,6 +20,11 @@ class Database {
         Database::$connection->query($query);
     }
 
+    public static function escape($text) {
+        Database::setUpConnection();
+        return Database::$connection->real_escape_string($text);
+    }
+
     public static function getInsertedId() {
         return Database::$connection->insert_id;
     }

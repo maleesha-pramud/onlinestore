@@ -122,16 +122,16 @@ $grandTotal = $totalPrice + $serviceFee;
                         <hr class="my-4">
                         <h4 class="mb-4">Price details</h4>
                         <div class="d-flex justify-content-between mb-2">
-                            <p>$<?php echo number_format($propertyData['base_price'], 2); ?> x <?php echo $dateCount; ?> nights</p>
-                            <p>$<?php echo number_format($totalPrice, 2); ?></p>
+                            <p>LKR <?php echo number_format($propertyData['base_price'], 2); ?> x <?php echo $dateCount; ?> nights</p>
+                            <p>LKR <?php echo number_format($totalPrice, 2); ?></p>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <p>Service fee</p>
-                            <p>$<?php echo number_format($serviceFee, 2); ?></p>
+                            <p>LKR <?php echo number_format($serviceFee, 2); ?></p>
                         </div>
                         <div class="d-flex justify-content-between fw-bold fs-5 border-top pt-3">
-                            <p>Total (USD)</p>
-                            <p>$<?php echo number_format($grandTotal, 2); ?></p>
+                            <p>Total (LKR)</p>
+                            <p>LKR <?php echo number_format($grandTotal, 2); ?></p>
                         </div>
                     </div>
                 </div>

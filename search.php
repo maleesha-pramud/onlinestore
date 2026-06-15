@@ -2,22 +2,46 @@
 session_start();
 include './includes/connection.php';
 
-$query = "";
-$categoryId = null;
-$searchTerm = "";
+$categoryId = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$searchTerm = isset($_GET['q']) ? $_GET['q'] : "";
 
-if (isset($_GET['q'])) {
-    $searchTerm = $_GET['q'];
-    $query = "SELECT * FROM properties WHERE title LIKE '%$searchTerm%' OR address LIKE '%$searchTerm%'";
-} elseif (isset($_GET['id'])) {
-    $categoryId = $_GET['id'];
-    $query = "SELECT * FROM properties WHERE categories_id = $categoryId";
-} else {
-    $query = "SELECT * FROM properties";
+// Fetch the absolute maximum price from properties for the filter range
+$maxPriceQuery = Database::search("SELECT MAX(base_price) AS max_p FROM properties");
+$maxPriceData = $maxPriceQuery->fetch_assoc();
+$absoluteMaxPrice = $maxPriceData['max_p'] ? (float)$maxPriceData['max_p'] : 1000;
+
+$maxPrice = isset($_GET['max_price']) ? (float)$_GET['max_price'] : $absoluteMaxPrice;
+$selectedAmenities = isset($_GET['amenities']) ? $_GET['amenities'] : [];
+
+$conditions = [];
+
+if (!empty($searchTerm)) {
+    $escapedSearch = Database::escape($searchTerm);
+    $conditions[] = "(title LIKE '%$escapedSearch%' OR address LIKE '%$escapedSearch%')";
+}
+
+if ($categoryId) {
+    $conditions[] = "categories_id = $categoryId";
+}
+
+if (isset($_GET['max_price'])) {
+    $conditions[] = "base_price <= $maxPrice";
+}
+
+if (!empty($selectedAmenities)) {
+    $amenityIds = array_map('intval', $selectedAmenities);
+    $amenityList = implode(',', $amenityIds);
+    $amenityCount = count($amenityIds);
+    $conditions[] = "id IN (SELECT properties_id FROM properties_has_amenities WHERE amenities_id IN ($amenityList) GROUP BY properties_id HAVING COUNT(DISTINCT amenities_id) = $amenityCount)";
+}
+
+$query = "SELECT * FROM properties";
+if (!empty($conditions)) {
+    $query .= " WHERE " . implode(" AND ", $conditions);
 }
 
 $propertiesStmt = Database::search($query);
-$propertiesExist = $propertiesStmt->num_rows > 0;
+$propertiesExist = $propertiesStmt && $propertiesStmt->num_rows > 0;
 
 $categoryName = "All Properties";
 if ($categoryId) {
@@ -49,57 +73,67 @@ if ($categoryId) {
                     </ol>
                 </nav>
                 <h2 class="section-title mb-1"><?php echo $categoryName; ?></h2>
-                <p class="text-secondary"><?php echo $propertiesStmt->num_rows; ?> properties found</p>
+                <p class="text-secondary"><?php echo $propertiesStmt ? $propertiesStmt->num_rows : 0; ?> properties found</p>
             </div>
         </div>
 
         <div class="search-layout">
             <aside class="filter-sidebar d-none d-lg-block">
-                <div class="card filter-card border-0 shadow-sm">
-                    <div class="filter-group">
-                        <h3 class="filter-title">Filter by Price</h3>
-                        <div class="mb-3">
-                            <label for="priceRange" class="form-label text-secondary small">Max Price per night</label>
-                            <input type="range" class="form-range" min="0" max="1000" step="10" id="priceRange" value="1000">
-                            <div class="d-flex justify-content-between text-secondary small mt-2">
-                                <span>$0</span>
-                                <span id="priceValue" class="fw-bold text-primary">$1000</span>
+                <form action="search.php" method="GET">
+                    <?php if (!empty($searchTerm)): ?>
+                        <input type="hidden" name="q" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                    <?php endif; ?>
+                    <?php if ($categoryId): ?>
+                        <input type="hidden" name="id" value="<?php echo $categoryId; ?>">
+                    <?php endif; ?>
+
+                    <div class="card filter-card border-0 shadow-sm">
+                        <div class="filter-group">
+                            <h3 class="filter-title">Filter by Price</h3>
+                            <div class="mb-3">
+                                <label for="priceRange" class="form-label text-secondary small">Max Price per night</label>
+                                <input type="range" name="max_price" class="form-range" min="0" max="<?php echo $absoluteMaxPrice; ?>" step="10" id="priceRange" value="<?php echo $maxPrice; ?>">
+                                <div class="d-flex justify-content-between text-secondary small mt-2">
+                                    <span>LKR 0</span>
+                                    <span id="priceValue" class="fw-bold text-primary">LKR <?php echo $maxPrice; ?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="filter-group">
-                        <h3 class="filter-title">Categories</h3>
-                        <?php
-                        $allCats = Database::search("SELECT * FROM categories");
-                        while ($cat = $allCats->fetch_assoc()) {
-                            $activeClass = ($categoryId == $cat['id']) ? 'fw-bold text-primary' : 'text-secondary';
-                        ?>
-                            <div class="mb-2">
-                                <a href="/search.php?id=<?php echo $cat['id']; ?>" class="text-decoration-none <?php echo $activeClass; ?> small">
-                                    <?php echo $cat['name']; ?>
-                                </a>
-                            </div>
-                        <?php } ?>
-                    </div>
+                        <div class="filter-group">
+                            <h3 class="filter-title">Categories</h3>
+                            <?php
+                            $allCats = Database::search("SELECT * FROM categories");
+                            while ($cat = $allCats->fetch_assoc()) {
+                                $activeClass = ($categoryId == $cat['id']) ? 'fw-bold text-primary' : 'text-secondary';
+                            ?>
+                                <div class="mb-2">
+                                    <a href="/search.php?id=<?php echo $cat['id']; ?><?php echo !empty($searchTerm) ? '&q='.urlencode($searchTerm) : ''; ?>" class="text-decoration-none <?php echo $activeClass; ?> small">
+                                        <?php echo $cat['name']; ?>
+                                    </a>
+                                </div>
+                            <?php } ?>
+                        </div>
 
-                    <div class="filter-group">
-                        <h3 class="filter-title">Amenities</h3>
-                        <?php
-                        $amenitiesStmt = Database::search("SELECT * FROM `amenities` LIMIT 8");
-                        while ($amenity = $amenitiesStmt->fetch_assoc()) {
-                        ?>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="<?php echo $amenity['id'] ?>" id="amenity-filter-<?php echo $amenity['id'] ?>">
-                                <label class="form-check-label small text-secondary" for="amenity-filter-<?php echo $amenity['id'] ?>">
-                                    <?php echo $amenity['name'] ?>
-                                </label>
-                            </div>
-                        <?php } ?>
+                        <div class="filter-group">
+                            <h3 class="filter-title">Amenities</h3>
+                            <?php
+                            $amenitiesStmt = Database::search("SELECT * FROM `amenities` LIMIT 8");
+                            while ($amenity = $amenitiesStmt->fetch_assoc()) {
+                                $checked = in_array($amenity['id'], $selectedAmenities) ? 'checked' : '';
+                            ?>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="<?php echo $amenity['id'] ?>" id="amenity-filter-<?php echo $amenity['id'] ?>" <?php echo $checked; ?>>
+                                    <label class="form-check-label small text-secondary" for="amenity-filter-<?php echo $amenity['id'] ?>">
+                                        <?php echo $amenity['name'] ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Apply Filters</button>
+                        <button type="button" class="btn btn-link w-100 mt-2 text-secondary small" onclick="window.location.href='/search.php'">Clear All</button>
                     </div>
-                    <button class="btn btn-primary w-100 shadow-sm">Apply Filters</button>
-                    <button class="btn btn-link w-100 mt-2 text-secondary small" onclick="window.location.href='/search.php'">Clear All</button>
-                </div>
+                </form>
             </aside>
 
             <div class="search-results">
@@ -135,7 +169,7 @@ if ($categoryId) {
                                             
                                             <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
                                                 <p class="card-price mb-0">
-                                                    <span class="fw-bold fs-5 text-primary">$<?php echo number_format($property['base_price']); ?></span> <span class="text-secondary small">/ night</span>
+                                                    <span class="fw-bold fs-5 text-primary">LKR <?php echo number_format($property['base_price']); ?></span> <span class="text-secondary small">/ night</span>
                                                 </p>
                                                 <span class="badge bg-primary-soft text-primary small">Instant Book</span>
                                             </div>
@@ -167,7 +201,7 @@ if ($categoryId) {
         const priceValue = document.getElementById('priceValue');
         if(priceRange) {
             priceRange.addEventListener('input', function() {
-                priceValue.textContent = '$' + this.value;
+                priceValue.textContent = 'LKR ' + this.value;
             });
         }
     </script>

@@ -69,7 +69,7 @@ if ($userType == 1) { // Admin
                                         <div><?php echo date("M d", strtotime($booking['checkIn'])); ?> - <?php echo date("M d, Y", strtotime($booking['checkOut'])); ?></div>
                                     </td>
                                     <td><?php echo $booking['guests']; ?></td>
-                                    <td class="fw-bold">$<?php echo number_format($booking['total_price'], 2); ?></td>
+                                    <td class="fw-bold">LKR <?php echo number_format($booking['total_price'], 2); ?></td>
                                     <td><span class="badge bg-success-soft text-success">Confirmed</span></td>
                                 </tr>
                             <?php }

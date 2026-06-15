@@ -69,7 +69,7 @@ if ($userType == 1) { // Admin
                                         echo $category['name'];
                                         ?>
                                     </td>
-                                    <td>$<?php echo number_format($property['base_price']); ?> / night</td>
+                                    <td>LKR <?php echo number_format($property['base_price']); ?> / night</td>
                                     <td class="action-links">
                                         <a href="/listing/edit.php?id=<?php echo $property['id']; ?>">Edit</a>
                                         <a href="#" onclick="deleteListing(<?php echo $property['id']; ?>)" class="text-danger">Delete</a>

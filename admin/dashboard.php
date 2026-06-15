@@ -89,14 +89,14 @@ $bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
                                 <td>#12345</td>
                                 <td>John Doe</td>
                                 <td>PROP56</td>
-                                <td>$350.00</td>
+                                <td>LKR 350.00</td>
                                 <td><span class="badge bg-success-soft text-success">Confirmed</span></td>
                             </tr>
                              <tr>
                                 <td>#12346</td>
                                 <td>Jane Smith</td>
                                 <td>PROP78</td>
-                                <td>$500.00</td>
+                                <td>LKR 500.00</td>
                                 <td><span class="badge bg-warning-soft text-warning">Pending</span></td>
                             </tr>
                         </tbody>

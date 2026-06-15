@@ -68,7 +68,7 @@ $bookingsStmt = Database::search("SELECT b.*, p.title as property_title, p.image
                                             </div>
                                             <div class="col-md-4">
                                                 <p class="mb-1 fw-semibold">Total Paid</p>
-                                                <p class="text-secondary fw-bold">$<?php echo number_format($booking['total_price'], 2); ?></p>
+                                                <p class="text-secondary fw-bold">LKR <?php echo number_format($booking['total_price'], 2); ?></p>
                                             </div>
                                         </div>
 
