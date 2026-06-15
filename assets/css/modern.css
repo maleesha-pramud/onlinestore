@@ -1,6 +1,6 @@
 :root {
     /* "Nordic Soft" Color Palette */
-    --primary-accent: #3B82F6;
+    --primary-accent: #445d7b;
     --background-color: #F9FAFB;
     --surface-color: #FFFFFF;
     --primary-text-color: #1F2937;
@@ -141,7 +141,7 @@ a:hover {
 .search-input:focus {
     outline: none;
     border-color: var(--primary-accent);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px rgba(68, 93, 123, 0.1);
 }
 
 .search-icon {
@@ -224,6 +224,16 @@ a:hover {
     padding: 0.5rem 0;
     margin-top: 0.75rem;
     z-index: 1001;
+}
+
+/* Bridge the hover gap */
+.dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -0.75rem;
+    left: 0;
+    width: 100%;
+    height: 0.75rem;
 }
 
 .nav-dropdown:hover .dropdown-menu {
@@ -321,7 +331,7 @@ a:hover {
 }
 
 .bg-primary-soft {
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: rgba(68, 93, 123, 0.1);
     padding: 0.3rem 0.6rem;
     border-radius: 6px;
 }

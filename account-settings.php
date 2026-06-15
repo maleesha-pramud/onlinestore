@@ -85,19 +85,34 @@ $userType = $userData['user_type_id'];
                             
                             <div class="mb-3">
                                 <label for="currPassword" class="form-label small fw-semibold">Current Password</label>
-                                <input type="password" class="form-control" id="currPassword" placeholder="Enter current password">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="currPassword" placeholder="Enter current password">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                             
                             <hr class="my-4">
                             
                             <div class="mb-3">
                                 <label for="newPassword" class="form-label small fw-semibold">New Password</label>
-                                <input type="password" class="form-control" id="newPassword" placeholder="Minimum 8 characters">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="newPassword" placeholder="Minimum 8 characters">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="mb-4">
                                 <label for="confirmPassword" class="form-label small fw-semibold">Confirm New Password</label>
-                                <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat new password">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat new password">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword3">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <button onclick="changePassword();" class="btn btn-outline-primary w-100">Update Password</button>

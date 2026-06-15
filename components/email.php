@@ -5,7 +5,7 @@
         <table style="max-width: 600px;">
           <tr>
             <td align="center">
-              <a href="#" style="font-size: 35px; color: black; font-weight: bold; text-decoration: none;">Online Store</a>
+              <a href="#" style="font-size: 35px; color: black; font-weight: bold; text-decoration: none;">2nd Home</a>
               <hr>
             </td>
           </tr>
@@ -24,7 +24,7 @@
           </tr>
           <tr>
             <td>
-              <p style="font-size: 15px; color: gray;">&copy; 2024 Online Store. All rights reserved.</p>
+              <p style="font-size: 15px; color: gray;">&copy; 2024 2nd Home. All rights reserved.</p>
             </td>
           </tr>
         </table>

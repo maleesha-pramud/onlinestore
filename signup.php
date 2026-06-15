@@ -8,7 +8,9 @@
 <body class="auth-body">
     <div class="auth-card">
         <div class="auth-header">
-            <a href="/index.php" class="brand">ApeBordima.LK</a>
+            <a href="/index.php" class="brand">
+                <img src="/assets/images/logo/logo-only-text.png" alt="2nd Home" style="height: 40px;">
+            </a>
             <p>Create an account to start booking or hosting.</p>
         </div>
 
@@ -37,7 +39,12 @@
             </div>
             <div class="form-group mt-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" class="form-control" required>
+                <div class="input-group">
+                    <input type="password" id="password" class="form-control" required>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
             </div>
             <div class="d-grid mt-4">
                 <button type="submit" class="btn btn-primary">Create Account</button>

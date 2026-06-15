@@ -1,4 +1,6 @@
-<a href="/index.php" class="sidebar-brand">ApeBordima.LK</a>
+<a href="/index.php" class="sidebar-brand">
+    <img src="/assets/images/logo/logo-only-text.png" alt="2nd Home" style="height: 35px;">
+</a>
 
 <ul class="sidebar-nav">
     <li class="sidebar-nav-item">

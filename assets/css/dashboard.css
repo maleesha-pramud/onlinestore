@@ -159,5 +159,5 @@
 .form-control:focus {
     outline: none;
     border-color: var(--primary-accent);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px rgba(68, 93, 123, 0.1);
 }

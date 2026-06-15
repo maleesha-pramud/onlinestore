@@ -18,7 +18,9 @@ if (isset($_COOKIE["password"])) {
 <body class="auth-body">
     <div class="auth-card">
         <div class="auth-header">
-            <a href="/index.php" class="brand">ApeBordima.LK</a>
+            <a href="/index.php" class="brand">
+                <img src="/assets/images/logo/logo-only-text.png" alt="2nd Home" style="height: 40px;">
+            </a>
             <p>Welcome back! Please sign in to continue.</p>
         </div>
 
@@ -31,9 +33,14 @@ if (isset($_COOKIE["password"])) {
                 <label for="email2" class="form-label">Email Address</label>
                 <input type="email" id="email2" class="form-control" value="<?php echo htmlspecialchars($email); ?>" required>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="password2" class="form-label">Password</label>
-                <input type="password" id="password2" class="form-control" value="<?php echo htmlspecialchars($password); ?>" required>
+                <div class="input-group">
+                    <input type="password" id="password2" class="form-control" value="<?php echo htmlspecialchars($password); ?>" required>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
             </div>
             <div class="d-flex justify-content-between align-items-center form-group">
                 <div class="form-check">

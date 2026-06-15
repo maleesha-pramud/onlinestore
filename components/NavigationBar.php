@@ -10,7 +10,7 @@ if (isset($_SESSION['email'])) {
     <div class="container">
         <nav class="main-nav">
             <a class="nav-brand" href="/index.php">
-                ApeBordima.LK
+                <img src="/assets/images/logo/logo-only-text.png" alt="2nd Home" style="height: 40px;">
             </a>
 
             <form action="/search.php" method="GET" class="nav-search">
