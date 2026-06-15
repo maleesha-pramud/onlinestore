@@ -71,6 +71,13 @@
     align-items: center;
     gap: 1rem;
     font-size: 1rem;
+    padding: 0.5rem 0;
+}
+
+.amenity-item i {
+    color: var(--primary-accent);
+    width: 24px;
+    text-align: center;
 }
 
 .booking-card {

@@ -40,7 +40,7 @@ if (isset($_SESSION['email'])) {
                             } else {
                                 echo '<li><a class="dropdown-item" href="/my-bookings.php">My Bookings</a></li>';
                             }
-                            echo '<li><a class="dropdown-item" href="#">Account Settings</a></li>';
+                            echo '<li><a class="dropdown-item" href="/account-settings.php">Account Settings</a></li>';
                             echo '<div class="dropdown-divider"></div>';
                             echo '<li><a class="dropdown-item" href="/logout.php">Log Out</a></li>';
                         } else {

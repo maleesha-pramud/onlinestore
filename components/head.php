@@ -17,4 +17,5 @@
 <link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="https://cdn.tiny.cloud/1/lyb9vq2h83x99iepijgfk328smh9kf313sbtfvcbmif7m5vt/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>

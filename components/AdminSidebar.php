@@ -26,9 +26,21 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a href="#" class="nav-link">
+        <a href="/admin/amenity/list.php" class="nav-link">
+            <i class="fa-solid fa-couch icon"></i>
+            <span>Amenities</span>
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a href="/admin/user-management.php" class="nav-link">
             <i class="fa-solid fa-users icon"></i>
             <span>Users</span>
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a href="/account-settings.php" class="nav-link">
+            <i class="fa-solid fa-user-gear icon"></i>
+            <span>Account Settings</span>
         </a>
     </li>
      <li class="sidebar-nav-item" style="margin-top: 2rem;">

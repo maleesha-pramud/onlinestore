@@ -25,6 +25,12 @@
             <span>Bookings</span>
         </a>
     </li>
+    <li class="sidebar-nav-item">
+        <a href="/account-settings.php" class="nav-link">
+            <i class="fa-solid fa-user-gear icon"></i>
+            <span>Account Settings</span>
+        </a>
+    </li>
     <li class="sidebar-nav-item" style="margin-top: 2rem;">
         <a href="/logout.php" class="nav-link">
             <i class="fa-solid fa-sign-out-alt icon"></i>
