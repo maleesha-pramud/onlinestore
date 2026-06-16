@@ -2,19 +2,19 @@
 
 include '../includes/connection.php';
 
-// Retrieve form data
-$checkIn = $_POST['checkIn'];
-$checkOut = $_POST['checkOut'];
-$firstName = $_POST['firstName'];
-$lastName = $_POST['lastName'];
-$nic = $_POST['nic'];
-$contact = $_POST['contact'];
-$guests = $_POST['guests'];
-$email = $_POST['email'];
-$specialRequests = $_POST['specialRequests'];
-$propertyId = $_POST['propertyId'];
-$totalPrice = $_POST['totalPrice'];
-$orderId = $_POST['orderId'];
+// Retrieve and escape form data
+$checkIn = Database::escape($_POST['checkIn']);
+$checkOut = Database::escape($_POST['checkOut']);
+$firstName = Database::escape($_POST['firstName']);
+$lastName = Database::escape($_POST['lastName']);
+$nic = Database::escape($_POST['nic']);
+$contact = Database::escape($_POST['contact']);
+$guests = Database::escape($_POST['guests']);
+$email = Database::escape($_POST['email']);
+$specialRequests = Database::escape($_POST['specialRequests']);
+$propertyId = Database::escape($_POST['propertyId']);
+$totalPrice = Database::escape($_POST['totalPrice']);
+$orderId = Database::escape($_POST['orderId']);
 
 
 // Insert the booking into the database

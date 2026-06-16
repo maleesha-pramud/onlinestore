@@ -113,8 +113,7 @@ $amenitiesStmt = Database::search("
                 <div class="card booking-card">
                     <div class="card-body">
                         <h5 class="card-title fs-4 mb-4">Add dates for prices</h5>
-                        <form action="booking.php" method="GET">
-                            <input type="hidden" name="id" value="<?php echo $propertyId; ?>">
+                        <form onsubmit="checkAvailability(<?php echo $propertyId; ?>); return false;">
                             <div class="form-group">
                                 <label for="checkIn" class="form-label">Check-in</label>
                                 <input type="date" id="checkIn" name="checkIn" class="form-control" required>

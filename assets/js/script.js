@@ -159,12 +159,16 @@ function resetPassword() {
 function checkAvailability(listingId) {
     var checkIn = document.getElementById('checkIn').value;
     var checkOut = document.getElementById('checkOut').value;
+    var guests = document.getElementById('guests').value;
 
     if (!checkIn) {
         alert('Please Enter the Check In date')
         return;
     } else if (!checkOut) {
         alert('Please Enter the Check Out date')
+        return;
+    } else if (!guests) {
+        alert('Please Enter the number of guests')
         return;
     }
 
@@ -178,7 +182,7 @@ function checkAvailability(listingId) {
         if (req.readyState == 4 && req.status == 200) {
             var response = req.responseText;
             if (response === 'success') {
-                window.location.href = '/booking.php?id=' + listingId + '&checkIn=' + checkIn + '&checkOut=' + checkOut;
+                window.location.href = '/booking.php?id=' + listingId + '&checkIn=' + checkIn + '&checkOut=' + checkOut + '&guests=' + guests;
             } else {
                 alert(response);
             }
@@ -244,10 +248,10 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
         }
         var payment = {
             "sandbox": true,
-            "merchant_id": "1227844", // Replace your Merchant ID
-            "return_url": undefined, // Important
-            "cancel_url": undefined, // Important
-            "notify_url": "http://sample.com/notify",
+            "merchant_id": response.merchant_id,
+            "return_url": window.location.origin,
+            "cancel_url": window.location.origin,
+            "notify_url": window.location.origin + "/lib/payment-notify-process.php",
             "order_id": response.order_id,
             "items": response.items,
             "amount": response.amount,

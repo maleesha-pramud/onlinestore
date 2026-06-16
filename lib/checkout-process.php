@@ -33,6 +33,7 @@ $response = [
   'status' => true,
   'message' => 'success',
   'success' => true,
+  'merchant_id' => $merchant_id,
   'order_id' => $order_id,
   'items' => 'Booking for ' . $guests . ' guests',
   'amount' => $amount,

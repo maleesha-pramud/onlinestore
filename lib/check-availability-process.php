@@ -2,9 +2,9 @@
 
 include '../includes/connection.php';
 
-$listingId = $_POST['listingId'];
-$checkIn = $_POST['checkIn'];
-$checkOut = $_POST['checkOut'];
+$listingId = Database::escape($_POST['listingId']);
+$checkIn = Database::escape($_POST['checkIn']);
+$checkOut = Database::escape($_POST['checkOut']);
 
 $bookingsStmt = Database::search("SELECT * FROM `bookings` WHERE `properties_id` = '$listingId'");
 $bookings = [];

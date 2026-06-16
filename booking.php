@@ -67,6 +67,7 @@ $grandTotal = $totalPrice + $serviceFee;
                         <div>
                             <p class="fw-bold mb-1">Guests</p>
                             <p class="text-secondary"><?php echo htmlspecialchars($guests); ?> guest(s)</p>
+                            <input type="hidden" id="guests" value="<?php echo htmlspecialchars($guests); ?>">
                         </div>
                         <a href="#">Edit</a>
                     </div>
