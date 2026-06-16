@@ -262,6 +262,26 @@ a:hover {
     margin: 0.5rem 0;
 }
 
+/* Global Mobile Refinements */
+@media (max-width: 575.98px) {
+    .main-header {
+        padding: 0.75rem 0;
+    }
+    
+    .nav-brand img {
+        height: 30px !important;
+    }
+
+    .dropdown-toggle-btn {
+        padding: 0.4rem;
+        gap: 0.5rem;
+    }
+
+    .footer-bottom {
+        padding-bottom: 2rem;
+    }
+}
+
 /* Homepage Styles */
 
 .hero-section {

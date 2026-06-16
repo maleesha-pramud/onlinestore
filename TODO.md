@@ -1,0 +1,1 @@
+- fix the responsive issues of @search.php page on mobile screens

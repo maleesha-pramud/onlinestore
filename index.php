@@ -24,11 +24,29 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
             min-height: 600px;
             overflow: hidden;
             border-radius: 0 0 3rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-slider {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-slider, 
+        .hero-slider .owl-stage-outer, 
+        .hero-slider .owl-stage, 
+        .hero-slider .owl-item {
+            height: 100%;
         }
 
         .hero-slider .item {
-            height: 85vh;
-            min-height: 600px;
+            height: 100%;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -45,10 +63,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
         }
 
         .hero-overlay {
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: relative;
             z-index: 10;
             width: 100%;
             max-width: 900px;
@@ -201,6 +216,99 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
             letter-spacing: 0.05em;
             margin-bottom: 1rem;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 991.98px) {
+            .hero-section-modern {
+                height: auto;
+                min-height: 600px;
+                padding-top: 80px; /* Space for fixed navbar */
+            }
+
+            .hero-slider .item {
+                height: 100%;
+            }
+            
+            .hero-overlay {
+                padding: 4rem 1.5rem;
+            }
+
+            .hero-overlay h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-overlay p {
+                font-size: 1.1rem;
+            }
+
+            .search-box-modern {
+                flex-direction: column;
+                border-radius: 2rem;
+                padding: 1.5rem;
+                margin-top: 2rem;
+                gap: 1rem;
+            }
+
+            .search-item {
+                border-right: none;
+                border-bottom: 1px solid #f0f0f0;
+                padding: 0.5rem 0;
+                width: 100%;
+            }
+
+            .search-item:last-child {
+                border-bottom: none;
+            }
+
+            .search-item button {
+                width: 100% !important;
+                border-radius: 1rem !important;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .hero-overlay h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-section-modern {
+                border-radius: 0 0 1.5rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .featured-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 1rem;
+            }
+
+            .cta-section-wrapper {
+                padding: 3rem 1.5rem !important;
+                border-radius: 2rem !important;
+            }
+
+            .cta-section-wrapper h2 {
+                font-size: 2.25rem !important;
+            }
+
+            .cta-section-wrapper p {
+                font-size: 1.1rem !important;
+            }
+            
+            .cta-section-wrapper a {
+                width: 100%;
+                padding: 1rem !important;
+            }
+
+            .amenity-pill {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 
@@ -233,7 +341,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
                         <label>Check Out</label>
                         <input type="date" name="checkout">
                     </div>
-                    <div class="search-item" style="flex: 0.4;">
+                    <div class="search-item search-btn-container" style="flex: 0.4;">
                         <button type="submit" class="btn btn-primary rounded-circle p-0 d-flex align-items-center justify-content-center mx-auto" style="width: 55px; height: 55px; font-size: 1.25rem;">
                             <i class="bi bi-search"></i>
                         </button>
@@ -244,7 +352,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
         <!-- Hero Section End -->
 
         <!-- Categories Section Start -->
-        <section class="container py-5 mt-5">
+        <section class="container py-5 mt-md-5">
             <div class="text-center mb-5">
                 <span class="section-badge">Explore</span>
                 <h2 class="section-title mb-1">Discover by category</h2>
@@ -257,7 +365,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
                         <div class="category-icon-wrapper">
                             <img src="assets/images/categories/<?php echo $cat['image']; ?>" alt="<?php echo $cat['name']; ?>">
                         </div>
-                        <span class="category-name"><?php echo $cat['name']; ?></span>
+                        <span class="category-name text-truncate d-block"><?php echo $cat['name']; ?></span>
                     </a>
                 <?php } ?>
             </div>
@@ -266,7 +374,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
 
         <!-- Featured Properties Section Start -->
         <section class="container py-5">
-            <div class="d-flex justify-content-between align-items-end mb-4">
+            <div class="d-flex justify-content-between align-items-end mb-4 featured-header">
                 <div>
                     <span class="section-badge">Featured</span>
                     <h2 class="section-title mb-1">Top-rated stays</h2>
@@ -463,7 +571,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
 
         <!-- CTA Section Start -->
         <section class="container py-5 mt-5 mb-5">
-            <div class="bg-primary rounded-5 p-5 text-center text-white position-relative overflow-hidden shadow-lg">
+            <div class="bg-primary rounded-5 p-5 text-center text-white position-relative overflow-hidden shadow-lg cta-section-wrapper">
                 <div class="position-relative z-index-10 py-4">
                     <h2 class="display-4 fw-bold mb-3">Ready to host your space?</h2>
                     <p class="fs-4 mb-5 opacity-80">Join 50,000+ hosts and start earning today.</p>
@@ -510,6 +618,16 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
                 dots: true,
                 nav: false,
                 responsive: {
+                    0: { items: 1 },
+                    768: { items: 2 },
+                    1024: { items: 3 }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>       responsive: {
                     0: { items: 1 },
                     768: { items: 2 },
                     1024: { items: 3 }
