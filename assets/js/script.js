@@ -70,7 +70,7 @@ function signUp() {
         if (req.readyState == 4 && req.status == 200) {
             var response = req.responseText;
             if (response == 'success') {
-                window.location.reload();
+                window.location.href = '/signin.php';
             } else {
                 document.getElementById('errorMsg').innerHTML = response;
                 document.getElementById('errorMsgDiv').classList.remove('d-none');
