@@ -713,3 +713,50 @@ function addReview(propertyId) {
         }
     });
 }
+
+// Favorites Functionality
+function toggleFavorite(propertyId, element) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const index = favorites.indexOf(propertyId);
+
+    if (index === -1) {
+        favorites.push(propertyId);
+        showToast('Added to favorites', 'success');
+        updateFavoriteUI(element, true);
+    } else {
+        favorites.splice(index, 1);
+        showToast('Removed from favorites', 'info');
+        updateFavoriteUI(element, false);
+    }
+
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+function updateFavoriteUI(element, isFavorite) {
+    const icon = element.querySelector('i');
+    if (icon) {
+        if (icon.classList.contains('bi')) {
+            // Bootstrap Icons
+            icon.classList.toggle('bi-heart', !isFavorite);
+            icon.classList.toggle('bi-heart-fill', isFavorite);
+            icon.classList.toggle('text-danger', isFavorite);
+        } else {
+            // FontAwesome
+            icon.classList.toggle('fa-regular', !isFavorite);
+            icon.classList.toggle('fa-solid', isFavorite);
+            icon.classList.toggle('text-danger', isFavorite);
+        }
+    }
+}
+
+function initFavorites() {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    document.querySelectorAll('[data-favorite-id]').forEach(btn => {
+        const id = parseInt(btn.getAttribute('data-favorite-id'));
+        if (favorites.includes(id)) {
+            updateFavoriteUI(btn, true);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initFavorites);

@@ -82,7 +82,7 @@ if (isset($_SESSION['email'])) {
                 </div>
                 <div class="d-flex gap-3">
                     <button class="btn btn-link text-dark text-decoration-underline fw-bold p-0"><i class="fa-solid fa-share-nodes me-2"></i>Share</button>
-                    <button class="btn btn-link text-dark text-decoration-underline fw-bold p-0"><i class="fa-solid fa-heart me-2"></i>Save</button>
+                    <button class="btn btn-link text-dark text-decoration-underline fw-bold p-0" data-favorite-id="<?php echo $propertyId; ?>" onclick="toggleFavorite(<?php echo $propertyId; ?>, this)"><i class="fa-regular fa-heart me-2"></i>Save</button>
                 </div>
             </div>
         </div>

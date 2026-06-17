@@ -108,7 +108,7 @@ if ($categoryId) {
                                         <div class="position-relative">
                                             <img src="assets/images/properties/<?php echo $firstImage; ?>" class="card-img-top rounded-top" alt="<?php echo $property['title']; ?>" style="height: 200px; object-fit: cover;">
                                             <div class="position-absolute top-0 end-0 p-2">
-                                                <button class="btn btn-white btn-sm rounded-circle shadow-sm">
+                                                <button class="btn btn-white btn-sm rounded-circle shadow-sm" data-favorite-id="<?php echo $property['id']; ?>" onclick="event.preventDefault(); toggleFavorite(<?php echo $property['id']; ?>, this)">
                                                     <i class="fa-regular fa-heart"></i>
                                                 </button>
                                             </div>

@@ -415,7 +415,7 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
                                         </span>
                                     </div>
                                     <div class="position-absolute top-0 end-0 p-3">
-                                        <button class="btn btn-white btn-sm rounded-circle shadow-sm" style="width: 40px; height: 40px; padding: 0;">
+                                        <button class="btn btn-white btn-sm rounded-circle shadow-sm" style="width: 40px; height: 40px; padding: 0;" data-favorite-id="<?php echo $property['id']; ?>" onclick="event.preventDefault(); toggleFavorite(<?php echo $property['id']; ?>, this)">
                                             <i class="bi bi-heart"></i>
                                         </button>
                                     </div>
