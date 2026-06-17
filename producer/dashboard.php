@@ -59,9 +59,11 @@ $bookingCount = Database::search("SELECT b.* FROM bookings b JOIN properties p O
                      <h2 class="section-title mb-0">My Recent Listings</h2>
                      <a href="/listing/list.php" class="btn btn-primary">View All</a>
                 </div>
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table datatable align-middle mb-0">
+                                <thead class="table-light">
                             <tr>
                                 <th>Property Name</th>
                                 <th>Price</th>
@@ -72,8 +74,7 @@ $bookingCount = Database::search("SELECT b.* FROM bookings b JOIN properties p O
                         <tbody>
                             <?php
                             $recentProperties = Database::search("SELECT p.*, c.name as category_name FROM properties p JOIN categories c ON p.categories_id = c.id WHERE p.users_id = '$userId' ORDER BY p.id DESC LIMIT 5");
-                            if ($recentProperties->num_rows > 0) {
-                                while ($property = $recentProperties->fetch_assoc()) {
+                            while ($property = $recentProperties->fetch_assoc()) {
                             ?>
                             <tr>
                                 <td><?php echo $property['title']; ?></td>
@@ -86,12 +87,11 @@ $bookingCount = Database::search("SELECT b.* FROM bookings b JOIN properties p O
                             </tr>
                             <?php
                                 }
-                            } else {
-                                echo '<tr><td colspan="4" class="text-center">You haven\'t added any properties yet.</td></tr>';
-                            }
                             ?>
                         </tbody>
                     </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

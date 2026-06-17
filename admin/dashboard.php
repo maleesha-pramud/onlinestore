@@ -72,9 +72,11 @@ $bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
                      <h2 class="section-title mb-0">Recent Bookings</h2>
                      <a href="/listing/bookings.php" class="btn btn-primary">View All</a>
                 </div>
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table datatable align-middle mb-0">
+                                <thead class="table-light">
                             <tr>
                                 <th>Order ID</th>
                                 <th>Customer</th>
@@ -86,8 +88,7 @@ $bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
                         <tbody>
                             <?php
                             $recentBookings = Database::search("SELECT b.*, p.title as property_title FROM bookings b JOIN properties p ON b.properties_id = p.id ORDER BY b.id DESC LIMIT 5");
-                            if ($recentBookings->num_rows > 0) {
-                                while ($booking = $recentBookings->fetch_assoc()) {
+                            while ($booking = $recentBookings->fetch_assoc()) {
                             ?>
                             <tr>
                                 <td>#<?php echo $booking['order_id']; ?></td>
@@ -98,12 +99,11 @@ $bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
                             </tr>
                             <?php 
                                 }
-                            } else {
-                                echo '<tr><td colspan="5" class="text-center">No recent bookings found.</td></tr>';
-                            }
                             ?>
                         </tbody>
                     </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -46,9 +46,11 @@ if ($userType == 1) { // Admin
                 <p class="text-secondary">View and manage reservations for your properties.</p>
             </div>
 
-            <div class="table-container">
-                <table class="table">
-                    <thead>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table datatable align-middle">
+                            <thead class="table-light">
                         <tr>
                             <th>Guest Name</th>
                             <th>Dates</th>
@@ -58,8 +60,7 @@ if ($userType == 1) { // Admin
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($bookingsStmt->num_rows > 0) {
-                            while ($booking = $bookingsStmt->fetch_assoc()) { ?>
+                        <?php while ($booking = $bookingsStmt->fetch_assoc()) { ?>
                                 <tr>
                                     <td>
                                         <div class="fw-bold"><?php echo htmlspecialchars($booking['first_name'] . ' ' . $booking['last_name']); ?></div>
@@ -72,14 +73,11 @@ if ($userType == 1) { // Admin
                                     <td class="fw-bold">LKR <?php echo number_format($booking['total_price'], 2); ?></td>
                                     <td><span class="badge bg-success-soft text-success">Confirmed</span></td>
                                 </tr>
-                            <?php }
-                        } else { ?>
-                            <tr>
-                                <td colspan="5" class="text-center py-4">No bookings found.</td>
-                            </tr>
-                        <?php } ?>
+                            <?php } ?>
                     </tbody>
                 </table>
+                    </div>
+                </div>
             </div>
         </main>
     </div>

@@ -46,9 +46,11 @@ if ($userType == 1) { // Admin
                 <a href="/listing/add.php" class="btn btn-primary">Add New Property</a>
             </div>
 
-            <div class="table-container">
-                <table class="table">
-                    <thead>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table datatable align-middle">
+                            <thead class="table-light">
                         <tr>
                             <th>Title</th>
                             <th>Category</th>
@@ -57,8 +59,7 @@ if ($userType == 1) { // Admin
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($propertiesStmt->num_rows > 0) {
-                            while ($property = $propertiesStmt->fetch_assoc()) { ?>
+                        <?php while ($property = $propertiesStmt->fetch_assoc()) { ?>
                                 <tr>
                                     <td><?php echo $property['title']; ?></td>
                                     <td>
@@ -75,14 +76,11 @@ if ($userType == 1) { // Admin
                                         <a href="#" onclick="deleteListing(<?php echo $property['id']; ?>)" class="text-danger">Delete</a>
                                     </td>
                                 </tr>
-                            <?php }
-                        } else { ?>
-                            <tr>
-                                <td colspan="4" class="text-center">No properties found.</td>
-                            </tr>
-                        <?php } ?>
+                            <?php } ?>
                     </tbody>
                 </table>
+                    </div>
+                </div>
             </div>
         </main>
     </div>

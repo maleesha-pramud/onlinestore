@@ -100,12 +100,18 @@
 .table {
     width: 100%;
     border-collapse: collapse;
+    border: 1px solid var(--border-color);
 }
 
 .table th, .table td {
     padding: 1rem 1.5rem;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+}
+
+.table th:last-child, .table td:last-child {
+    border-right: none;
 }
 
 .table thead th {
@@ -131,6 +137,89 @@
 }
 .table .action-links a:hover {
     text-decoration: underline;
+}
+
+/* DataTables Modern Styling */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 1.5rem;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    padding: 0.5rem 1.25rem;
+    outline: none;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 4px rgba(68, 93, 123, 0.1);
+}
+
+.dataTables_wrapper .dataTables_length, 
+.dataTables_wrapper .dataTables_filter {
+    padding: 1.25rem 1.5rem 0;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    padding: 1rem 1.5rem 1.25rem;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+    outline: none;
+}
+
+.dataTables_wrapper .dataTables_info {
+    padding-top: 1.5rem;
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding-top: 1.5rem;
+}
+
+.dataTables_wrapper .paginate_button.page-item.active .page-link {
+    background-color: var(--primary-accent) !important;
+    border-color: var(--primary-accent) !important;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(68, 93, 123, 0.2);
+}
+
+.dataTables_wrapper .page-link {
+    border-radius: 8px !important;
+    margin: 0 2px;
+    color: var(--primary-text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0.9rem;
+}
+
+.dataTables_wrapper .page-item:not(.active) .page-link:hover {
+    background-color: #f3f4f6;
+}
+
+.datatable thead th {
+    border-top: none;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.datatable tbody td {
+    padding: 1.25rem 1.5rem !important;
+}
+
+div.dataTables_wrapper div.dataTables_processing {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 /* Form Styles */
