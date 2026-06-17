@@ -374,4 +374,92 @@ a:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
 }
 
+/* Modern Minimalist Toast Styles */
+.toast-container {
+    z-index: 2000;
+}
+
+.modern-toast {
+    background: #ffffff !important;
+    color: var(--primary-text-color) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    min-width: 320px;
+    padding: 0.2rem 0.25rem;
+    overflow: hidden;
+}
+
+.modern-toast .toast-body {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+}
+
+.toast-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+}
+
+.toast-content {
+    flex-grow: 1;
+}
+
+.toast-message {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.toast-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--secondary-text-color);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.toast-close-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-text-color);
+    padding: 0.5rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.toast-close-btn:hover {
+    opacity: 1;
+}
+
+/* Toast Variants */
+.toast-success .toast-icon-wrapper {
+    background-color: #ecfdf5;
+    color: #10b981;
+}
+
+.toast-error .toast-icon-wrapper {
+    background-color: #fef2f2;
+    color: #ef4444;
+}
+
+.toast-warning .toast-icon-wrapper {
+    background-color: #fffbeb;
+    color: #f59e0b;
+}
+
+.toast-info .toast-icon-wrapper {
+    background-color: #eff6ff;
+    color: #3b82f6;
+}
+
 

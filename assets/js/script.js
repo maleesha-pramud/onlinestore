@@ -1,34 +1,56 @@
-function showToast(message, type = 'info', title = 'Notification') {
+function showToast(message, type = 'info', title = '') {
     const toastElement = document.getElementById('liveToast');
     const toastTitle = document.getElementById('toastTitle');
     const toastMessage = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
 
-    toastTitle.innerText = title;
     toastMessage.innerText = message;
+    
+    // Set default title if not provided
+    if (title === '') {
+        switch (type) {
+            case 'success': title = 'Success'; break;
+            case 'error': case 'danger': title = 'Error'; break;
+            case 'warning': title = 'Warning'; break;
+            case 'info': title = 'Info'; break;
+            default: title = 'Notification';
+        }
+    }
+    toastTitle.innerText = title;
 
     // Reset classes
-    toastElement.classList.remove('text-bg-primary', 'text-bg-success', 'text-bg-danger', 'text-bg-warning', 'text-bg-info');
+    toastElement.classList.remove('toast-success', 'toast-error', 'toast-warning', 'toast-info');
 
-    // Add type class
+    // Add type class and icon
+    let iconClass = '';
     switch (type) {
         case 'success':
-            toastElement.classList.add('text-bg-success');
+            toastElement.classList.add('toast-success');
+            iconClass = 'fa-solid fa-circle-check';
             break;
         case 'error':
         case 'danger':
-            toastElement.classList.add('text-bg-danger');
+            toastElement.classList.add('toast-error');
+            iconClass = 'fa-solid fa-circle-xmark';
             break;
         case 'warning':
-            toastElement.classList.add('text-bg-warning');
+            toastElement.classList.add('toast-warning');
+            iconClass = 'fa-solid fa-triangle-exclamation';
             break;
         case 'info':
-            toastElement.classList.add('text-bg-info');
+            toastElement.classList.add('toast-info');
+            iconClass = 'fa-solid fa-circle-info';
             break;
         default:
-            toastElement.classList.add('text-bg-primary');
+            toastElement.classList.add('toast-info');
+            iconClass = 'fa-solid fa-circle-info';
     }
 
-    const toast = new bootstrap.Toast(toastElement);
+    toastIcon.innerHTML = `<i class="${iconClass}"></i>`;
+
+    const toast = new bootstrap.Toast(toastElement, {
+        delay: 4000
+    });
     toast.show();
 }
 
@@ -587,6 +609,69 @@ function deleteCategory(id) {
 
         if (response.status) {
             location.reload();
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
+}
+
+function updateBooking() {
+    var id = document.getElementById('editBookingId').value;
+    var fname = document.getElementById('editFirstName').value;
+    var lname = document.getElementById('editLastName').value;
+    var nic = document.getElementById('editNIC').value;
+    var contact = document.getElementById('editContact').value;
+    var specialRequests = document.getElementById('editSpecialRequests').value;
+
+    if (!fname || !lname || !nic || !contact) {
+        showToast('Please fill all required fields', 'warning');
+        return;
+    }
+
+    var form = new FormData();
+    form.append('id', id);
+    form.append('fname', fname);
+    form.append('lname', lname);
+    form.append('nic', nic);
+    form.append('contact', contact);
+    form.append('specialRequests', specialRequests);
+
+    PostRequest('/lib/edit-booking-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast('Booking updated successfully', 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
+}
+
+function deleteBooking(id) {
+    if (!confirm('Are you sure you want to cancel this booking?')) {
+        return;
+    }
+
+    var form = new FormData();
+    form.append('id', id);
+
+    PostRequest('/lib/delete-booking-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast('Booking cancelled successfully', 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         } else {
             showToast(response.message, 'error');
         }

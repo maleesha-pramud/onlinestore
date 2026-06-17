@@ -33,13 +33,16 @@ if (isset($_SESSION['email'])) {
                         if (isset($userData['user_type_id'])) {
                             if ($userData['user_type_id'] == 1) {
                                 echo '<li><a class="dropdown-item bold" href="/admin/dashboard.php">Admin Dashboard</a></li>';
-                                echo '<li><a class="dropdown-item" href="/listing/bookings.php">Manage Bookings</a></li>';
                             } else if ($userData['user_type_id'] == 2) {
                                 echo '<li><a class="dropdown-item bold" href="/producer/dashboard.php">Host Dashboard</a></li>';
-                                echo '<li><a class="dropdown-item" href="/listing/bookings.php">Manage Bookings</a></li>';
-                            } else {
-                                echo '<li><a class="dropdown-item" href="/my-bookings.php">My Bookings</a></li>';
                             }
+                            
+                            echo '<li><a class="dropdown-item" href="/my-bookings.php">My Bookings</a></li>';
+                            
+                            if ($userData['user_type_id'] == 1 || $userData['user_type_id'] == 2) {
+                                echo '<li><a class="dropdown-item" href="/listing/bookings.php">Manage Bookings</a></li>';
+                            }
+
                             echo '<li><a class="dropdown-item" href="/account-settings.php">Account Settings</a></li>';
                             echo '<div class="dropdown-divider"></div>';
                             echo '<li><a class="dropdown-item" href="/logout.php">Log Out</a></li>';
