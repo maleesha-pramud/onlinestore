@@ -759,4 +759,28 @@ function initFavorites() {
     });
 }
 
+// Share Functionality
+function shareLink(title, text, url) {
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            text: text,
+            url: url || window.location.href
+        }).then(() => {
+            console.log('Successful share');
+        }).catch((error) => {
+            console.log('Error sharing', error);
+        });
+    } else {
+        // Fallback: Copy to clipboard
+        const shareUrl = url || window.location.href;
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast('Link copied to clipboard!', 'success');
+        }).catch(err => {
+            showToast('Failed to copy link', 'error');
+            console.error('Could not copy text: ', err);
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', initFavorites);
