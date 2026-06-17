@@ -1,1 +1,5 @@
 - implement reviews and ratings functionality (users can put a review to a property only if they have booked that property once)
+- implement a DB Cart 
+- implement add to favourites
+- implement share functionality
+- implement (unique) users viewed count save to database and displayed to property management page

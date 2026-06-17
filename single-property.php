@@ -18,6 +18,46 @@ $amenitiesStmt = Database::search("
     JOIN properties_has_amenities pa ON a.id = pa.amenities_id
     WHERE pa.properties_id = '$propertyId'
 ");
+
+// Fetch reviews
+$reviewsStmt = Database::search("
+    SELECT r.*, u.fname, u.lname 
+    FROM reviews r 
+    JOIN users u ON r.users_id = u.id 
+    WHERE r.properties_id = '$propertyId' 
+    ORDER BY r.created_at DESC
+");
+
+$totalReviews = $reviewsStmt->num_rows;
+$averageRating = 0;
+$reviewsArray = [];
+if ($totalReviews > 0) {
+    $sumRating = 0;
+    while ($row = $reviewsStmt->fetch_assoc()) {
+        $sumRating += $row['rating'];
+        $reviewsArray[] = $row;
+    }
+    $averageRating = round($sumRating / $totalReviews, 1);
+}
+
+$hasBooked = false;
+$hasReviewed = false;
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+    $bookingCheck = Database::search("SELECT `id` FROM `bookings` WHERE `email` = '$email' AND `properties_id` = '$propertyId'");
+    if ($bookingCheck->num_rows > 0) {
+        $hasBooked = true;
+    }
+
+    $userStmt = Database::search("SELECT `id` FROM `users` WHERE `email` = '$email'");
+    if ($userStmt->num_rows > 0) {
+        $userId = $userStmt->fetch_assoc()['id'];
+        $reviewCheck = Database::search("SELECT `id` FROM `reviews` WHERE `users_id` = '$userId' AND `properties_id` = '$propertyId'");
+        if ($reviewCheck->num_rows > 0) {
+            $hasReviewed = true;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +136,7 @@ $amenitiesStmt = Database::search("
                          </div>
                     </div>
 
-                    <div class="py-4">
+                    <div class="py-4 border-bottom">
                         <h2 class="section-title">What this place offers</h2>
                         <div class="amenities-grid">
                             <?php while ($amenity = $amenitiesStmt->fetch_assoc()) { ?>
@@ -106,6 +146,64 @@ $amenitiesStmt = Database::search("
                                 </div>
                             <?php } ?>
                         </div>
+                    </div>
+
+                    <div class="py-4 border-top">
+                        <div class="d-flex align-items-center gap-2 mb-4">
+                            <h2 class="section-title mb-0"><i class="fa-solid fa-star me-2"></i><?php echo ($totalReviews > 0) ? $averageRating . " &middot; " . $totalReviews . " reviews" : "No reviews yet"; ?></h2>
+                        </div>
+
+                        <div class="row g-4">
+                            <?php if ($totalReviews > 0) {
+                                foreach ($reviewsArray as $review) { ?>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center gap-3 mb-2">
+                                            <div class="avatar bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                <i class="fa-solid fa-user text-secondary"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold"><?php echo $review['fname'] . " " . $review['lname']; ?></h6>
+                                                <p class="text-secondary small mb-0"><?php echo date("F Y", strtotime($review['created_at'])); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                                <i class="fa-solid fa-star <?php echo ($i <= $review['rating']) ? 'text-warning' : 'text-light'; ?> small"></i>
+                                            <?php } ?>
+                                        </div>
+                                        <p class="text-secondary"><?php echo $review['comment']; ?></p>
+                                    </div>
+                                <?php }
+                            } ?>
+                        </div>
+
+                        <?php if ($hasBooked && !$hasReviewed) { ?>
+                            <div class="mt-5 p-4 bg-light rounded-4">
+                                <h4 class="fw-bold mb-3">Leave a Review</h4>
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Rating</label>
+                                    <div class="rating-input d-flex gap-2">
+                                        <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                            <input type="radio" name="rating" value="<?php echo $i; ?>" id="rate-<?php echo $i; ?>" class="btn-check">
+                                            <label class="btn btn-outline-warning btn-sm" for="rate-<?php echo $i; ?>"><?php echo $i; ?> <i class="fa-solid fa-star"></i></label>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reviewComment" class="form-label">Your Comment</label>
+                                    <textarea class="form-control" id="reviewComment" rows="3" placeholder="Share your experience..."></textarea>
+                                </div>
+                                <button class="btn btn-primary px-4" onclick="addReview(<?php echo $propertyId; ?>)">Submit Review</button>
+                            </div>
+                        <?php } else if ($hasBooked && $hasReviewed) { ?>
+                            <div class="mt-5 p-3 border border-success-subtle bg-success-subtle text-success rounded-3">
+                                <i class="fa-solid fa-circle-check me-2"></i>You have already reviewed this property. Thank you!
+                            </div>
+                        <?php } else if (isset($_SESSION['email'])) { ?>
+                            <div class="mt-5 p-3 border bg-light text-secondary rounded-3">
+                                <i class="fa-solid fa-circle-info me-2"></i>Only guests who have booked this property can leave a review.
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

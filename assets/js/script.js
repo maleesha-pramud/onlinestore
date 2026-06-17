@@ -677,3 +677,39 @@ function deleteBooking(id) {
         }
     });
 }
+
+function addReview(propertyId) {
+    var rating = document.querySelector('input[name="rating"]:checked');
+    var comment = document.getElementById('reviewComment').value;
+
+    if (!rating) {
+        showToast('Please select a rating', 'warning');
+        return;
+    }
+
+    if (!comment) {
+        showToast('Please enter a comment', 'warning');
+        return;
+    }
+
+    var form = new FormData();
+    form.append('propertyId', propertyId);
+    form.append('rating', rating.value);
+    form.append('comment', comment);
+
+    PostRequest('/lib/add-review-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast(response.message, 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
+}
