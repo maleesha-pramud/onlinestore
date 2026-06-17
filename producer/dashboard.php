@@ -65,30 +65,31 @@ $bookingCount = Database::search("SELECT b.* FROM bookings b JOIN properties p O
                             <tr>
                                 <th>Property Name</th>
                                 <th>Price</th>
-                                <th>Status</th>
+                                <th>Category</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Example Row -->
+                            <?php
+                            $recentProperties = Database::search("SELECT p.*, c.name as category_name FROM properties p JOIN categories c ON p.categories_id = c.id WHERE p.users_id = '$userId' ORDER BY p.id DESC LIMIT 5");
+                            if ($recentProperties->num_rows > 0) {
+                                while ($property = $recentProperties->fetch_assoc()) {
+                            ?>
                             <tr>
-                                <td>Waterside Apartment</td>
-                                <td>LKR 250.00 / night</td>
-                                <td><span class="badge bg-success-soft text-success">Active</span></td>
+                                <td><?php echo $property['title']; ?></td>
+                                <td>LKR <?php echo number_format($property['base_price'], 2); ?> / night</td>
+                                <td><span class="badge bg-primary-soft text-primary"><?php echo $property['category_name']; ?></span></td>
                                 <td class="action-links">
-                                    <a href="#">Edit</a>
-                                    <a href="#" class="text-danger">Delete</a>
+                                    <a href="/listing/edit.php?id=<?php echo $property['id']; ?>">Edit</a>
+                                    <a href="#" class="text-danger" onclick="deleteListing(<?php echo $property['id']; ?>)">Delete</a>
                                 </td>
                             </tr>
-                             <tr>
-                                <td>Ebony Suite</td>
-                                <td>LKR 400.00 / night</td>
-                                <td><span class="badge bg-warning-soft text-warning">Pending Review</span></td>
-                                <td class="action-links">
-                                    <a href="#">Edit</a>
-                                    <a href="#" class="text-danger">Delete</a>
-                                </td>
-                            </tr>
+                            <?php
+                                }
+                            } else {
+                                echo '<tr><td colspan="4" class="text-center">You haven\'t added any properties yet.</td></tr>';
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>

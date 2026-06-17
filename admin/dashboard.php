@@ -70,7 +70,7 @@ $bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
             <div class="mt-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                      <h2 class="section-title mb-0">Recent Bookings</h2>
-                     <a href="#" class="btn btn-primary">View All</a>
+                     <a href="/listing/bookings.php" class="btn btn-primary">View All</a>
                 </div>
                 <div class="table-container">
                     <table class="table">
@@ -78,27 +78,30 @@ $bookingCount = Database::search("SELECT * FROM bookings")->num_rows;
                             <tr>
                                 <th>Order ID</th>
                                 <th>Customer</th>
-                                <th>Property ID</th>
+                                <th>Property</th>
                                 <th>Total Price</th>
-                                <th>Status</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Example Row -->
+                            <?php
+                            $recentBookings = Database::search("SELECT b.*, p.title as property_title FROM bookings b JOIN properties p ON b.properties_id = p.id ORDER BY b.id DESC LIMIT 5");
+                            if ($recentBookings->num_rows > 0) {
+                                while ($booking = $recentBookings->fetch_assoc()) {
+                            ?>
                             <tr>
-                                <td>#12345</td>
-                                <td>John Doe</td>
-                                <td>PROP56</td>
-                                <td>LKR 350.00</td>
-                                <td><span class="badge bg-success-soft text-success">Confirmed</span></td>
+                                <td>#<?php echo $booking['order_id']; ?></td>
+                                <td><?php echo $booking['first_name'] . ' ' . $booking['last_name']; ?></td>
+                                <td><?php echo $booking['property_title']; ?></td>
+                                <td>LKR <?php echo number_format($booking['total_price'], 2); ?></td>
+                                <td><?php echo date("M d, Y", strtotime($booking['checkIn'])); ?></td>
                             </tr>
-                             <tr>
-                                <td>#12346</td>
-                                <td>Jane Smith</td>
-                                <td>PROP78</td>
-                                <td>LKR 500.00</td>
-                                <td><span class="badge bg-warning-soft text-warning">Pending</span></td>
-                            </tr>
+                            <?php 
+                                }
+                            } else {
+                                echo '<tr><td colspan="5" class="text-center">No recent bookings found.</td></tr>';
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
