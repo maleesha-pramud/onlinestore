@@ -35,10 +35,14 @@ if (!empty($selectedAmenities)) {
     $conditions[] = "id IN (SELECT properties_id FROM properties_has_amenities WHERE amenities_id IN ($amenityList) GROUP BY properties_id HAVING COUNT(DISTINCT amenities_id) = $amenityCount)";
 }
 
-$query = "SELECT * FROM properties";
+$query = "
+    SELECT p.*, AVG(r.rating) AS avg_rating, COUNT(r.id) AS review_count 
+    FROM properties p 
+    LEFT JOIN reviews r ON p.id = r.properties_id";
 if (!empty($conditions)) {
     $query .= " WHERE " . implode(" AND ", $conditions);
 }
+$query .= " GROUP BY p.id";
 
 $propertiesStmt = Database::search($query);
 $propertiesExist = $propertiesStmt && $propertiesStmt->num_rows > 0;
@@ -114,7 +118,7 @@ if ($categoryId) {
                                                 <h5 class="card-title mb-0"><?php echo $property['title']; ?></h5>
                                                 <div class="d-flex align-items-center">
                                                     <i class="fa-solid fa-star text-warning me-1 small"></i>
-                                                    <span class="small fw-bold">4.8</span>
+                                                    <span class="small fw-bold"><?php echo ($property['review_count'] > 0) ? number_format($property['avg_rating'], 1) : "New"; ?></span>
                                                 </div>
                                             </div>
                                             <p class="card-text text-secondary small mb-3">

@@ -3,9 +3,23 @@ session_start();
 include './includes/connection.php';
 
 // Featured Properties (Limit 6)
-$propertiesStmt = Database::search("SELECT * FROM properties ORDER BY RAND() LIMIT 6");
+$propertiesStmt = Database::search("
+    SELECT p.*, AVG(r.rating) AS avg_rating, COUNT(r.id) AS review_count 
+    FROM properties p 
+    LEFT JOIN reviews r ON p.id = r.properties_id 
+    GROUP BY p.id 
+    ORDER BY RAND() 
+    LIMIT 6
+");
 // Newest Properties (Limit 4)
-$newestPropertiesStmt = Database::search("SELECT * FROM properties ORDER BY id DESC LIMIT 4");
+$newestPropertiesStmt = Database::search("
+    SELECT p.*, AVG(r.rating) AS avg_rating, COUNT(r.id) AS review_count 
+    FROM properties p 
+    LEFT JOIN reviews r ON p.id = r.properties_id 
+    GROUP BY p.id 
+    ORDER BY p.id DESC 
+    LIMIT 4
+");
 // All Categories
 $categoriesStmt = Database::search("SELECT * FROM categories");
 // All Amenities
@@ -396,7 +410,8 @@ $amenitiesStmt = Database::search("SELECT * FROM amenities");
                                     <img src="assets/images/properties/<?php echo $firstImage; ?>" class="card-img-top h-100 w-100 object-fit-cover transition-all" alt="<?php echo $property['title']; ?>">
                                     <div class="position-absolute top-0 start-0 p-3">
                                         <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 fw-bold small">
-                                            <i class="bi bi-star-fill text-warning me-1"></i> 4.9
+                                            <i class="bi bi-star-fill text-warning me-1"></i> 
+                                            <?php echo ($property['review_count'] > 0) ? number_format($property['avg_rating'], 1) : "New"; ?>
                                         </span>
                                     </div>
                                     <div class="position-absolute top-0 end-0 p-3">

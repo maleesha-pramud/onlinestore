@@ -37,7 +37,7 @@ if ($totalReviews > 0) {
         $sumRating += $row['rating'];
         $reviewsArray[] = $row;
     }
-    $averageRating = round($sumRating / $totalReviews, 1);
+    $averageRating = number_format($sumRating / $totalReviews, 1);
 }
 
 $hasBooked = false;

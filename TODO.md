@@ -1,4 +1,5 @@
 - implement reviews and ratings functionality (users can put a review to a property only if they have booked that property once)
+- use bootstrap datatables with working paginations and search functionalities for dashboard pages
 - implement a DB Cart 
 - implement add to favourites
 - implement share functionality
