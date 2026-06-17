@@ -112,7 +112,7 @@ $userType = $userData['user_type_id'];
                                 <div class="col-md-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="<?php echo $amenity['id'] ?>" id="amenity-<?php echo $amenity['id'] ?>" name="amenities[]">
-                                        <label class="form-check-label" for="amenity-<?php echo $amenity['id'] ?>">
+                                        <label class="form-check-label" for="amenity-<?php echo $amenity['id'] ?>" style="cursor: pointer;">
                                             <?php echo $amenity['name'] ?>
                                         </label>
                                     </div>

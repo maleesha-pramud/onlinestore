@@ -35,3 +35,14 @@
 .search-results {
     flex-grow: 1;
 }
+
+/* Offcanvas Filter Adjustments */
+.offcanvas .filter-card {
+    position: static;
+    box-shadow: none !important;
+    padding: 0;
+}
+
+.offcanvas .filter-group:last-child {
+    margin-bottom: 2rem;
+}

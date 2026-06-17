@@ -64,76 +64,30 @@ if ($categoryId) {
     <?php include './components/NavigationBar.php'; ?>
 
     <main class="container py-5">
-        <div class="row">
-            <div class="col-12 mb-4">
+        <div class="row align-items-center mb-4">
+            <div class="col-md-8">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
+                    <ol class="breadcrumb mb-2">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Search</li>
                     </ol>
                 </nav>
                 <h2 class="section-title mb-1"><?php echo $categoryName; ?></h2>
-                <p class="text-secondary"><?php echo $propertiesStmt ? $propertiesStmt->num_rows : 0; ?> properties found</p>
+                <p class="text-secondary mb-0"><?php echo $propertiesStmt ? $propertiesStmt->num_rows : 0; ?> properties found</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0 d-lg-none">
+                <button class="btn btn-outline-primary rounded-pill px-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters" aria-controls="offcanvasFilters">
+                    <i class="fa-solid fa-sliders me-2"></i> Filters
+                </button>
             </div>
         </div>
 
         <div class="search-layout">
             <aside class="filter-sidebar d-none d-lg-block">
-                <form action="search.php" method="GET">
-                    <?php if (!empty($searchTerm)): ?>
-                        <input type="hidden" name="q" value="<?php echo htmlspecialchars($searchTerm); ?>">
-                    <?php endif; ?>
-                    <?php if ($categoryId): ?>
-                        <input type="hidden" name="id" value="<?php echo $categoryId; ?>">
-                    <?php endif; ?>
-
-                    <div class="card filter-card border-0 shadow-sm">
-                        <div class="filter-group">
-                            <h3 class="filter-title">Filter by Price</h3>
-                            <div class="mb-3">
-                                <label for="priceRange" class="form-label text-secondary small">Max Price per night</label>
-                                <input type="range" name="max_price" class="form-range" min="0" max="<?php echo $absoluteMaxPrice; ?>" step="10" id="priceRange" value="<?php echo $maxPrice; ?>">
-                                <div class="d-flex justify-content-between text-secondary small mt-2">
-                                    <span>LKR 0</span>
-                                    <span id="priceValue" class="fw-bold text-primary">LKR <?php echo $maxPrice; ?></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="filter-group">
-                            <h3 class="filter-title">Categories</h3>
-                            <?php
-                            $allCats = Database::search("SELECT * FROM categories");
-                            while ($cat = $allCats->fetch_assoc()) {
-                                $activeClass = ($categoryId == $cat['id']) ? 'fw-bold text-primary' : 'text-secondary';
-                            ?>
-                                <div class="mb-2">
-                                    <a href="/search.php?id=<?php echo $cat['id']; ?><?php echo !empty($searchTerm) ? '&q='.urlencode($searchTerm) : ''; ?>" class="text-decoration-none <?php echo $activeClass; ?> small">
-                                        <?php echo $cat['name']; ?>
-                                    </a>
-                                </div>
-                            <?php } ?>
-                        </div>
-
-                        <div class="filter-group">
-                            <h3 class="filter-title">Amenities</h3>
-                            <?php
-                            $amenitiesStmt = Database::search("SELECT * FROM `amenities` LIMIT 8");
-                            while ($amenity = $amenitiesStmt->fetch_assoc()) {
-                                $checked = in_array($amenity['id'], $selectedAmenities) ? 'checked' : '';
-                            ?>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="<?php echo $amenity['id'] ?>" id="amenity-filter-<?php echo $amenity['id'] ?>" <?php echo $checked; ?>>
-                                    <label class="form-check-label small text-secondary" for="amenity-filter-<?php echo $amenity['id'] ?>">
-                                        <?php echo $amenity['name'] ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Apply Filters</button>
-                        <button type="button" class="btn btn-link w-100 mt-2 text-secondary small" onclick="window.location.href='/search.php'">Clear All</button>
-                    </div>
-                </form>
+                <?php 
+                $filterPrefix = "desktop";
+                include './components/FilterForm.php'; 
+                ?>
             </aside>
 
             <div class="search-results">
@@ -195,15 +149,32 @@ if ($categoryId) {
         </div>
     </main>
 
+    <!-- Mobile Filters Offcanvas -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasFilters" aria-labelledby="offcanvasFiltersLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasFiltersLabel">Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="p-3">
+                <?php 
+                $filterPrefix = "mobile";
+                include './components/FilterForm.php'; 
+                ?>
+            </div>
+        </div>
+    </div>
+
     <?php include './components/script.php'; ?>
     <script>
-        const priceRange = document.getElementById('priceRange');
-        const priceValue = document.getElementById('priceValue');
-        if(priceRange) {
-            priceRange.addEventListener('input', function() {
-                priceValue.textContent = 'LKR ' + this.value;
+        document.querySelectorAll('.price-range-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const valueSpan = this.parentElement.querySelector('.price-range-value');
+                if (valueSpan) {
+                    valueSpan.textContent = 'LKR ' + this.value;
+                }
             });
-        }
+        });
     </script>
 </body>
 </html>

@@ -1,2 +1,1 @@
-- fix the responsive issues of @search.php page on mobile screens
 - implement reviews and ratings functionality (users can put a review to a property only if they have booked that property once)
