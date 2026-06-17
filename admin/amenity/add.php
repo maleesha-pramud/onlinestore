@@ -169,11 +169,11 @@ $commonIcons = [
       const icon_cls = document.getElementById('icon_cls').value;
 
       if (!name) {
-        alert('Please enter amenity name');
+        showToast('Please enter amenity name', 'warning');
         return;
       }
       if (!icon_cls) {
-        alert('Please select an icon');
+        showToast('Please select an icon', 'warning');
         return;
       }
 
@@ -183,14 +183,14 @@ $commonIcons = [
 
       PostRequest('/lib/add-amenity-process.php', form, function(response, error) {
         if (error) {
-          alert(error);
+          showToast(error, 'error');
           return;
         }
 
         if (response.status) {
           window.location.href = '/admin/amenity/list.php';
         } else {
-          alert(response.message);
+          showToast(response.message, 'error');
         }
       });
     }

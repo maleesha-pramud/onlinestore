@@ -103,14 +103,14 @@ $RootPath = '/';
 
         GetRequest('/lib/delete-amenity-process.php', {id: id}, function (response, error) {
           if (error) {
-            alert(error);
+            showToast(error, 'error');
             return;
           }
 
           if (response.status) {
             location.reload();
           } else {
-            alert(response.message);
+            showToast(response.message, 'error');
           }
         });
       }

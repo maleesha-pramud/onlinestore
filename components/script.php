@@ -12,3 +12,17 @@
 <script src="https://kit.fontawesome.com/58cb4002a7.js" crossorigin="anonymous"></script>
 <script src="/assets/js/script.js"></script>
 <script src="/assets/js/ui-script.js"></script> 
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto" id="toastTitle">Notification</strong>
+      <small id="toastTime">Just now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="toastMessage">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div>

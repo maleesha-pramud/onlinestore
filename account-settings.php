@@ -131,7 +131,7 @@ $userType = $userData['user_type_id'];
             const mobile = document.getElementById('mobile').value;
 
             if (!fname || !lname || !mobile) {
-                alert('All fields are required');
+                showToast('All fields are required', 'warning');
                 return;
             }
 
@@ -142,14 +142,16 @@ $userType = $userData['user_type_id'];
 
             PostRequest('/lib/update-profile-process.php', form, function(response, error) {
                 if (error) {
-                    alert(error);
+                    showToast(error, 'error');
                     return;
                 }
                 if (response.status) {
-                    alert('Profile updated successfully');
-                    location.reload();
+                    showToast('Profile updated successfully', 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                 } else {
-                    alert(response.message);
+                    showToast(response.message, 'error');
                 }
             });
         }
@@ -160,17 +162,17 @@ $userType = $userData['user_type_id'];
             const confirmPassword = document.getElementById('confirmPassword').value;
 
             if (!currPassword || !newPassword || !confirmPassword) {
-                alert('All password fields are required');
+                showToast('All password fields are required', 'warning');
                 return;
             }
 
             if (newPassword !== confirmPassword) {
-                alert('New passwords do not match');
+                showToast('New passwords do not match', 'warning');
                 return;
             }
 
             if (newPassword.length < 8) {
-                alert('New password must be at least 8 characters long');
+                showToast('New password must be at least 8 characters long', 'warning');
                 return;
             }
 
@@ -180,16 +182,16 @@ $userType = $userData['user_type_id'];
 
             PostRequest('/lib/change-password-process.php', form, function(response, error) {
                 if (error) {
-                    alert(error);
+                    showToast(error, 'error');
                     return;
                 }
                 if (response.status) {
-                    alert('Password updated successfully');
+                    showToast('Password updated successfully', 'success');
                     document.getElementById('currPassword').value = '';
                     document.getElementById('newPassword').value = '';
                     document.getElementById('confirmPassword').value = '';
                 } else {
-                    alert(response.message);
+                    showToast(response.message, 'error');
                 }
             });
         }

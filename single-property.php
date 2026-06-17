@@ -162,7 +162,7 @@ $amenitiesStmt = Database::search("
                         }).catch(console.error);
                     } else {
                         navigator.clipboard.writeText(window.location.href);
-                        alert('Link copied to clipboard!');
+                        showToast('Link copied to clipboard!', 'success');
                     }
                 }
             });

@@ -122,13 +122,13 @@ while ($ut = $userTypesStmt->fetch_assoc()) {
 
             PostRequest('/lib/update-user-type-process.php', form, function(response, error) {
                 if (error) {
-                    alert(error);
+                    showToast(error, 'error');
                     return;
                 }
                 if (response.status) {
-                    // Success, maybe show a toast or just leave it
+                    showToast('User type updated successfully', 'success');
                 } else {
-                    alert(response.message);
+                    showToast(response.message, 'error');
                 }
             });
         }
@@ -137,13 +137,13 @@ while ($ut = $userTypesStmt->fetch_assoc()) {
             if (confirm('Are you sure you want to delete this user? All their properties and bookings will also be removed.')) {
                 GetRequest('/lib/delete-user-process.php', {id: id}, function(response, error) {
                     if (error) {
-                        alert(error);
+                        showToast(error, 'error');
                         return;
                     }
                     if (response.status) {
                         location.reload();
                     } else {
-                        alert(response.message);
+                        showToast(response.message, 'error');
                     }
                 });
             }

@@ -1,3 +1,37 @@
+function showToast(message, type = 'info', title = 'Notification') {
+    const toastElement = document.getElementById('liveToast');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMessage = document.getElementById('toastMessage');
+
+    toastTitle.innerText = title;
+    toastMessage.innerText = message;
+
+    // Reset classes
+    toastElement.classList.remove('text-bg-primary', 'text-bg-success', 'text-bg-danger', 'text-bg-warning', 'text-bg-info');
+
+    // Add type class
+    switch (type) {
+        case 'success':
+            toastElement.classList.add('text-bg-success');
+            break;
+        case 'error':
+        case 'danger':
+            toastElement.classList.add('text-bg-danger');
+            break;
+        case 'warning':
+            toastElement.classList.add('text-bg-warning');
+            break;
+        case 'info':
+            toastElement.classList.add('text-bg-info');
+            break;
+        default:
+            toastElement.classList.add('text-bg-primary');
+    }
+
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+}
+
 function PostRequest(path, formData, callback) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function () {
@@ -124,7 +158,7 @@ function forgotPassword() {
     req.onreadystatechange = function () {
         if (req.readyState == 4 && req.status == 200) {
             var response = req.responseText;
-            alert(response);
+            showToast(response, 'info');
         }
     }
 
@@ -144,14 +178,14 @@ function resetPassword() {
 
     PostRequest('./lib/reset-password-process.php', form, function (response, error) {
         if (error) {
-            alert(error);
+            showToast(error, 'error');
             return;
         }
 
         if (response.status) {
             window.location.href = '/signin.php';
         } else {
-            alert(response.message);
+            showToast(response.message, 'error');
         }
     });
 }
@@ -162,13 +196,13 @@ function checkAvailability(listingId) {
     var guests = document.getElementById('guests').value;
 
     if (!checkIn) {
-        alert('Please Enter the Check In date')
+        showToast('Please Enter the Check In date', 'warning')
         return;
     } else if (!checkOut) {
-        alert('Please Enter the Check Out date')
+        showToast('Please Enter the Check Out date', 'warning')
         return;
     } else if (!guests) {
-        alert('Please Enter the number of guests')
+        showToast('Please Enter the number of guests', 'warning')
         return;
     }
 
@@ -184,7 +218,7 @@ function checkAvailability(listingId) {
             if (response === 'success') {
                 window.location.href = '/booking.php?id=' + listingId + '&checkIn=' + checkIn + '&checkOut=' + checkOut + '&guests=' + guests;
             } else {
-                alert(response);
+                showToast(response, 'error');
             }
         }
     }
@@ -208,22 +242,22 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
     var specialRequests = document.getElementById('specialRequests').value;
 
     if (!fname) {
-        alert("First name is required.");
+        showToast("First name is required.", 'warning');
         return;
     } else if (lname === "") {
-        alert("Last name is required.");
+        showToast("Last name is required.", 'warning');
         return;
     } else if (nic === "") {
-        alert("NIC is required.");
+        showToast("NIC is required.", 'warning');
         return;
     } else if (contact === "" || !/^\d+$/.test(contact)) {
-        alert("Valid contact number is required.");
+        showToast("Valid contact number is required.", 'warning');
         return;
     } else if (guests === "" || !/^\d+$/.test(guests)) {
-        alert("Guests count must be a valid number.");
+        showToast("Guests count must be a valid number.", 'warning');
         return;
     } else if (email === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert("Valid email address is required.");
+        showToast("Valid email address is required.", 'warning');
         return;
     }
 
@@ -242,7 +276,7 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
 
     PostRequest('/lib/checkout-process.php', formData, function (response, error) {
         if (error) {
-            alert(error);
+            showToast(error, 'error');
             console.log(error);
             return;
         }
@@ -295,7 +329,7 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
 function booking(formData) {
     PostRequest('/lib/booking-process.php', formData, function (response, error) {
         if (error) {
-            alert(error);
+            showToast(error, 'error');
             console.log(error);
             return;
         }
@@ -303,7 +337,7 @@ function booking(formData) {
         if (response.status) {
             window.location.href = '/';
         } else {
-            alert(response.message);
+            showToast(response.message, 'error');
         }
     })
 }
@@ -325,25 +359,25 @@ function addListing(userId) {
 
     // Validate the values before appending to FormData
     if (!title) {
-        alert('Please enter a title');
+        showToast('Please enter a title', 'warning');
     } else if (!category) {
-        alert('Please select a category');
+        showToast('Please select a category', 'warning');
     } else if (!description) {
-        alert('Please enter a description');
+        showToast('Please enter a description', 'warning');
     } else if (!address) {
-        alert('Please enter an address');
+        showToast('Please enter an address', 'warning');
     } else if (!guests) {
-        alert('Please enter the number of guests');
+        showToast('Please enter the number of guests', 'warning');
     } else if (!bedrooms) {
-        alert('Please enter the number of bedrooms');
+        showToast('Please enter the number of bedrooms', 'warning');
     } else if (!beds) {
-        alert('Please enter the number of beds');
+        showToast('Please enter the number of beds', 'warning');
     } else if (!bathrooms) {
-        alert('Please enter the number of bathrooms');
+        showToast('Please enter the number of bathrooms', 'warning');
     } else if (images.length === 0) {
-        alert('Please select at least one image');
+        showToast('Please select at least one image', 'warning');
     } else if (!basePrice) {
-        alert('Please enter the base price');
+        showToast('Please enter the base price', 'warning');
     } else {
         var form = new FormData();
         form.append('userId', userId);
@@ -367,14 +401,14 @@ function addListing(userId) {
 
         PostRequest('/lib/add-listing-process.php', form, function (response, error) {
             if (error) {
-                alert(error);
+                showToast(error, 'error');
                 return;
             }
 
             if (response.status) {
                 window.location.href = '/';
             } else {
-                alert(response.message);
+                showToast(response.message, 'error');
                 console.log(response);
             }
         });
@@ -396,25 +430,25 @@ function editListing(propertyId) {
 
     // Validate the values before appending to FormData
     if (!title) {
-        alert('Please enter a title');
+        showToast('Please enter a title', 'warning');
     } else if (!category) {
-        alert('Please select a category');
+        showToast('Please select a category', 'warning');
     } else if (!description) {
-        alert('Please enter a description');
+        showToast('Please enter a description', 'warning');
     } else if (!address) {
-        alert('Please enter an address');
+        showToast('Please enter an address', 'warning');
     } else if (!guests) {
-        alert('Please enter the number of guests');
+        showToast('Please enter the number of guests', 'warning');
     } else if (!bedrooms) {
-        alert('Please enter the number of bedrooms');
+        showToast('Please enter the number of bedrooms', 'warning');
     } else if (!beds) {
-        alert('Please enter the number of beds');
+        showToast('Please enter the number of beds', 'warning');
     } else if (!bathrooms) {
-        alert('Please enter the number of bathrooms');
+        showToast('Please enter the number of bathrooms', 'warning');
     } else if (!basePrice) {
-        alert('Please enter the base price');
+        showToast('Please enter the base price', 'warning');
     } else if (!keptImages && newImages.length === 0) {
-        alert('Please select at least one image');
+        showToast('Please select at least one image', 'warning');
     } else {
         var form = new FormData();
         form.append('title', title);
@@ -441,14 +475,14 @@ function editListing(propertyId) {
 
         PostRequest('/lib/edit-listing-process.php', form, function (response, error) {
             if (error) {
-                alert(error);
+                showToast(error, 'error');
                 return;
             }
 
             if (response.status) {
                 window.location.href = '/listing/list.php';
             } else {
-                alert(response.message);
+                showToast(response.message, 'error');
                 console.log(response);
             }
         });
@@ -472,7 +506,7 @@ function deleteListing(id) {
 
     GetRequest('/lib/delete-listing-process.php', form, function (response, error) {
         if (error) {
-            alert(error);
+            showToast(error, 'error');
             console.log(error);
             return;
         }
@@ -480,7 +514,7 @@ function deleteListing(id) {
         if (response.status) {
             location.reload();
         } else {
-            alert(response.message);
+            showToast(response.message, 'error');
         }
     });
 }
@@ -494,7 +528,7 @@ function addCategory() {
     if (imageInput.files.length > 0) {
         image = imageInput.files[0];
     } else {
-        alert('Please select an image');
+        showToast('Please select an image', 'warning');
         return;
     }
 
@@ -507,10 +541,10 @@ function addCategory() {
             if (response.status) {
                 window.location.href = '/admin/category/list.php';
             } else {
-                alert(response.message);
+                showToast(response.message, 'error');
             }
         } else {
-            alert(error);
+            showToast(error, 'error');
         }
     });
 }
@@ -533,10 +567,10 @@ function editCategory() {
             if (response.status) {
                 window.location.href = '/admin/category/list.php';
             } else {
-                alert(response.message);
+                showToast(response.message, 'error');
             }
         } else {
-            alert(error);
+            showToast(error, 'error');
         }
     });
 }
@@ -546,7 +580,7 @@ function deleteCategory(id) {
 
     GetRequest('/lib/delete-category-process.php', form, function (response, error) {
         if (error) {
-            alert(error);
+            showToast(error, 'error');
             console.log(error);
             return;
         }
@@ -554,7 +588,7 @@ function deleteCategory(id) {
         if (response.status) {
             location.reload();
         } else {
-            alert(response.message);
+            showToast(response.message, 'error');
         }
     });
 }
