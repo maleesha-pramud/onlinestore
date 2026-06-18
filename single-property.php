@@ -224,8 +224,11 @@ if (isset($_SESSION['email'])) {
                                 <label for="guests" class="form-label">Number of guests</label>
                                 <input type="number" id="guests" name="guests" class="form-control" min="1" max="<?php echo $propertyData['guests']; ?>" required>
                             </div>
-                            <div class="d-grid mt-4">
+                            <div class="d-grid mt-4 gap-2">
                                 <button type="submit" class="btn btn-primary">Check Availability</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="addToCart(<?php echo $propertyId; ?>)">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                </button>
                             </div>
                         </form>
                     </div>

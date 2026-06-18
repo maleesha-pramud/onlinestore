@@ -38,6 +38,7 @@ if (isset($_SESSION['email'])) {
                             }
                             
                             echo '<li><a class="dropdown-item" href="/my-bookings.php">My Bookings</a></li>';
+                            echo '<li><a class="dropdown-item" href="/cart.php">My Cart</a></li>';
                             
                             if ($userData['user_type_id'] == 1 || $userData['user_type_id'] == 2) {
                                 echo '<li><a class="dropdown-item" href="/listing/bookings.php">Manage Bookings</a></li>';

@@ -1,4 +1,2 @@
 - implement a DB Cart 
-- implement add to favourites
-- implement share functionality
 - implement (unique) users viewed count save to database and displayed to property management page

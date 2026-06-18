@@ -106,3 +106,16 @@ CREATE TABLE `reviews` (
   CONSTRAINT `fk_reviews_properties` FOREIGN KEY (`properties_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_reviews_users` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
+
+-- Table structure for `cart`
+CREATE TABLE `cart` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `users_id` INT NOT NULL,
+  `properties_id` INT NOT NULL,
+  `checkIn` DATE NOT NULL,
+  `checkOut` DATE NOT NULL,
+  `guests` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_cart_users` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cart_properties` FOREIGN KEY (`properties_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE
+);

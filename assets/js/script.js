@@ -714,7 +714,7 @@ function addReview(propertyId) {
     });
 }
 
-// Favorites Functionality
+// Favorites Functionality (LocalStorage Only)
 function toggleFavorite(propertyId, element) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const index = favorites.indexOf(propertyId);
@@ -730,6 +730,56 @@ function toggleFavorite(propertyId, element) {
     }
 
     localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+// Cart Functionality (Database)
+function addToCart(propertyId) {
+    var checkIn = document.getElementById('checkIn').value;
+    var checkOut = document.getElementById('checkOut').value;
+    var guests = document.getElementById('guests').value;
+
+    if (!checkIn || !checkOut || !guests) {
+        showToast('Please select dates and guests first', 'warning');
+        return;
+    }
+
+    var form = new FormData();
+    form.append('propertyId', propertyId);
+    form.append('checkIn', checkIn);
+    form.append('checkOut', checkOut);
+    form.append('guests', guests);
+
+    PostRequest('/lib/add-to-cart-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast(response.message, 'success');
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
+}
+
+function removeFromCart(cartId) {
+    var form = new FormData();
+    form.append('id', cartId);
+
+    PostRequest('/lib/remove-from-cart-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast(response.message, 'success');
+            setTimeout(() => location.reload(), 500);
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
 }
 
 function updateFavoriteUI(element, isFavorite) {
