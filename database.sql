@@ -14,6 +14,18 @@ INSERT INTO `user_types` (`id`, `name`) VALUES
 (2, 'Producer'),
 (3, 'Customer');
 
+-- Table structure for `status`
+CREATE TABLE `status` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- Insert initial data for `status`
+INSERT INTO `status` (`id`, `name`) VALUES
+(1, 'Active'),
+(2, 'Inactive');
+
 -- Table structure for `users`
 CREATE TABLE `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -24,6 +36,7 @@ CREATE TABLE `users` (
   `password` VARCHAR(255) NOT NULL,
   `vcode` VARCHAR(255) DEFAULT NULL,
   `user_type_id` INT NOT NULL,
+  `status_id` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 );
 
@@ -66,6 +79,7 @@ CREATE TABLE `properties` (
   `images` TEXT NOT NULL,
   `base_price` DECIMAL(10,2) NOT NULL,
   `users_id` INT NOT NULL,
+  `status_id` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 );
 

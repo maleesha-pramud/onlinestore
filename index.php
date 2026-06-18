@@ -7,6 +7,7 @@ $propertiesStmt = Database::search("
     SELECT p.*, AVG(r.rating) AS avg_rating, COUNT(r.id) AS review_count 
     FROM properties p 
     LEFT JOIN reviews r ON p.id = r.properties_id 
+    WHERE p.status_id = 1
     GROUP BY p.id 
     ORDER BY RAND() 
     LIMIT 6
@@ -16,6 +17,7 @@ $newestPropertiesStmt = Database::search("
     SELECT p.*, AVG(r.rating) AS avg_rating, COUNT(r.id) AS review_count 
     FROM properties p 
     LEFT JOIN reviews r ON p.id = r.properties_id 
+    WHERE p.status_id = 1
     GROUP BY p.id 
     ORDER BY p.id DESC 
     LIMIT 4

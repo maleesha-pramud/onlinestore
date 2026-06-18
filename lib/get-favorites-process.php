@@ -20,7 +20,7 @@ $query = "
     SELECT p.*, AVG(r.rating) AS avg_rating, COUNT(r.id) AS review_count 
     FROM properties p 
     LEFT JOIN reviews r ON p.id = r.properties_id 
-    WHERE p.id IN ($idsString)
+    WHERE p.id IN ($idsString) AND p.status_id = 1
     GROUP BY p.id
 ";
 

@@ -19,7 +19,7 @@ $cartStmt = Database::search("
     FROM cart c 
     JOIN properties p ON c.properties_id = p.id 
     LEFT JOIN reviews r ON p.id = r.properties_id 
-    WHERE c.users_id = '$userId' 
+    WHERE c.users_id = '$userId' AND p.status_id = 1
     GROUP BY c.id
 ");
 ?>

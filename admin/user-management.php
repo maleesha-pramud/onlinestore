@@ -18,14 +18,26 @@ if (!isset($_SESSION['email'])) {
 
 $RootPath = '/';
 
-// Fetch users with their types
-$usersQuery = "SELECT u.*, ut.name as user_type_name FROM users u JOIN user_types ut ON u.user_type_id = ut.id ORDER BY u.id DESC";
+// Fetch users with their types and status
+$usersQuery = "
+    SELECT u.*, ut.name as user_type_name, s.name as status_name 
+    FROM users u 
+    JOIN user_types ut ON u.user_type_id = ut.id 
+    JOIN status s ON u.status_id = s.id 
+    ORDER BY u.id DESC
+";
 $usersStmt = Database::search($usersQuery);
 
 $userTypesStmt = Database::search("SELECT * FROM user_types");
 $userTypes = [];
 while ($ut = $userTypesStmt->fetch_assoc()) {
     $userTypes[] = $ut;
+}
+
+$statusStmt = Database::search("SELECT * FROM status");
+$statusList = [];
+while ($s = $statusStmt->fetch_assoc()) {
+    $statusList[] = $s;
 }
 ?>
 
@@ -61,6 +73,7 @@ while ($ut = $userTypesStmt->fetch_assoc()) {
                                     <th scope="col">User</th>
                                     <th scope="col">Contact</th>
                                     <th scope="col">Type</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col" class="text-end">Action</th>
                                 </tr>
                             </thead>
@@ -88,6 +101,15 @@ while ($ut = $userTypesStmt->fetch_assoc()) {
                                                 <?php foreach ($userTypes as $ut) { ?>
                                                     <option value="<?php echo $ut['id']; ?>" <?php echo ($user['user_type_id'] == $ut['id']) ? 'selected' : ''; ?>>
                                                         <?php echo $ut['name']; ?>
+                                                    </option>
+                                                <?php } ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm border-0 <?php echo $user['status_id'] == 1 ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger'; ?>" style="width: 110px;" onchange="updateUserStatus(<?php echo $user['id']; ?>, this.value)" <?php echo $isSelf ? 'disabled' : ''; ?>>
+                                                <?php foreach ($statusList as $s) { ?>
+                                                    <option value="<?php echo $s['id']; ?>" <?php echo ($user['status_id'] == $s['id']) ? 'selected' : ''; ?>>
+                                                        <?php echo $s['name']; ?>
                                                     </option>
                                                 <?php } ?>
                                             </select>
@@ -147,6 +169,25 @@ while ($ut = $userTypesStmt->fetch_assoc()) {
                     }
                 });
             }
+        }
+
+        function updateUserStatus(id, status) {
+            const form = new FormData();
+            form.append('id', id);
+            form.append('status', status);
+
+            PostRequest('/lib/update-user-status-process.php', form, function(response, error) {
+                if (error) {
+                    showToast(error, 'error');
+                    return;
+                }
+                if (response.status) {
+                    showToast('User status updated successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(response.message, 'error');
+                }
+            });
         }
     </script>
 </body>

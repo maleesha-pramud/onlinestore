@@ -17,9 +17,15 @@ $userType = $userData['user_type_id'];
 
 $propertiesStmt = null;
 if ($userType == 1) { // Admin
-    $propertiesStmt = Database::search("SELECT * FROM properties");
+    $propertiesStmt = Database::search("SELECT p.*, s.name as status_name FROM properties p JOIN status s ON p.status_id = s.id");
 } else { // Producer
-    $propertiesStmt = Database::search("SELECT * FROM properties WHERE `users_id` = $userId");
+    $propertiesStmt = Database::search("SELECT p.*, s.name as status_name FROM properties p JOIN status s ON p.status_id = s.id WHERE p.users_id = $userId");
+}
+
+$statusStmt = Database::search("SELECT * FROM status");
+$statusList = [];
+while ($s = $statusStmt->fetch_assoc()) {
+    $statusList[] = $s;
 }
 ?>
 
@@ -55,6 +61,7 @@ if ($userType == 1) { // Admin
                             <th>Title</th>
                             <th>Category</th>
                             <th>Price</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -71,6 +78,15 @@ if ($userType == 1) { // Admin
                                         ?>
                                     </td>
                                     <td>LKR <?php echo number_format($property['base_price']); ?> / night</td>
+                                    <td>
+                                        <select class="form-select form-select-sm border-0 <?php echo $property['status_id'] == 1 ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger'; ?>" style="width: 110px;" onchange="updatePropertyStatus(<?php echo $property['id']; ?>, this.value)">
+                                            <?php foreach ($statusList as $s) { ?>
+                                                <option value="<?php echo $s['id']; ?>" <?php echo ($property['status_id'] == $s['id']) ? 'selected' : ''; ?>>
+                                                    <?php echo $s['name']; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                    </td>
                                     <td class="action-links">
                                         <a href="/listing/edit.php?id=<?php echo $property['id']; ?>">Edit</a>
                                         <a href="#" onclick="deleteListing(<?php echo $property['id']; ?>)" class="text-danger">Delete</a>
@@ -85,5 +101,25 @@ if ($userType == 1) { // Admin
         </main>
     </div>
     <?php include '../components/script.php'; ?>
+    <script>
+        function updatePropertyStatus(id, status) {
+            const form = new FormData();
+            form.append('id', id);
+            form.append('status', status);
+
+            PostRequest('/lib/update-property-status-process.php', form, function(response, error) {
+                if (error) {
+                    showToast(error, 'error');
+                    return;
+                }
+                if (response.status) {
+                    showToast('Property status updated successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(response.message, 'error');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

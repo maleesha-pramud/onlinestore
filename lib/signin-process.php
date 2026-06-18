@@ -38,6 +38,12 @@ if (empty($email)) {
         return;
     }
 
+    $user = $rs->fetch_assoc();
+    if ($user['status_id'] != 1) {
+        echo json_encode(["message" => "Your account is inactive. Please contact support.", "status" => false]);
+        return;
+    }
+
     if ($rememberMe == "true") {
         setcookie("email", $email, time() + 60 * 60 * 24 * 30);
         setcookie("password", $password, time() + 60 * 60 * 24 * 30);

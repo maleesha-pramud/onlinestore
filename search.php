@@ -24,6 +24,8 @@ if ($categoryId) {
     $conditions[] = "categories_id = $categoryId";
 }
 
+$conditions[] = "status_id = 1";
+
 if (isset($_GET['max_price'])) {
     $conditions[] = "base_price <= $maxPrice";
 }
