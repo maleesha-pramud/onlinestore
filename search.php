@@ -17,24 +17,24 @@ $conditions = [];
 
 if (!empty($searchTerm)) {
     $escapedSearch = Database::escape($searchTerm);
-    $conditions[] = "(title LIKE '%$escapedSearch%' OR address LIKE '%$escapedSearch%')";
+    $conditions[] = "(p.title LIKE '%$escapedSearch%' OR p.address LIKE '%$escapedSearch%')";
 }
 
 if ($categoryId) {
-    $conditions[] = "categories_id = $categoryId";
+    $conditions[] = "p.categories_id = $categoryId";
 }
 
-$conditions[] = "status_id = 1";
+$conditions[] = "p.status_id = 1";
 
 if (isset($_GET['max_price'])) {
-    $conditions[] = "base_price <= $maxPrice";
+    $conditions[] = "p.base_price <= $maxPrice";
 }
 
 if (!empty($selectedAmenities)) {
     $amenityIds = array_map('intval', $selectedAmenities);
     $amenityList = implode(',', $amenityIds);
     $amenityCount = count($amenityIds);
-    $conditions[] = "id IN (SELECT properties_id FROM properties_has_amenities WHERE amenities_id IN ($amenityList) GROUP BY properties_id HAVING COUNT(DISTINCT amenities_id) = $amenityCount)";
+    $conditions[] = "p.id IN (SELECT properties_id FROM properties_has_amenities WHERE amenities_id IN ($amenityList) GROUP BY properties_id HAVING COUNT(DISTINCT amenities_id) = $amenityCount)";
 }
 
 $query = "

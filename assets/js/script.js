@@ -4,7 +4,7 @@ const RegexPatterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     passwordMin5: /^.{5,}$/,
     passwordMin8: /^.{8,}$/,
-    nic: /^(?:\d{9}[vVxX]|\\d{12})$/
+    nic: /^(?:[0-9]{9}[vVxX]|[0-9]{12})$/
 };
 
 function showToast(message, type = 'info', title = '') {
