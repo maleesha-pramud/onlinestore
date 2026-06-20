@@ -270,7 +270,11 @@ function forgotPassword() {
     req.onreadystatechange = function () {
         if (req.readyState == 4 && req.status == 200) {
             var response = req.responseText;
-            showToast(response, 'info');
+            if (response === 'Message has been sent') {
+                showToast('Password reset link sent to your email!', 'success');
+            } else {
+                showToast(response, 'error');
+            }
         }
     }
 
