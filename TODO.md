@@ -1,2 +1,1 @@
-- implement a DB Cart 
 - implement (unique) users viewed count save to database and displayed to property management page

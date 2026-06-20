@@ -215,16 +215,21 @@ function resetPassword() {
 function checkAvailability(listingId) {
     var checkIn = document.getElementById('checkIn').value;
     var checkOut = document.getElementById('checkOut').value;
-    var guests = document.getElementById('guests').value;
+    var guestsInput = document.getElementById('guests');
+    var guests = guestsInput.value;
+    var maxGuests = parseInt(guestsInput.getAttribute('max'));
 
     if (!checkIn) {
-        showToast('Please Enter the Check In date', 'warning')
+        showToast('Please select a check-in date', 'warning');
         return;
     } else if (!checkOut) {
-        showToast('Please Enter the Check Out date', 'warning')
+        showToast('Please select a check-out date', 'warning');
         return;
-    } else if (!guests) {
-        showToast('Please Enter the number of guests', 'warning')
+    } else if (!guests || guests < 1) {
+        showToast('Please enter a valid number of guests (at least 1)', 'warning');
+        return;
+    } else if (guests > maxGuests) {
+        showToast('Maximum capacity for this property is ' + maxGuests + ' guests', 'warning');
         return;
     }
 
@@ -736,10 +741,21 @@ function toggleFavorite(propertyId, element) {
 function addToCart(propertyId) {
     var checkIn = document.getElementById('checkIn').value;
     var checkOut = document.getElementById('checkOut').value;
-    var guests = document.getElementById('guests').value;
+    var guestsInput = document.getElementById('guests');
+    var guests = guestsInput.value;
+    var maxGuests = parseInt(guestsInput.getAttribute('max'));
 
-    if (!checkIn || !checkOut || !guests) {
-        showToast('Please select dates and guests first', 'warning');
+    if (!checkIn) {
+        showToast('Please select a check-in date', 'warning');
+        return;
+    } else if (!checkOut) {
+        showToast('Please select a check-out date', 'warning');
+        return;
+    } else if (!guests || guests < 1) {
+        showToast('Please enter a valid number of guests (at least 1)', 'warning');
+        return;
+    } else if (guests > maxGuests) {
+        showToast('Maximum capacity for this property is ' + maxGuests + ' guests', 'warning');
         return;
     }
 
