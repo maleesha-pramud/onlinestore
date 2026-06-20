@@ -15,7 +15,7 @@ if (empty($email)) {
         "message" => "Email is required",
         "status" => false,
     ]);
-} else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+} else if (!Validation::validateEmail($email)) {
     echo json_encode([
         "message" => "Email is not valid",
         "status" => false,
@@ -25,7 +25,7 @@ if (empty($email)) {
         "message" => "Password is required",
         "status" => false,
     ]);
-} else if (strlen($password) < 5) { 
+} else if (!Validation::validatePasswordMin5($password)) { 
     echo json_encode([
         "message" => "Password is too short",
         "status" => false,

@@ -16,6 +16,11 @@ if (empty($currPassword) || empty($newPassword)) {
     exit();
 }
 
+if (!Validation::validatePasswordMin8($newPassword)) {
+    echo json_encode(["status" => false, "message" => "New password must be at least 8 characters long"]);
+    exit();
+}
+
 // Check if current password is correct
 $userStmt = Database::search("SELECT `password` FROM `users` WHERE `email` = '$email'");
 $userData = $userStmt->fetch_assoc();

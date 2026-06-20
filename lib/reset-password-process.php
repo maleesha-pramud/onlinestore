@@ -13,6 +13,11 @@ if (empty($password) || empty($cPassword)) {
     "message" => "Password can't be empty",
     "status" => false,
   ]);
+} else if (!Validation::validatePasswordMin8($password)) {
+  echo json_encode([
+    "message" => "Password must be at least 8 characters long",
+    "status" => false,
+  ]);
 } else if ($password !== $cPassword) {
   echo json_encode([
     "message" => "Passwords do not match",

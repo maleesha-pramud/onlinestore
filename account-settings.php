@@ -135,6 +135,27 @@ $userType = $userData['user_type_id'];
                 return;
             }
 
+            if (fname.length > 20) {
+                showToast('First name is too long', 'warning');
+                return;
+            } else if (!RegexPatterns.name.test(fname)) {
+                showToast('First name must contain only letters', 'warning');
+                return;
+            }
+
+            if (lname.length > 20) {
+                showToast('Last name is too long', 'warning');
+                return;
+            } else if (!RegexPatterns.name.test(lname)) {
+                showToast('Last name must contain only letters', 'warning');
+                return;
+            }
+
+            if (!RegexPatterns.mobile.test(mobile)) {
+                showToast('Mobile number is not valid (e.g. 0771234567)', 'warning');
+                return;
+            }
+
             const form = new FormData();
             form.append('fname', fname);
             form.append('lname', lname);
@@ -171,7 +192,7 @@ $userType = $userData['user_type_id'];
                 return;
             }
 
-            if (newPassword.length < 8) {
+            if (!RegexPatterns.passwordMin8.test(newPassword)) {
                 showToast('New password must be at least 8 characters long', 'warning');
                 return;
             }

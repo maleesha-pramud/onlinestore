@@ -17,6 +17,31 @@ $guests = $_POST['guests'];
 $email = $_POST['email'];
 $amount = $_POST['totalPrice'];
 
+if (empty($firstName) || empty($lastName) || empty($contact) || empty($guests) || empty($email) || empty($amount)) {
+    echo json_encode(["status" => false, "message" => "All fields are required"]);
+    exit();
+}
+
+if (!Validation::validateName($firstName)) {
+    echo json_encode(["status" => false, "message" => "First name must contain only letters"]);
+    exit();
+}
+
+if (!Validation::validateName($lastName)) {
+    echo json_encode(["status" => false, "message" => "Last name must contain only letters"]);
+    exit();
+}
+
+if (!Validation::validateMobile($contact)) {
+    echo json_encode(["status" => false, "message" => "Contact number is not valid"]);
+    exit();
+}
+
+if (!Validation::validateEmail($email)) {
+    echo json_encode(["status" => false, "message" => "Email is not valid"]);
+    exit();
+}
+
 // Generate the hash
 $hash = strtoupper(
   md5(

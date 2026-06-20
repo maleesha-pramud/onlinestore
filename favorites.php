@@ -52,7 +52,6 @@ include './includes/connection.php';
             const formData = new FormData();
             formData.append('ids', JSON.stringify(favorites));
 
-            // We'll create a simple process file to fetch these properties
             PostRequest('/lib/get-favorites-process.php', formData, function(response, error) {
                 if (error) {
                     showToast(error, 'error');

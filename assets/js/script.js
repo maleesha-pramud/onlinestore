@@ -1,3 +1,12 @@
+const RegexPatterns = {
+    name: /^[a-zA-Z\s]+$/,
+    mobile: /^07[01245678][0-9]{7}$/,
+    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    passwordMin5: /^.{5,}$/,
+    passwordMin8: /^.{8,}$/,
+    nic: /^(?:\d{9}[vVxX]|\\d{12})$/
+};
+
 function showToast(message, type = 'info', title = '') {
     const toastElement = document.getElementById('liveToast');
     const toastTitle = document.getElementById('toastTitle');
@@ -114,6 +123,59 @@ function signUp() {
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 
+    function showError(msg) {
+        document.getElementById('errorMsg').innerHTML = msg;
+        document.getElementById('errorMsgDiv').classList.remove('d-none');
+    }
+
+    document.getElementById('errorMsgDiv').classList.add('d-none');
+
+    if (!fname) {
+        showError('First name is required');
+        return;
+    } else if (fname.length > 20) {
+        showError('First name is too long');
+        return;
+    } else if (!RegexPatterns.name.test(fname)) {
+        showError('First name must contain only letters');
+        return;
+    }
+
+    if (!lname) {
+        showError('Last name is required');
+        return;
+    } else if (lname.length > 20) {
+        showError('Last name is too long');
+        return;
+    } else if (!RegexPatterns.name.test(lname)) {
+        showError('Last name must contain only letters');
+        return;
+    }
+
+    if (!mobile) {
+        showError('Mobile is required');
+        return;
+    } else if (!RegexPatterns.mobile.test(mobile)) {
+        showError('Mobile is not valid');
+        return;
+    }
+
+    if (!email) {
+        showError('Email is required');
+        return;
+    } else if (!RegexPatterns.email.test(email)) {
+        showError('Email is not valid');
+        return;
+    }
+
+    if (!password) {
+        showError('Password is required');
+        return;
+    } else if (!RegexPatterns.passwordMin5.test(password)) {
+        showError('Password must be at least 5 characters long');
+        return;
+    }
+
     var form = new FormData();
     form.append('fname', fname);
     form.append('lname', lname);
@@ -128,8 +190,7 @@ function signUp() {
             if (response == 'success') {
                 window.location.href = '/signin.php';
             } else {
-                document.getElementById('errorMsg').innerHTML = response;
-                document.getElementById('errorMsgDiv').classList.remove('d-none');
+                showError(response);
             }
         }
     }
@@ -142,6 +203,29 @@ function signIn() {
     var password = document.getElementById('password2').value;
     var rememberMe = document.getElementById('remember-me').checked;
 
+    function showError(msg) {
+        document.getElementById('errorMsg2').innerHTML = msg;
+        document.getElementById('errorMsgDiv2').classList.remove('d-none');
+    }
+
+    document.getElementById('errorMsgDiv2').classList.add('d-none');
+
+    if (!email) {
+        showError('Email is required');
+        return;
+    } else if (!RegexPatterns.email.test(email)) {
+        showError('Email is not valid');
+        return;
+    }
+
+    if (!password) {
+        showError('Password is required');
+        return;
+    } else if (!RegexPatterns.passwordMin5.test(password)) {
+        showError('Password must be at least 5 characters long');
+        return;
+    }
+
     var form = new FormData();
     form.append('email', email);
     form.append('password', password);
@@ -149,8 +233,7 @@ function signIn() {
 
     PostRequest('./lib/signin-process.php', form, function (response, error) {
         if (error) {
-            document.getElementById('errorMsg2').innerHTML = error;
-            document.getElementById('errorMsgDiv2').classList.remove('d-none');
+            showError(error);
             return;
         }
 
@@ -164,14 +247,21 @@ function signIn() {
             }
             window.location.href = '/';
         } else {
-            document.getElementById('errorMsg2').innerHTML = response.message;
-            document.getElementById('errorMsgDiv2').classList.remove('d-none');
+            showError(response.message);
         }
     });
 }
 
 function forgotPassword() {
     var email = document.getElementById('email').value;
+
+    if (!email) {
+        showToast('Email is required', 'warning');
+        return;
+    } else if (!RegexPatterns.email.test(email)) {
+        showToast('Email is not valid', 'warning');
+        return;
+    }
 
     var form = new FormData();
     form.append('email', email);
@@ -192,6 +282,24 @@ function resetPassword() {
     var password = document.getElementById('password').value;
     var cPassword = document.getElementById('cPassword').value;
     var vcode = document.getElementById('vcode').value;
+
+    if (!password) {
+        showToast('Password is required', 'warning');
+        return;
+    } else if (!RegexPatterns.passwordMin8.test(password)) {
+        showToast('Password must be at least 8 characters long', 'warning');
+        return;
+    }
+
+    if (password !== cPassword) {
+        showToast('Passwords do not match', 'warning');
+        return;
+    }
+
+    if (!vcode) {
+        showToast('Please resend a forgot password request', 'warning');
+        return;
+    }
 
     var form = new FormData();
     form.append('password', password);
@@ -267,23 +375,53 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
     var guests = document.getElementById('guests').value;
     var email = document.getElementById('email').value;
     var specialRequests = document.getElementById('specialRequests').value;
-
     if (!fname) {
         showToast("First name is required.", 'warning');
         return;
-    } else if (lname === "") {
+    } else if (fname.length > 20) {
+        showToast("First name is too long.", 'warning');
+        return;
+    } else if (!RegexPatterns.name.test(fname)) {
+        showToast("First name must contain only letters.", 'warning');
+        return;
+    }
+
+    if (!lname) {
         showToast("Last name is required.", 'warning');
         return;
-    } else if (nic === "") {
+    } else if (lname.length > 20) {
+        showToast("Last name is too long.", 'warning');
+        return;
+    } else if (!RegexPatterns.name.test(lname)) {
+        showToast("Last name must contain only letters.", 'warning');
+        return;
+    }
+
+    if (!nic) {
         showToast("NIC is required.", 'warning');
         return;
-    } else if (contact === "" || !/^\d+$/.test(contact)) {
-        showToast("Valid contact number is required.", 'warning');
+    } else if (!RegexPatterns.nic.test(nic)) {
+        showToast("NIC is not valid.", 'warning');
         return;
-    } else if (guests === "" || !/^\d+$/.test(guests)) {
+    }
+
+    if (!contact) {
+        showToast("Contact number is required.", 'warning');
+        return;
+    } else if (!RegexPatterns.mobile.test(contact)) {
+        showToast("Contact number must be a valid mobile number (e.g. 0771234567).", 'warning');
+        return;
+    }
+
+    if (!guests || !/^\d+$/.test(guests)) {
         showToast("Guests count must be a valid number.", 'warning');
         return;
-    } else if (email === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    }
+
+    if (!email) {
+        showToast("Email address is required.", 'warning');
+        return;
+    } else if (!RegexPatterns.email.test(email)) {
         showToast("Valid email address is required.", 'warning');
         return;
     }

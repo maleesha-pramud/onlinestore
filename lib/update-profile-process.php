@@ -17,9 +17,24 @@ if (empty($fname) || empty($lname) || empty($mobile)) {
     exit();
 }
 
-// Simple validation for mobile (just length check as per existing patterns)
-if (strlen($mobile) < 10) {
-    echo json_encode(["status" => false, "message" => "Invalid mobile number"]);
+if (strlen($fname) > 20) {
+    echo json_encode(["status" => false, "message" => "First name is too long"]);
+    exit();
+} else if (!Validation::validateName($fname)) {
+    echo json_encode(["status" => false, "message" => "First name must contain only letters"]);
+    exit();
+}
+
+if (strlen($lname) > 20) {
+    echo json_encode(["status" => false, "message" => "Last name is too long"]);
+    exit();
+} else if (!Validation::validateName($lname)) {
+    echo json_encode(["status" => false, "message" => "Last name must contain only letters"]);
+    exit();
+}
+
+if (!Validation::validateMobile($mobile)) {
+    echo json_encode(["status" => false, "message" => "Mobile number is not valid"]);
     exit();
 }
 

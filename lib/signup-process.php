@@ -12,21 +12,25 @@ if (empty($fname)) {
     echo ("First name is required");
 } else if (strlen($fname) > 20) {
     echo ("First name is too long");
+} else if (!Validation::validateName($fname)) {
+    echo ("First name must contain only letters");
 } else if (empty($lname)) {
     echo ("Last name is required");
 } else if (strlen($lname) > 20) {
     echo ("Last name is too long");
+} else if (!Validation::validateName($lname)) {
+    echo ("Last name must contain only letters");
 } else if (empty($mobile)) {
     echo ("Mobile is required");
-} else if (!preg_match('/07[0,1,2,4,5,6,7,8]{1}[0-9]{7}/', $mobile)) {
+} else if (!Validation::validateMobile($mobile)) {
     echo ("Mobile is not valid");
 } else if (empty($email)) {
     echo ("Email is required");
-} else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+} else if (!Validation::validateEmail($email)) {
     echo ("Email is not valid");
 } else if (empty($password)) {
     echo ("Password is required");
-} else if (strlen($password) < 5) {
+} else if (!Validation::validatePasswordMin5($password)) {
     echo ("Password is too short");
 } else {
 

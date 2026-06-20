@@ -14,6 +14,8 @@ $email = $_POST['email'];
  
 if (empty($email)) {
     echo ("Email is required");
+} else if (!Validation::validateEmail($email)) {
+    echo ("Email is not valid");
 } else {
     $rs = Database::search("SELECT * FROM `users` WHERE `email` = '$email'");
     if ($rs->num_rows == 0) {
