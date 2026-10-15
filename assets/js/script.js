@@ -142,6 +142,8 @@ function signUp() {
     var mobile = document.getElementById('mobile').value;
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
+    var accountTypeInput = document.querySelector('input[name="accountType"]:checked');
+    var accountType = accountTypeInput ? accountTypeInput.value : '';
 
     function showError(msg) {
         document.getElementById('errorMsg').innerHTML = msg;
@@ -149,6 +151,11 @@ function signUp() {
     }
 
     document.getElementById('errorMsgDiv').classList.add('d-none');
+
+    if (accountType !== 'guest' && accountType !== 'host') {
+        showError('Please select whether you are signing up as a guest or a host');
+        return;
+    }
 
     if (!fname) {
         showError('First name is required');
@@ -202,6 +209,7 @@ function signUp() {
     form.append('mobile', mobile);
     form.append('email', email);
     form.append('password', password);
+    form.append('accountType', accountType);
 
     var req = new XMLHttpRequest();
     req.onreadystatechange = function () {
@@ -1045,3 +1053,107 @@ function shareLink(title, text, url) {
 }
 
 document.addEventListener('DOMContentLoaded', initFavorites);
+
+// Multi checkout (cart)
+function cartCheckout() {
+    var fname = document.getElementById('firstName').value.trim();
+    var lname = document.getElementById('lastName').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var contact = document.getElementById('contact').value.trim();
+    var nic = document.getElementById('nic').value.trim();
+    var specialRequests = document.getElementById('specialRequests').value.trim();
+
+    if (!fname || fname.length > 20 || !RegexPatterns.name.test(fname)) {
+        showToast('First name must contain only letters (max 20 characters).', 'warning');
+        return;
+    } else if (!lname || lname.length > 20 || !RegexPatterns.name.test(lname)) {
+        showToast('Last name must contain only letters (max 20 characters).', 'warning');
+        return;
+    } else if (!RegexPatterns.email.test(email)) {
+        showToast('Valid email address is required.', 'warning');
+        return;
+    } else if (!RegexPatterns.mobile.test(contact)) {
+        showToast('Contact number must be a valid mobile number (e.g. 0771234567).', 'warning');
+        return;
+    } else if (!RegexPatterns.nic.test(nic)) {
+        showToast('NIC is not valid.', 'warning');
+        return;
+    } else if (specialRequests.length > 500) {
+        showToast('Special requests are too long (max 500 characters).', 'warning');
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append('firstName', fname);
+    formData.append('lastName', lname);
+    formData.append('email', email);
+    formData.append('contact', contact);
+    formData.append('nic', nic);
+    formData.append('specialRequests', specialRequests);
+
+    PostRequest('/lib/cart-checkout-process.php', formData, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (!response.status) {
+            showToast(response.message, 'error');
+            return;
+        }
+
+        var payment = {
+            "sandbox": true,
+            "merchant_id": response.merchant_id,
+            "return_url": window.location.origin,
+            "cancel_url": window.location.origin,
+            "notify_url": window.location.origin + "/lib/payment-notify-process.php",
+            "order_id": response.order_id,
+            "items": response.items,
+            "amount": response.amount,
+            "currency": "LKR",
+            "hash": response.hash,
+            "first_name": response.first_name,
+            "last_name": response.last_name,
+            "email": response.email,
+            "phone": response.phone,
+            "address": response.address,
+            "city": response.city,
+            "country": response.country,
+            "delivery_address": response.delivery_address,
+            "delivery_city": response.delivery_city,
+            "delivery_country": response.delivery_country,
+            "custom_1": "",
+            "custom_2": ""
+        };
+
+        payhere.onCompleted = function onCompleted(orderId) {
+            formData.append('orderId', orderId);
+            PostRequest('/lib/cart-booking-process.php', formData, function (res, err) {
+                if (err) {
+                    showToast(err, 'error');
+                    return;
+                }
+
+                if (res.status) {
+                    showToast('All properties booked successfully', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/my-bookings.php';
+                    }, 1000);
+                } else {
+                    showToast(res.message, 'error');
+                }
+            });
+        };
+
+        payhere.onDismissed = function onDismissed() {
+            console.log("Payment dismissed");
+        };
+
+        payhere.onError = function onError(error) {
+            showToast('Payment failed: ' + error, 'error');
+        };
+
+        payhere.startPayment(payment);
+    });
+}

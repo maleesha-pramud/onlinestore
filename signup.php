@@ -30,6 +30,15 @@
                 </div>
             </div>
              <div class="form-group mt-3">
+                <label class="form-label d-block">I want to sign up as</label>
+                <div class="btn-group w-100" role="group" aria-label="Account type">
+                    <input type="radio" class="btn-check" name="accountType" id="typeGuest" value="guest" checked>
+                    <label class="btn btn-outline-primary" for="typeGuest"><i class="bi bi-person me-1"></i>Guest</label>
+                    <input type="radio" class="btn-check" name="accountType" id="typeHost" value="host">
+                    <label class="btn btn-outline-primary" for="typeHost"><i class="bi bi-house-door me-1"></i>Host</label>
+                </div>
+            </div>
+            <div class="form-group mt-3">
                 <label for="mobile" class="form-label">Mobile</label>
                 <input type="text" id="mobile" class="form-control" required>
             </div>

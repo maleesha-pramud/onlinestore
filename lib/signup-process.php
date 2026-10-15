@@ -7,8 +7,11 @@ $lname = $_POST['lname'];
 $mobile = $_POST['mobile'];
 $email = $_POST['email']; 
 $password = $_POST['password'];
+$accountType = $_POST['accountType'] ?? '';
 
-if (empty($fname)) {
+if ($accountType !== 'guest' && $accountType !== 'host') {
+    echo ("Please select whether you are signing up as a guest or a host");
+} else if (empty($fname)) {
     echo ("First name is required");
 } else if (strlen($fname) > 20) {
     echo ("First name is too long");
@@ -34,13 +37,16 @@ if (empty($fname)) {
     echo ("Password is too short");
 } else {
 
+    // Host = Producer (2), Guest = Customer (3)
+    $userTypeId = $accountType === 'host' ? 2 : 3;
+
     $rs = Database::search("SELECT * FROM `users` WHERE `email` = '$email' AND `password` = '$password'");
     if ($rs->num_rows > 0) {
         echo ("User already exists");
         return;
     }
 
-    $query = "INSERT INTO users (`fname`, `lname`, `mobile`, `email`, `password`, `user_type_id`) VALUES ('$fname', '$lname', '$mobile', '$email', '$password', '2')";
+    $query = "INSERT INTO users (`fname`, `lname`, `mobile`, `email`, `password`, `user_type_id`) VALUES ('$fname', '$lname', '$mobile', '$email', '$password', '$userTypeId')";
     Database::iud($query);
     echo ("success");
 }

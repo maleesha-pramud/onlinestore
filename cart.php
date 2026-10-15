@@ -12,6 +12,7 @@ $userStmt = Database::search("SELECT `id` FROM `users` WHERE `email` = '$email'"
 $userData = $userStmt->fetch_assoc();
 $userId = $userData['id'];
 $grandTotal = 0;
+$cartErrors = [];
 
 // Fetch cart items
 $cartStmt = Database::search("
@@ -75,12 +76,16 @@ $cartStmt = Database::search("
                                     <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
                                         <p class="card-price mb-0 text-dark">
                                             <?php 
-                                            $days = (strtotime($property['checkOut']) - strtotime($property['checkIn'])) / (60 * 60 * 24);
-                                            if($days <= 0) $days = 1;
-                                            $total = $property['base_price'] * $days;
+                                            $calc = Validation::calculateBookingTotal($property['id'], (string) $property['checkIn'], (string) $property['checkOut'], (string) $property['cart_guests']);
+                                            if (isset($calc['error'])) {
+                                                $total = 0;
+                                                $cartErrors[] = $property['title'] . ': ' . $calc['error'];
+                                            } else {
+                                                $total = $calc['total'];
+                                            }
                                             $grandTotal += $total;
                                             ?>
-                                            <span class="fw-bold fs-5">LKR <?php echo number_format($total); ?></span> <span class="text-secondary small">Total</span>
+                                            <span class="fw-bold fs-5">LKR <?php echo number_format($total, 2); ?></span> <span class="text-secondary small">Total (incl. 10% service fee)</span>
                                         </p>
                                     </div>
                                 </div>
@@ -97,8 +102,13 @@ $cartStmt = Database::search("
                                 <p class="text-secondary mb-md-0">Ready to book all <?php echo $cartStmt->num_rows; ?> properties?</p>
                             </div>
                             <div class="col-md-4 text-md-end">
-                                <h2 class="fw-bold text-primary mb-3">LKR <?php echo number_format($grandTotal); ?></h2>
-                                <button class="btn btn-primary btn-lg rounded-pill px-5" onclick="showToast('Multi-checkout is coming soon!', 'info')">Checkout All</button>
+                                <h2 class="fw-bold text-primary mb-3">LKR <?php echo number_format($grandTotal, 2); ?></h2>
+                                <?php if (empty($cartErrors)) { ?>
+                                    <button class="btn btn-primary btn-lg rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#cartCheckoutModal">Checkout All</button>
+                                <?php } else { ?>
+                                    <button class="btn btn-primary btn-lg rounded-pill px-5" disabled>Checkout All</button>
+                                    <p class="text-danger small mt-2 mb-0">Fix or remove these items first:<br><?php echo implode('<br>', array_map('htmlspecialchars', $cartErrors)); ?></p>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -117,6 +127,58 @@ $cartStmt = Database::search("
         </div>
     </main>
 
+
+    <?php if ($cartStmt->num_rows > 0) {
+        $profileStmt = Database::search("SELECT `fname`, `lname`, `mobile` FROM `users` WHERE `id` = '$userId'");
+        $profile = $profileStmt->fetch_assoc();
+    ?>
+    <div class="modal fade" id="cartCheckoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 1.5rem;">
+                <form onsubmit="cartCheckout(); return false;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold">Confirm and pay</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-secondary">Total: <strong>LKR <?php echo number_format($grandTotal, 2); ?></strong> for <?php echo $cartStmt->num_rows; ?> properties</p>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" maxlength="20" value="<?php echo htmlspecialchars($profile['fname']); ?>" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" maxlength="20" value="<?php echo htmlspecialchars($profile['lname']); ?>" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="<?php echo htmlspecialchars($email); ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" id="contact" value="<?php echo htmlspecialchars($profile['mobile']); ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nic" class="form-label">NIC</label>
+                            <input type="text" class="form-control" id="nic" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specialRequests" class="form-label">Special Requests (optional)</label>
+                            <textarea class="form-control" id="specialRequests" rows="3" maxlength="500"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5">Confirm and Pay</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+
+    <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
     <?php include './components/Footer.php'; ?>
     <?php include './components/script.php'; ?>
 </body>

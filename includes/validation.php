@@ -97,4 +97,29 @@ class Validation {
         $subtotal = (float) $property['base_price'] * $nights;
         return ['total' => round($subtotal + $subtotal * 0.1, 2), 'nights' => $nights];
     }
+
+    // Validates every cart item of a user and returns ['items' => [...], 'total' => float] or ['error' => string]
+    public static function getCartCheckout($email) {
+        $email = Database::escape($email);
+        $rs = Database::search("SELECT `id` FROM `users` WHERE `email` = '$email'");
+        $user = $rs ? $rs->fetch_assoc() : null;
+        if (!$user) return ['error' => 'User not found'];
+
+        $cart = Database::search("SELECT c.id AS cart_id, c.checkIn, c.checkOut, c.guests, c.properties_id, p.title FROM `cart` c JOIN `properties` p ON c.properties_id = p.id WHERE c.users_id = '" . $user['id'] . "' AND p.status_id = 1");
+        $items = [];
+        $total = 0;
+        while ($row = $cart->fetch_assoc()) {
+            $calc = self::calculateBookingTotal($row['properties_id'], (string) $row['checkIn'], (string) $row['checkOut'], (string) $row['guests']);
+            if (isset($calc['error'])) return ['error' => $row['title'] . ': ' . $calc['error']];
+
+            $overlap = Database::search("SELECT `id` FROM `bookings` WHERE `properties_id` = '" . $row['properties_id'] . "' AND `checkIn` < '" . $row['checkOut'] . "' AND `checkOut` > '" . $row['checkIn'] . "'");
+            if ($overlap && $overlap->num_rows > 0) return ['error' => $row['title'] . ': not available for the selected dates'];
+
+            $row['total'] = $calc['total'];
+            $items[] = $row;
+            $total += $calc['total'];
+        }
+        if (empty($items)) return ['error' => 'Your cart is empty'];
+        return ['items' => $items, 'total' => round($total, 2)];
+    }
 }
