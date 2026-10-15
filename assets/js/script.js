@@ -965,6 +965,9 @@ function addToCart(propertyId) {
 
         if (response.status) {
             showToast(response.message, 'success');
+            setTimeout(() => {
+                window.location.href = '/cart.php';
+            }, 800);
         } else {
             showToast(response.message, 'error');
         }
