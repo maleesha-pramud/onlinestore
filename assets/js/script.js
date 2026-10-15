@@ -938,6 +938,78 @@ function addReview(propertyId) {
     });
 }
 
+function showEditReview() {
+    var box = document.getElementById('editReviewBox');
+    if (box) {
+        box.classList.remove('d-none');
+        box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+function updateReview(reviewId) {
+    var rating = document.querySelector('input[name="rating"]:checked');
+    var comment = document.getElementById('reviewComment').value;
+
+    if (!rating) {
+        showToast('Please select a rating', 'warning');
+        return;
+    }
+
+    if (!comment.trim()) {
+        showToast('Please enter a comment', 'warning');
+        return;
+    } else if (comment.length > 1000 || !RegexPatterns.text.test(comment)) {
+        showToast('Comment contains invalid characters or is too long (max 1000 characters)', 'warning');
+        return;
+    }
+
+    var form = new FormData();
+    form.append('reviewId', reviewId);
+    form.append('rating', rating.value);
+    form.append('comment', comment);
+
+    PostRequest('/lib/edit-review-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast(response.message, 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
+}
+
+function deleteReview(reviewId) {
+    if (!confirm('Are you sure you want to remove your review?')) {
+        return;
+    }
+
+    var form = new FormData();
+    form.append('reviewId', reviewId);
+
+    PostRequest('/lib/delete-review-process.php', form, function (response, error) {
+        if (error) {
+            showToast(error, 'error');
+            return;
+        }
+
+        if (response.status) {
+            showToast(response.message, 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(response.message, 'error');
+        }
+    });
+}
+
 // Favorites Functionality (LocalStorage Only)
 function toggleFavorite(propertyId, element) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];

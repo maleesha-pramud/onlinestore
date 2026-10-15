@@ -42,6 +42,8 @@ if ($totalReviews > 0) {
 
 $hasBooked = false;
 $hasReviewed = false;
+$userId = null;
+$userReview = null;
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
     $bookingCheck = Database::search("SELECT `id` FROM `bookings` WHERE `email` = '$email' AND `properties_id` = '$propertyId'");
@@ -52,9 +54,10 @@ if (isset($_SESSION['email'])) {
     $userStmt = Database::search("SELECT `id` FROM `users` WHERE `email` = '$email'");
     if ($userStmt->num_rows > 0) {
         $userId = $userStmt->fetch_assoc()['id'];
-        $reviewCheck = Database::search("SELECT `id` FROM `reviews` WHERE `users_id` = '$userId' AND `properties_id` = '$propertyId'");
+        $reviewCheck = Database::search("SELECT `id`, `rating`, `comment` FROM `reviews` WHERE `users_id` = '$userId' AND `properties_id` = '$propertyId'");
         if ($reviewCheck->num_rows > 0) {
             $hasReviewed = true;
+            $userReview = $reviewCheck->fetch_assoc();
         }
     }
 }
@@ -172,6 +175,12 @@ if (isset($_SESSION['email'])) {
                                             <?php } ?>
                                         </div>
                                         <p class="text-secondary"><?php echo $review['comment']; ?></p>
+                                        <?php if ($userId !== null && $review['users_id'] == $userId) { ?>
+                                            <div class="d-flex gap-3">
+                                                <button type="button" class="btn btn-link p-0 small text-decoration-none" onclick="showEditReview()"><i class="fa-solid fa-pen me-1"></i>Edit</button>
+                                                <button type="button" class="btn btn-link p-0 small text-danger text-decoration-none" onclick="deleteReview(<?php echo $review['id']; ?>)"><i class="fa-solid fa-trash me-1"></i>Remove</button>
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 <?php }
                             } ?>
@@ -197,7 +206,25 @@ if (isset($_SESSION['email'])) {
                             </div>
                         <?php } else if ($hasBooked && $hasReviewed) { ?>
                             <div class="mt-5 p-3 border border-success-subtle bg-success-subtle text-success rounded-3">
-                                <i class="fa-solid fa-circle-check me-2"></i>You have already reviewed this property. Thank you!
+                                <i class="fa-solid fa-circle-check me-2"></i>You have already reviewed this property. Thank you! You can edit or remove your review above.
+                            </div>
+                            <div class="mt-4 p-4 bg-light rounded-4 d-none" id="editReviewBox">
+                                <h4 class="fw-bold mb-3">Edit Your Review</h4>
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Rating</label>
+                                    <div class="rating-input d-flex gap-2">
+                                        <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                            <input type="radio" name="rating" value="<?php echo $i; ?>" id="rate-<?php echo $i; ?>" class="btn-check" <?php echo ($i == $userReview['rating']) ? 'checked' : ''; ?>>
+                                            <label class="btn btn-outline-warning btn-sm" for="rate-<?php echo $i; ?>"><?php echo $i; ?> <i class="fa-solid fa-star"></i></label>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reviewComment" class="form-label">Your Comment</label>
+                                    <textarea class="form-control" id="reviewComment" rows="3" maxlength="1000"><?php echo htmlspecialchars($userReview['comment']); ?></textarea>
+                                </div>
+                                <button class="btn btn-primary px-4" onclick="updateReview(<?php echo $userReview['id']; ?>)">Save Changes</button>
+                                <button class="btn btn-outline-secondary px-4" onclick="document.getElementById('editReviewBox').classList.add('d-none')">Cancel</button>
                             </div>
                         <?php } else if (isset($_SESSION['email'])) { ?>
                             <div class="mt-5 p-3 border bg-light text-secondary rounded-3">
