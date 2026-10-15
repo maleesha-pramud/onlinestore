@@ -39,6 +39,7 @@ if (empty($password) || empty($cPassword)) {
   } else {
     $row = $rs->fetch_assoc();
     Database::iud("UPDATE `users` SET `password` = '$password', `vcode` = Null WHERE `id` = '" . $row['id'] . "'");
+    Mailer::sendPasswordChanged($row['email']);
     echo json_encode([
       "message" => "Password reset successfully",
       "status" => true,

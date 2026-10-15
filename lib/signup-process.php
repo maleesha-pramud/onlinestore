@@ -48,5 +48,8 @@ if ($accountType !== 'guest' && $accountType !== 'host') {
 
     $query = "INSERT INTO users (`fname`, `lname`, `mobile`, `email`, `password`, `user_type_id`) VALUES ('$fname', '$lname', '$mobile', '$email', '$password', '$userTypeId')";
     Database::iud($query);
+
+    Mailer::sendWelcome($email, $fname, $accountType === 'host');
+
     echo ("success");
 }

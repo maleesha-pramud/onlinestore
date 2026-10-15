@@ -78,6 +78,14 @@ $BookingStmt = Database::iud("INSERT INTO `bookings` (`checkIn`,`checkOut`,`firs
 
 
 // Prepare the response 
+Mailer::notifyBooking($email, $firstName, $orderId, [[
+    'properties_id' => $propertyId,
+    'checkIn' => $checkIn,
+    'checkOut' => $checkOut,
+    'guests' => $guests,
+    'total' => $totalPrice,
+]]);
+
 $response = [
     'status' => true,
     'message' => 'Booked Successfully',

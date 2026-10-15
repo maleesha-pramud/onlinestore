@@ -34,4 +34,6 @@ if ($userData['password'] !== $currPassword) {
 // Update to new password
 Database::iud("UPDATE `users` SET `password` = '$newPassword' WHERE `email` = '$email'");
 
+Mailer::sendPasswordChanged($email);
+
 echo json_encode(["status" => true, "message" => "Password updated successfully"]);

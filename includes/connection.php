@@ -32,3 +32,4 @@ class Database {
 }
 
 require_once dirname(__FILE__) . '/validation.php';
+require_once dirname(__FILE__) . '/mailer.php';

@@ -72,4 +72,6 @@ foreach ($cart['items'] as $item) {
     Database::iud("DELETE FROM `cart` WHERE `id` = '" . $item['cart_id'] . "'");
 }
 
+Mailer::notifyBooking($email, $firstName, $orderId, $cart['items']);
+
 echo json_encode(['status' => true, 'message' => 'Booked Successfully']);
