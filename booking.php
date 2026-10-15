@@ -66,7 +66,6 @@ $grandTotal = $totalPrice + $serviceFee;
                             <p class="fw-bold mb-1">Dates</p>
                             <p class="text-secondary"><?php echo date("M d, Y", strtotime($checkIn)); ?> - <?php echo date("M d, Y", strtotime($checkOut)); ?></p>
                         </div>
-                        <a href="#">Edit</a>
                     </div>
                      <div class="d-flex justify-content-between">
                         <div>
@@ -74,7 +73,6 @@ $grandTotal = $totalPrice + $serviceFee;
                             <p class="text-secondary"><?php echo htmlspecialchars($guests); ?> guest(s)</p>
                             <input type="hidden" id="guests" value="<?php echo htmlspecialchars($guests); ?>">
                         </div>
-                        <a href="#">Edit</a>
                     </div>
 
                     <hr class="my-4">
