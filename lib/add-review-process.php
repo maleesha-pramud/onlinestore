@@ -8,14 +8,31 @@ if (!isset($_SESSION['email'])) {
 }
 
 $email = $_SESSION['email'];
-$propertyId = Database::escape($_POST['propertyId']);
-$rating = Database::escape($_POST['rating']);
-$comment = Database::escape($_POST['comment']);
+$propertyId = Database::escape($_POST['propertyId'] ?? '');
+$rating = $_POST['rating'] ?? '';
+$rawComment = trim($_POST['comment'] ?? '');
 
-if (empty($rating) || empty($comment)) {
+if (!Validation::validateId($propertyId)) {
+    echo json_encode(['status' => false, 'message' => 'Invalid property.']);
+    exit();
+}
+
+if (empty($rating) || $rawComment === '') {
     echo json_encode(['status' => false, 'message' => 'Please provide both rating and comment.']);
     exit();
 }
+
+if (!Validation::validateRating($rating)) {
+    echo json_encode(['status' => false, 'message' => 'Rating must be between 1 and 5.']);
+    exit();
+}
+
+if (mb_strlen($rawComment) > 1000) {
+    echo json_encode(['status' => false, 'message' => 'Comment is too long (max 1000 characters).']);
+    exit();
+}
+
+$comment = Database::escape($rawComment);
 
 // Get user ID
 $userStmt = Database::search("SELECT `id` FROM `users` WHERE `email` = '$email'");

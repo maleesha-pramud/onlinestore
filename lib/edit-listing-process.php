@@ -5,55 +5,74 @@ include '../includes/connection.php';
 $RootFilePath = dirname(__FILE__);
 $uploadDir = $RootFilePath . "/../assets/images/properties/";
 
-$propertyId = $_POST['propertyId'];
-$title = $_POST['title'];
-$category = $_POST['category'];
-$description = $_POST['description'];
-$address = $_POST['address'];
-$guests = $_POST['guests'];
-$bedrooms = $_POST['bedrooms'];
-$beds = $_POST['beds'];
-$bathrooms = $_POST['bathrooms'];
-$amenities = isset($_POST['amenities']) ? $_POST['amenities'] : [];
-$basePrice = $_POST['basePrice'];
+header('Content-Type: application/json');
+
+$propertyId = $_POST['propertyId'] ?? '';
+$title = trim($_POST['title'] ?? '');
+$category = $_POST['category'] ?? '';
+$description = trim($_POST['description'] ?? '');
+$address = trim($_POST['address'] ?? '');
+$guests = $_POST['guests'] ?? '';
+$bedrooms = $_POST['bedrooms'] ?? '';
+$beds = $_POST['beds'] ?? '';
+$bathrooms = $_POST['bathrooms'] ?? '';
+$amenities = isset($_POST['amenities']) && is_array($_POST['amenities']) ? $_POST['amenities'] : [];
+$basePrice = $_POST['basePrice'] ?? '';
 $keptImagesString = isset($_POST['keptImages']) ? $_POST['keptImages'] : "";
 
-// Validate basic input fields
-if (empty($title)) {
-    echo json_encode(["status" => false, "message" => "Title is required"]);
-    exit();
-} elseif (empty($category)) {
-    echo json_encode(["status" => false, "message" => "Category is required"]);
-    exit();
-} elseif (empty($description)) {
-    echo json_encode(["status" => false, "message" => "Description is required"]);
-    exit();
-} elseif (empty($address)) {
-    echo json_encode(["status" => false, "message" => "Address is required"]);
-    exit();
-} elseif (empty($guests)) {
-    echo json_encode(["status" => false, "message" => "Number of guests is required"]);
-    exit();
-} elseif (empty($bedrooms)) {
-    echo json_encode(["status" => false, "message" => "Number of bedrooms is required"]);
-    exit();
-} elseif (empty($beds)) {
-    echo json_encode(["status" => false, "message" => "Number of beds is required"]);
-    exit();
-} elseif (empty($bathrooms)) {
-    echo json_encode(["status" => false, "message" => "Number of bathrooms is required"]);
-    exit();
-} elseif (empty($basePrice)) {
-    echo json_encode(["status" => false, "message" => "Base price is required"]);
+function fail($message) {
+    echo json_encode(["status" => false, "message" => $message]);
     exit();
 }
+
+// Validate basic input fields
+if (!Validation::validateId($propertyId)) {
+    fail("Invalid property");
+} elseif (!Validation::validateText($title, 100)) {
+    fail("Title is required (max 100 characters)");
+} elseif (!Validation::validateId($category)) {
+    fail("Category is required");
+} elseif (!Validation::validateText($description, 10000)) {
+    fail("Description is required");
+} elseif (!Validation::validateText($address, 255)) {
+    fail("Address is required (max 255 characters)");
+} elseif (!Validation::validatePositiveInt($guests, 100)) {
+    fail("Number of guests must be a whole number between 1 and 100");
+} elseif (!Validation::validatePositiveInt($bedrooms, 100)) {
+    fail("Number of bedrooms must be a whole number between 1 and 100");
+} elseif (!Validation::validatePositiveInt($beds, 100)) {
+    fail("Number of beds must be a whole number between 1 and 100");
+} elseif (!Validation::validatePositiveInt($bathrooms, 100)) {
+    fail("Number of bathrooms must be a whole number between 1 and 100");
+} elseif (!Validation::validatePrice($basePrice)) {
+    fail("Base price must be a number greater than 0");
+}
+
+foreach ($amenities as $amenity) {
+    if (!Validation::validateId($amenity)) {
+        fail("Invalid amenity selected");
+    }
+}
+
+if (isset($_FILES['newImages']) && is_array($_FILES['newImages']['tmp_name'])) {
+    foreach ($_FILES['newImages']['tmp_name'] as $key => $tmp_name) {
+        if ($_FILES['newImages']['error'][$key] === UPLOAD_ERR_NO_FILE) continue;
+        if ($_FILES['newImages']['error'][$key] !== UPLOAD_ERR_OK || !Validation::validateImage($tmp_name)) {
+            fail("Only valid image files (JPG, PNG, WEBP, GIF) are allowed");
+        }
+    }
+}
+
+$title = Database::escape($title);
+$description = Database::escape($description);
+$address = Database::escape($address);
 
 // 1. Handle Kept Images
 $keptImages = [];
 if (!empty($keptImagesString)) {
     $tempKept = explode(',', $keptImagesString);
     foreach ($tempKept as $img) {
-        if (!empty($img)) {
+        if (!empty($img) && preg_match('/^[A-Za-z0-9_-]+\.[A-Za-z]{3,4}$/', $img)) {
             $keptImages[] = $img;
         }
     }
@@ -61,6 +80,9 @@ if (!empty($keptImagesString)) {
 
 // 2. Handle File Deletions
 $currentProperty = Database::search("SELECT `images` FROM `properties` WHERE `id` = '$propertyId'")->fetch_assoc();
+if (!$currentProperty) {
+    fail("Property not found");
+}
 $currentImages = explode(',', $currentProperty['images']);
 
 foreach ($currentImages as $imageName) {

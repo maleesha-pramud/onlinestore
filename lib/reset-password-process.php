@@ -2,9 +2,9 @@
 
 include '../includes/connection.php';
 
-$password = $_POST['password'];
-$cPassword = $_POST['cPassword'];
-$vcode = $_POST['vcode'];
+$password = $_POST['password'] ?? '';
+$cPassword = $_POST['cPassword'] ?? '';
+$vcode = Database::escape($_POST['vcode'] ?? '');
 
 header('Content-Type: application/json');
 
@@ -29,6 +29,7 @@ if (empty($password) || empty($cPassword)) {
     "status" => false,
   ]); 
 } else {
+  $password = Database::escape($password);
   $rs = Database::search("SELECT * FROM `users` WHERE `vcode` = '$vcode'");
   if ($rs->num_rows == 0) {
     echo json_encode([

@@ -10,15 +10,23 @@ $currency = 'LKR';
 $merchant_secret = 'MzI2MTAyMzMwODExMjkxMDI3OTU0MTE5MDQ5NjE5MTMzNzgxNjAzMg==';
 
 // Retrieve form data
-$firstName = $_POST['firstName'];
-$lastName = $_POST['lastName'];
-$contact = $_POST['contact'];
-$guests = $_POST['guests'];
-$email = $_POST['email'];
-$amount = $_POST['totalPrice'];
+$firstName = $_POST['firstName'] ?? '';
+$lastName = $_POST['lastName'] ?? '';
+$contact = $_POST['contact'] ?? '';
+$guests = $_POST['guests'] ?? '';
+$email = $_POST['email'] ?? '';
+$nic = $_POST['nic'] ?? '';
+$propertyId = $_POST['propertyId'] ?? '';
+$checkIn = $_POST['checkIn'] ?? '';
+$checkOut = $_POST['checkOut'] ?? '';
 
-if (empty($firstName) || empty($lastName) || empty($contact) || empty($guests) || empty($email) || empty($amount)) {
+if (empty($firstName) || empty($lastName) || empty($contact) || empty($guests) || empty($email) || empty($nic)) {
     echo json_encode(["status" => false, "message" => "All fields are required"]);
+    exit();
+}
+
+if (strlen($firstName) > 20 || strlen($lastName) > 20) {
+    echo json_encode(["status" => false, "message" => "Name is too long"]);
     exit();
 }
 
@@ -42,6 +50,19 @@ if (!Validation::validateEmail($email)) {
     exit();
 }
 
+if (!Validation::validateNIC($nic)) {
+    echo json_encode(["status" => false, "message" => "NIC is not valid"]);
+    exit();
+}
+
+// Never trust the price sent by the browser; calculate it from the property
+$booking = Validation::calculateBookingTotal(Database::escape($propertyId), $checkIn, $checkOut, $guests);
+if (isset($booking['error'])) {
+    echo json_encode(["status" => false, "message" => $booking['error']]);
+    exit();
+}
+$amount = $booking['total'];
+
 // Generate the hash
 $hash = strtoupper(
   md5(
@@ -61,7 +82,7 @@ $response = [
   'merchant_id' => $merchant_id,
   'order_id' => $order_id,
   'items' => 'Booking for ' . $guests . ' guests',
-  'amount' => $amount,
+  'amount' => number_format($amount, 2, '.', ''),
   'hash' => $hash,
   'first_name' => $firstName,
   'last_name' => $lastName,

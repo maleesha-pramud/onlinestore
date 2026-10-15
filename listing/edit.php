@@ -60,7 +60,7 @@ $images = explode(',', $property['images']);
                         <div class="col-lg-8">
                              <div class="form-group">
                                 <label for="title" class="form-label">Property Title</label>
-                                <input type="text" class="form-control" id="title" name="title" value="<?php echo $property['title']; ?>" required>
+                                <input type="text" class="form-control" id="title" name="title" maxlength="100" value="<?php echo $property['title']; ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="description" class="form-label">Description</label>
@@ -68,7 +68,7 @@ $images = explode(',', $property['images']);
                             </div>
                              <div class="form-group">
                                 <label for="address" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="address" name="address" value="<?php echo $property['address']; ?>" required>
+                                <input type="text" class="form-control" id="address" name="address" maxlength="255" value="<?php echo $property['address']; ?>" required>
                             </div>
                         </div>
                         <div class="col-lg-4">
@@ -86,7 +86,7 @@ $images = explode(',', $property['images']);
                             </div>
                              <div class="form-group">
                                 <label for="basePrice" class="form-label">Price per night ($)</label>
-                                <input type="number" class="form-control" id="basePrice" name="basePrice" value="<?php echo $property['base_price']; ?>" required>
+                                <input type="number" class="form-control" id="basePrice" min="1" step="0.01" max="10000000" name="basePrice" value="<?php echo $property['base_price']; ?>" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Current Images</label>
@@ -116,19 +116,19 @@ $images = explode(',', $property['images']);
                     <div class="row">
                         <div class="col-md-3 form-group">
                             <label for="guests" class="form-label">Guests</label>
-                            <input type="number" class="form-control" id="guests" name="guests" value="<?php echo $property['guests']; ?>" required>
+                            <input type="number" class="form-control" id="guests" min="1" max="100" step="1" name="guests" value="<?php echo $property['guests']; ?>" required>
                         </div>
                          <div class="col-md-3 form-group">
                             <label for="bedrooms" class="form-label">Bedrooms</label>
-                            <input type="number" class="form-control" id="bedrooms" name="bedrooms" value="<?php echo $property['bedrooms']; ?>" required>
+                            <input type="number" class="form-control" id="bedrooms" min="1" max="100" step="1" name="bedrooms" value="<?php echo $property['bedrooms']; ?>" required>
                         </div>
                          <div class="col-md-3 form-group">
                             <label for="beds" class="form-label">Beds</label>
-                            <input type="number" class="form-control" id="beds" name="beds" value="<?php echo $property['beds']; ?>" required>
+                            <input type="number" class="form-control" id="beds" min="1" max="100" step="1" name="beds" value="<?php echo $property['beds']; ?>" required>
                         </div>
                          <div class="col-md-3 form-group">
                             <label for="bathrooms" class="form-label">Bathrooms</label>
-                            <input type="number" class="form-control" id="bathrooms" name="bathrooms" value="<?php echo $property['bathrooms']; ?>" required>
+                            <input type="number" class="form-control" id="bathrooms" min="1" max="100" step="1" name="bathrooms" value="<?php echo $property['bathrooms']; ?>" required>
                         </div>
                     </div>
 

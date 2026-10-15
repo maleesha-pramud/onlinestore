@@ -214,11 +214,11 @@ if (isset($_SESSION['email'])) {
                         <form onsubmit="checkAvailability(<?php echo $propertyId; ?>); return false;">
                             <div class="form-group">
                                 <label for="checkIn" class="form-label">Check-in</label>
-                                <input type="date" id="checkIn" name="checkIn" class="form-control" required>
+                                <input type="date" id="checkIn" name="checkIn" class="form-control" min="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                              <div class="form-group mt-3">
                                 <label for="checkOut" class="form-label">Check-out</label>
-                                <input type="date" id="checkOut" name="checkOut" class="form-control" required>
+                                <input type="date" id="checkOut" name="checkOut" class="form-control" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required>
                             </div>
                              <div class="form-group mt-3">
                                 <label for="guests" class="form-label">Number of guests</label>

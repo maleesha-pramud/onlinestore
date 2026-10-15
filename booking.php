@@ -3,7 +3,7 @@ session_start();
 include './includes/connection.php';
 
 // Return to home page if id is undefined
-if (isset($_GET['id'])) {
+if (isset($_GET['id']) && Validation::validateId($_GET['id'])) {
     $propertyId = $_GET['id'];
 } else {
     header('location: /');
@@ -14,20 +14,25 @@ $checkIn = $_GET['checkIn'] ?? '';
 $checkOut = $_GET['checkOut'] ?? '';
 $guests = $_GET['guests'] ?? '1';
 
-// Calculate the date count
-if ($checkIn && $checkOut) {
-    $date1 = new DateTime($checkIn);
-    $date2 = new DateTime($checkOut);
-    $dateDifferenceObj = $date1->diff($date2);
-    $dateCount = $dateDifferenceObj->days;
-} else {
-    $dateCount = 1; // Default to 1 night if dates are not set
+// Calculate the date count (dates must be valid, in the future and check-out after check-in)
+$dateCount = Validation::getNights($checkIn, $checkOut);
+if ($dateCount === false) {
+    header('location: /single-property.php?id=' . $propertyId);
+    exit();
 }
-
 
 // Fetching the property details
 $propertyStmt = Database::search("SELECT * FROM `properties` WHERE `id` = '$propertyId'");
 $propertyData = $propertyStmt->fetch_assoc();
+
+if (!$propertyData) {
+    header('location: /');
+    exit();
+}
+
+if (!Validation::validatePositiveInt($guests, (int) $propertyData['guests'])) {
+    $guests = '1';
+}
  
 // Convert value list string to array
 $images = explode(',', $propertyData['images']);

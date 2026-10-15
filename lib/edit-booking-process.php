@@ -7,12 +7,43 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
-$id = Database::escape($_POST['id']);
-$fname = Database::escape($_POST['fname']);
-$lname = Database::escape($_POST['lname']);
-$nic = Database::escape($_POST['nic']);
-$contact = Database::escape($_POST['contact']);
-$specialRequests = Database::escape($_POST['specialRequests']);
+$id = Database::escape($_POST['id'] ?? '');
+$fname = trim($_POST['fname'] ?? '');
+$lname = trim($_POST['lname'] ?? '');
+$nic = trim($_POST['nic'] ?? '');
+$contact = trim($_POST['contact'] ?? '');
+$rawRequests = trim($_POST['specialRequests'] ?? '');
+
+if (!Validation::validateId($id) || $fname === '' || $lname === '' || $nic === '' || $contact === '') {
+    echo json_encode(['status' => false, 'message' => 'Please fill all required fields']);
+    exit();
+}
+
+if (strlen($fname) > 20 || strlen($lname) > 20 || !Validation::validateName($fname) || !Validation::validateName($lname)) {
+    echo json_encode(['status' => false, 'message' => 'Names must contain only letters (max 20 characters)']);
+    exit();
+}
+
+if (!Validation::validateNIC($nic)) {
+    echo json_encode(['status' => false, 'message' => 'NIC is not valid']);
+    exit();
+}
+
+if (!Validation::validateMobile($contact)) {
+    echo json_encode(['status' => false, 'message' => 'Contact number is not valid']);
+    exit();
+}
+
+if (mb_strlen($rawRequests) > 500) {
+    echo json_encode(['status' => false, 'message' => 'Special requests are too long']);
+    exit();
+}
+
+$fname = Database::escape($fname);
+$lname = Database::escape($lname);
+$nic = Database::escape($nic);
+$contact = Database::escape($contact);
+$specialRequests = Database::escape($rawRequests);
 
 // Security check: Ensure this booking belongs to the logged-in user
 $email = $_SESSION['email'];

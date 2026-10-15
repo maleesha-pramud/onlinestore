@@ -1,7 +1,7 @@
 <?php
 include '../includes/connection.php';
 
-if (isset($_POST['userId']) && isset($_POST['typeId'])) {
+if (isset($_POST['userId']) && isset($_POST['typeId']) && Validation::validateId($_POST['userId']) && Validation::validateId($_POST['typeId'])) {
     $userId = $_POST['userId'];
     $typeId = $_POST['typeId'];
 

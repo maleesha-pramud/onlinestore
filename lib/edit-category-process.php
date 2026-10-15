@@ -6,9 +6,26 @@ $RootFilePath = dirname(__FILE__);
 
 header('Content-Type: application/json');
 
-$id = $_POST['id'];
-$name = $_POST['name'];
+$id = $_POST['id'] ?? '';
+$name = trim($_POST['name'] ?? '');
 $imagePath = '';
+
+if (!Validation::validateText($name, 50)) {
+  echo json_encode(['status' => false, 'message' => 'Name is required (max 50 characters)']);
+  exit();
+}
+
+if (!Validation::validateId($id)) {
+  echo json_encode(['status' => false, 'message' => 'ID is required']);
+  exit();
+}
+
+if (!empty($_FILES['image']['tmp_name']) && !Validation::validateImage($_FILES['image']['tmp_name'])) {
+  echo json_encode(['status' => false, 'message' => 'Only valid image files are allowed']);
+  exit();
+}
+
+$name = Database::escape($name);
 
 if (!empty($_FILES['image'])) {
   $image = $_FILES['image'];

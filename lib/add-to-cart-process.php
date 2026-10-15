@@ -8,13 +8,19 @@ if (!isset($_SESSION['email'])) {
 }
 
 $email = $_SESSION['email'];
-$propertyId = Database::escape($_POST['propertyId']);
-$checkIn = Database::escape($_POST['checkIn']);
-$checkOut = Database::escape($_POST['checkOut']);
-$guests = Database::escape($_POST['guests']);
+$propertyId = Database::escape($_POST['propertyId'] ?? '');
+$checkIn = Database::escape($_POST['checkIn'] ?? '');
+$checkOut = Database::escape($_POST['checkOut'] ?? '');
+$guests = Database::escape($_POST['guests'] ?? '');
 
 if (empty($checkIn) || empty($checkOut) || empty($guests)) {
     echo json_encode(['status' => false, 'message' => 'Please select dates and guests.']);
+    exit();
+}
+
+$calc = Validation::calculateBookingTotal($propertyId, $checkIn, $checkOut, $guests);
+if (isset($calc['error'])) {
+    echo json_encode(['status' => false, 'message' => $calc['error']]);
     exit();
 }
 

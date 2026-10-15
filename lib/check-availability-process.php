@@ -2,9 +2,19 @@
 
 include '../includes/connection.php';
 
-$listingId = Database::escape($_POST['listingId']);
-$checkIn = Database::escape($_POST['checkIn']);
-$checkOut = Database::escape($_POST['checkOut']);
+$listingId = Database::escape($_POST['listingId'] ?? '');
+$checkIn = Database::escape($_POST['checkIn'] ?? '');
+$checkOut = Database::escape($_POST['checkOut'] ?? '');
+
+if (!Validation::validateId($listingId)) {
+  echo "Invalid property";
+  exit();
+}
+
+if (Validation::getNights($checkIn, $checkOut) === false) {
+  echo "Please select valid future dates (check-out must be after check-in)";
+  exit();
+}
 
 $bookingsStmt = Database::search("SELECT * FROM `bookings` WHERE `properties_id` = '$listingId'");
 $bookings = [];

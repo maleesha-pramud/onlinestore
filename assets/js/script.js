@@ -7,6 +7,26 @@ const RegexPatterns = {
     nic: /^(?:[0-9]{9}[vVxX]|[0-9]{12})$/
 };
 
+// Shared validation helpers
+function isPositiveInt(value, max = 1000) {
+    return /^[1-9][0-9]{0,8}$/.test(String(value)) && parseInt(value, 10) <= max;
+}
+
+function isValidPrice(value) {
+    return /^[0-9]+(\.[0-9]{1,2})?$/.test(String(value)) && parseFloat(value) > 0 && parseFloat(value) <= 10000000;
+}
+
+// Returns an error message for an invalid stay, or an empty string when valid
+function validateStayDates(checkIn, checkOut) {
+    if (!checkIn) return 'Please select a check-in date';
+    if (!checkOut) return 'Please select a check-out date';
+    var today = new Date();
+    var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    if (checkIn < todayStr) return 'Check-in date cannot be in the past';
+    if (checkOut <= checkIn) return 'Check-out date must be after the check-in date';
+    return '';
+}
+
 function showToast(message, type = 'info', title = '') {
     const toastElement = document.getElementById('liveToast');
     const toastTitle = document.getElementById('toastTitle');
@@ -331,13 +351,11 @@ function checkAvailability(listingId) {
     var guests = guestsInput.value;
     var maxGuests = parseInt(guestsInput.getAttribute('max'));
 
-    if (!checkIn) {
-        showToast('Please select a check-in date', 'warning');
+    var dateError = validateStayDates(checkIn, checkOut);
+    if (dateError) {
+        showToast(dateError, 'warning');
         return;
-    } else if (!checkOut) {
-        showToast('Please select a check-out date', 'warning');
-        return;
-    } else if (!guests || guests < 1) {
+    } else if (!isPositiveInt(guests)) {
         showToast('Please enter a valid number of guests (at least 1)', 'warning');
         return;
     } else if (guests > maxGuests) {
@@ -417,8 +435,14 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
         return;
     }
 
-    if (!guests || !/^\d+$/.test(guests)) {
-        showToast("Guests count must be a valid number.", 'warning');
+    if (!isPositiveInt(guests)) {
+        showToast("Guests count must be a valid number (at least 1).", 'warning');
+        return;
+    }
+
+    var dateError = validateStayDates(checkIn, checkOut);
+    if (dateError) {
+        showToast(dateError, 'warning');
         return;
     }
 
@@ -535,18 +559,18 @@ function addListing(userId) {
         showToast('Please enter a description', 'warning');
     } else if (!address) {
         showToast('Please enter an address', 'warning');
-    } else if (!guests) {
-        showToast('Please enter the number of guests', 'warning');
-    } else if (!bedrooms) {
-        showToast('Please enter the number of bedrooms', 'warning');
-    } else if (!beds) {
-        showToast('Please enter the number of beds', 'warning');
-    } else if (!bathrooms) {
-        showToast('Please enter the number of bathrooms', 'warning');
+    } else if (!isPositiveInt(guests, 100)) {
+        showToast('Number of guests must be a whole number between 1 and 100', 'warning');
+    } else if (!isPositiveInt(bedrooms, 100)) {
+        showToast('Number of bedrooms must be a whole number between 1 and 100', 'warning');
+    } else if (!isPositiveInt(beds, 100)) {
+        showToast('Number of beds must be a whole number between 1 and 100', 'warning');
+    } else if (!isPositiveInt(bathrooms, 100)) {
+        showToast('Number of bathrooms must be a whole number between 1 and 100', 'warning');
     } else if (images.length === 0) {
         showToast('Please select at least one image', 'warning');
-    } else if (!basePrice) {
-        showToast('Please enter the base price', 'warning');
+    } else if (!isValidPrice(basePrice)) {
+        showToast('Base price must be a number greater than 0', 'warning');
     } else {
         var form = new FormData();
         form.append('userId', userId);
@@ -606,16 +630,16 @@ function editListing(propertyId) {
         showToast('Please enter a description', 'warning');
     } else if (!address) {
         showToast('Please enter an address', 'warning');
-    } else if (!guests) {
-        showToast('Please enter the number of guests', 'warning');
-    } else if (!bedrooms) {
-        showToast('Please enter the number of bedrooms', 'warning');
-    } else if (!beds) {
-        showToast('Please enter the number of beds', 'warning');
-    } else if (!bathrooms) {
-        showToast('Please enter the number of bathrooms', 'warning');
-    } else if (!basePrice) {
-        showToast('Please enter the base price', 'warning');
+    } else if (!isPositiveInt(guests, 100)) {
+        showToast('Number of guests must be a whole number between 1 and 100', 'warning');
+    } else if (!isPositiveInt(bedrooms, 100)) {
+        showToast('Number of bedrooms must be a whole number between 1 and 100', 'warning');
+    } else if (!isPositiveInt(beds, 100)) {
+        showToast('Number of beds must be a whole number between 1 and 100', 'warning');
+    } else if (!isPositiveInt(bathrooms, 100)) {
+        showToast('Number of bathrooms must be a whole number between 1 and 100', 'warning');
+    } else if (!isValidPrice(basePrice)) {
+        showToast('Base price must be a number greater than 0', 'warning');
     } else if (!keptImages && newImages.length === 0) {
         showToast('Please select at least one image', 'warning');
     } else {
@@ -690,9 +714,14 @@ function deleteListing(id) {
 
 // Category Management
 function addCategory() {
-    var name = document.getElementById('name').value;
+    var name = document.getElementById('name').value.trim();
     var imageInput = document.getElementById('imageInput');
     var image = null;
+
+    if (!name || name.length > 50) {
+        showToast('Category name is required (max 50 characters)', 'warning');
+        return;
+    }
 
     if (imageInput.files.length > 0) {
         image = imageInput.files[0];
@@ -719,8 +748,13 @@ function addCategory() {
 }
 function editCategory() {
     var id = document.getElementById('id').value;
-    var name = document.getElementById('name').value;
+    var name = document.getElementById('name').value.trim();
     var imageInput = document.getElementById('imageInput');
+
+    if (!name || name.length > 50) {
+        showToast('Category name is required (max 50 characters)', 'warning');
+        return;
+    }
 
     var form = new FormData();
     form.append('id', id);
@@ -772,6 +806,21 @@ function updateBooking() {
 
     if (!fname || !lname || !nic || !contact) {
         showToast('Please fill all required fields', 'warning');
+        return;
+    }
+
+    if (fname.length > 20 || lname.length > 20 || !RegexPatterns.name.test(fname) || !RegexPatterns.name.test(lname)) {
+        showToast('Names must contain only letters (max 20 characters)', 'warning');
+        return;
+    }
+
+    if (!RegexPatterns.nic.test(nic)) {
+        showToast('NIC is not valid', 'warning');
+        return;
+    }
+
+    if (!RegexPatterns.mobile.test(contact)) {
+        showToast('Contact number must be a valid mobile number (e.g. 0771234567)', 'warning');
         return;
     }
 
@@ -834,8 +883,11 @@ function addReview(propertyId) {
         return;
     }
 
-    if (!comment) {
+    if (!comment.trim()) {
         showToast('Please enter a comment', 'warning');
+        return;
+    } else if (comment.length > 1000) {
+        showToast('Comment is too long (max 1000 characters)', 'warning');
         return;
     }
 
@@ -887,13 +939,11 @@ function addToCart(propertyId) {
     var guests = guestsInput.value;
     var maxGuests = parseInt(guestsInput.getAttribute('max'));
 
-    if (!checkIn) {
-        showToast('Please select a check-in date', 'warning');
+    var dateError = validateStayDates(checkIn, checkOut);
+    if (dateError) {
+        showToast(dateError, 'warning');
         return;
-    } else if (!checkOut) {
-        showToast('Please select a check-out date', 'warning');
-        return;
-    } else if (!guests || guests < 1) {
+    } else if (!isPositiveInt(guests)) {
         showToast('Please enter a valid number of guests (at least 1)', 'warning');
         return;
     } else if (guests > maxGuests) {

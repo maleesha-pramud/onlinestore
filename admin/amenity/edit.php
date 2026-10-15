@@ -181,8 +181,8 @@ $commonIcons = [
       const name = document.getElementById('name').value;
       const icon_cls = document.getElementById('icon_cls').value;
 
-      if (!name) {
-        showToast('Please enter amenity name', 'warning');
+      if (!name.trim() || name.length > 50) {
+        showToast('Amenity name is required (max 50 characters)', 'warning');
         return;
       }
       if (!icon_cls) {

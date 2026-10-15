@@ -8,7 +8,12 @@ if (!isset($_SESSION['email'])) {
 }
 
 $email = $_SESSION['email'];
-$propertyId = Database::escape($_POST['propertyId']);
+$propertyId = Database::escape($_POST['propertyId'] ?? '');
+
+if (!Validation::validateId($propertyId)) {
+    echo json_encode(['status' => false, 'message' => 'Invalid property.']);
+    exit();
+}
 
 // Get user ID
 $userStmt = Database::search("SELECT `id` FROM `users` WHERE `email` = '$email'");

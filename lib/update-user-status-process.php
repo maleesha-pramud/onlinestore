@@ -7,8 +7,13 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
-$id = Database::escape($_POST['id']);
-$status = Database::escape($_POST['status']);
+$id = Database::escape($_POST['id'] ?? '');
+$status = Database::escape($_POST['status'] ?? '');
+
+if (!Validation::validateId($id) || !Validation::validateId($status)) {
+    echo json_encode(['status' => false, 'message' => 'Invalid request.']);
+    exit();
+}
 
 Database::iud("UPDATE `users` SET `status_id` = '$status' WHERE `id` = '$id'");
 

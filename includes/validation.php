@@ -31,4 +31,70 @@ class Validation {
     public static function validateNIC($nic) {
         return (bool) preg_match(self::NIC_PATTERN, $nic);
     }
+
+    // Positive whole number (optionally capped), e.g. guests, beds
+    public static function validatePositiveInt($value, $max = 1000) {
+        return is_string($value) || is_int($value)
+            ? (bool) preg_match('/^[1-9][0-9]{0,8}$/', (string) $value) && (int) $value <= $max
+            : false;
+    }
+
+    // Positive price with up to 2 decimals, greater than zero
+    public static function validatePrice($value, $max = 10000000) {
+        if (!is_string($value) && !is_int($value) && !is_float($value)) return false;
+        if (!preg_match('/^(?:[0-9]+)(?:\.[0-9]{1,2})?$/', (string) $value)) return false;
+        return (float) $value > 0 && (float) $value <= $max;
+    }
+
+    public static function validateRating($value) {
+        return is_string($value) && (bool) preg_match('/^[1-5]$/', $value);
+    }
+
+    public static function validateDate($date) {
+        if (!is_string($date)) return false;
+        $d = DateTime::createFromFormat('Y-m-d', $date);
+        return $d && $d->format('Y-m-d') === $date;
+    }
+
+    // Returns number of nights for a valid future stay, otherwise false
+    public static function getNights($checkIn, $checkOut) {
+        if (!self::validateDate($checkIn) || !self::validateDate($checkOut)) return false;
+        $in = new DateTime($checkIn);
+        $out = new DateTime($checkOut);
+        if ($in < new DateTime('today') || $out <= $in) return false;
+        $nights = (int) $in->diff($out)->days;
+        return $nights <= 365 ? $nights : false;
+    }
+
+    public static function validateText($text, $max) {
+        return is_string($text) && trim($text) !== '' && mb_strlen($text) <= $max;
+    }
+
+    public static function validateId($id) {
+        return (is_string($id) || is_int($id)) && (bool) preg_match('/^[1-9][0-9]{0,9}$/', (string) $id);
+    }
+
+    public static function validateImage($tmpName) {
+        if (!is_uploaded_file($tmpName)) return false;
+        $info = @getimagesize($tmpName);
+        return $info !== false && in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP, IMAGETYPE_GIF]);
+    }
+
+    // Validates a stay request and returns ['total' => float] on success or ['error' => string]
+    public static function calculateBookingTotal($propertyId, $checkIn, $checkOut, $guests) {
+        if (!self::validateId($propertyId)) return ['error' => 'Invalid property'];
+        $nights = self::getNights($checkIn, $checkOut);
+        if ($nights === false) return ['error' => 'Please select valid future dates (check-out must be after check-in)'];
+
+        $rs = Database::search("SELECT `base_price`, `guests` FROM `properties` WHERE `id` = '$propertyId'");
+        $property = $rs ? $rs->fetch_assoc() : null;
+        if (!$property) return ['error' => 'Property not found'];
+
+        if (!self::validatePositiveInt($guests, (int) $property['guests'])) {
+            return ['error' => 'Guests must be between 1 and ' . $property['guests']];
+        }
+
+        $subtotal = (float) $property['base_price'] * $nights;
+        return ['total' => round($subtotal + $subtotal * 0.1, 2), 'nights' => $nights];
+    }
 }

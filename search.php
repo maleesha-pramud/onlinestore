@@ -10,7 +10,7 @@ $maxPriceQuery = Database::search("SELECT MAX(base_price) AS max_p FROM properti
 $maxPriceData = $maxPriceQuery->fetch_assoc();
 $absoluteMaxPrice = $maxPriceData['max_p'] ? (float)$maxPriceData['max_p'] : 1000;
 
-$maxPrice = isset($_GET['max_price']) ? (float)$_GET['max_price'] : $absoluteMaxPrice;
+$maxPrice = isset($_GET['max_price']) ? max(0, (float)$_GET['max_price']) : $absoluteMaxPrice;
 $selectedAmenities = isset($_GET['amenities']) ? $_GET['amenities'] : [];
 
 $conditions = [];

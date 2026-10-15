@@ -2,7 +2,7 @@
 session_start();
 include '../includes/connection.php';
 
-if (!isset($_POST['id'])) {
+if (!isset($_POST['id']) || !Validation::validateId($_POST['id'])) {
     echo json_encode(['status' => false, 'message' => 'Invalid request.']);
     exit();
 }
