@@ -6,6 +6,8 @@ class Validation {
     const EMAIL_PATTERN = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
     const PASSWORD_MIN5_PATTERN = '/^.{5,}$/';
     const PASSWORD_MIN8_PATTERN = '/^.{8,}$/';
+    // Letters, numbers, whitespace and basic punctuation only (no < > { } [ ] $ \ ` | ^ ~ = * etc.)
+    const TEXT_PATTERN = "/^[\\p{L}\\p{N}\\s.,!?'\"():;\\/&%@#+_-]*$/u";
     const NIC_PATTERN = '/^(?:[0-9]{9}[vVxX]|[0-9]{12})$/';
 
     public static function validateName($name) {
@@ -121,5 +123,24 @@ class Validation {
         }
         if (empty($items)) return ['error' => 'Your cart is empty'];
         return ['items' => $items, 'total' => round($total, 2)];
+    }
+
+    // Plain text areas (special requests, comments): optional, length limited, no special characters
+    public static function validateSafeText($text, $max) {
+        return is_string($text) && mb_strlen($text) <= $max && (bool) preg_match(self::TEXT_PATTERN, $text);
+    }
+
+    // Rich text (TinyMCE) description: the visible text must only use safe characters
+    public static function validateRichText($html, $max) {
+        if (!is_string($html) || mb_strlen($html) > $max * 3) return false;
+        $plain = trim(html_entity_decode(strip_tags($html), ENT_QUOTES, 'UTF-8'));
+        $plain = str_replace("\xC2\xA0", ' ', $plain);
+        return $plain !== '' && mb_strlen($plain) <= $max && (bool) preg_match(self::TEXT_PATTERN, $plain);
+    }
+
+    // Keeps only simple formatting tags and removes every attribute (blocks scripts, styles, event handlers)
+    public static function sanitizeRichText($html) {
+        $html = strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><h1><h2><h3><h4><h5><h6>');
+        return preg_replace('/<(\w+)\s[^>]*>/', '<$1>', $html);
     }
 }

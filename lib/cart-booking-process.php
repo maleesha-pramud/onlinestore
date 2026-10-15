@@ -42,7 +42,12 @@ if (!Validation::validateEmail($email)) {
     exit();
 }
 
-if (mb_strlen($specialRequests) > 500 || strlen($orderId) > 100) {
+if (!Validation::validateSafeText($specialRequests, 500)) {
+    echo json_encode(['status' => false, 'message' => 'Special requests contain invalid characters or are too long']);
+    exit();
+}
+
+if (strlen($orderId) > 100) {
     echo json_encode(['status' => false, 'message' => 'Invalid booking details']);
     exit();
 }

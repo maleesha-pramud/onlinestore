@@ -27,8 +27,8 @@ if (strlen($firstName) > 20 || strlen($lastName) > 20) {
     exit();
 }
 
-if (mb_strlen($specialRequests) > 500) {
-    echo json_encode(['status' => false, 'message' => 'Special requests are too long']);
+if (!Validation::validateSafeText(trim($_POST['specialRequests'] ?? ''), 500)) {
+    echo json_encode(['status' => false, 'message' => 'Special requests contain invalid characters or are too long']);
     exit();
 }
 

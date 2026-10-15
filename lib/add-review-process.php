@@ -27,8 +27,8 @@ if (!Validation::validateRating($rating)) {
     exit();
 }
 
-if (mb_strlen($rawComment) > 1000) {
-    echo json_encode(['status' => false, 'message' => 'Comment is too long (max 1000 characters).']);
+if (!Validation::validateSafeText($rawComment, 1000)) {
+    echo json_encode(['status' => false, 'message' => 'Comment contains invalid characters or is too long (max 1000 characters).']);
     exit();
 }
 

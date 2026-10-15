@@ -4,7 +4,8 @@ const RegexPatterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     passwordMin5: /^.{5,}$/,
     passwordMin8: /^.{8,}$/,
-    nic: /^(?:[0-9]{9}[vVxX]|[0-9]{12})$/
+    nic: /^(?:[0-9]{9}[vVxX]|[0-9]{12})$/,
+    text: /^[\p{L}\p{N}\s.,!?'"():;\/&%@#+_-]*$/u
 };
 
 // Shared validation helpers
@@ -462,6 +463,11 @@ function checkoutPayment(checkIn, checkOut, propertyId, totalPrice) {
         return;
     }
 
+    if (specialRequests.length > 500 || !RegexPatterns.text.test(specialRequests)) {
+        showToast("Special requests contain invalid characters or are too long.", 'warning');
+        return;
+    }
+
     var formData = new FormData();
     formData.append('checkIn', checkIn);
     formData.append('checkOut', checkOut);
@@ -549,6 +555,7 @@ function addListing(userId) {
     var title = document.getElementById('title').value;
     var category = document.getElementById('category').value;
     const description = tinymce.get('description').getContent();
+    const descriptionText = tinymce.get('description').getContent({ format: 'text' });
     var address = document.getElementById('address').value;
     var guests = document.getElementById('guests').value;
     var bedrooms = document.getElementById('bedrooms').value;
@@ -563,8 +570,10 @@ function addListing(userId) {
         showToast('Please enter a title', 'warning');
     } else if (!category) {
         showToast('Please select a category', 'warning');
-    } else if (!description) {
+    } else if (!descriptionText.trim()) {
         showToast('Please enter a description', 'warning');
+    } else if (descriptionText.length > 5000 || !RegexPatterns.text.test(descriptionText)) {
+        showToast('Description contains invalid characters or is too long (max 5000 characters)', 'warning');
     } else if (!address) {
         showToast('Please enter an address', 'warning');
     } else if (!isPositiveInt(guests, 100)) {
@@ -619,6 +628,7 @@ function editListing(propertyId) {
     var title = document.getElementById('title').value;
     var category = document.getElementById('category').value;
     const description = tinymce.get('description').getContent();
+    const descriptionText = tinymce.get('description').getContent({ format: 'text' });
     var address = document.getElementById('address').value;
     var guests = document.getElementById('guests').value;
     var bedrooms = document.getElementById('bedrooms').value;
@@ -634,8 +644,10 @@ function editListing(propertyId) {
         showToast('Please enter a title', 'warning');
     } else if (!category) {
         showToast('Please select a category', 'warning');
-    } else if (!description) {
+    } else if (!descriptionText.trim()) {
         showToast('Please enter a description', 'warning');
+    } else if (descriptionText.length > 5000 || !RegexPatterns.text.test(descriptionText)) {
+        showToast('Description contains invalid characters or is too long (max 5000 characters)', 'warning');
     } else if (!address) {
         showToast('Please enter an address', 'warning');
     } else if (!isPositiveInt(guests, 100)) {
@@ -832,6 +844,11 @@ function updateBooking() {
         return;
     }
 
+    if (specialRequests.length > 500 || !RegexPatterns.text.test(specialRequests)) {
+        showToast('Special requests contain invalid characters or are too long (max 500 characters)', 'warning');
+        return;
+    }
+
     var form = new FormData();
     form.append('id', id);
     form.append('fname', fname);
@@ -894,8 +911,8 @@ function addReview(propertyId) {
     if (!comment.trim()) {
         showToast('Please enter a comment', 'warning');
         return;
-    } else if (comment.length > 1000) {
-        showToast('Comment is too long (max 1000 characters)', 'warning');
+    } else if (comment.length > 1000 || !RegexPatterns.text.test(comment)) {
+        showToast('Comment contains invalid characters or is too long (max 1000 characters)', 'warning');
         return;
     }
 
@@ -1078,8 +1095,8 @@ function cartCheckout() {
     } else if (!RegexPatterns.nic.test(nic)) {
         showToast('NIC is not valid.', 'warning');
         return;
-    } else if (specialRequests.length > 500) {
-        showToast('Special requests are too long (max 500 characters).', 'warning');
+    } else if (specialRequests.length > 500 || !RegexPatterns.text.test(specialRequests)) {
+        showToast('Special requests contain invalid characters or are too long (max 500 characters).', 'warning');
         return;
     }
 

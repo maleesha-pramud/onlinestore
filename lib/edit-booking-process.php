@@ -34,8 +34,8 @@ if (!Validation::validateMobile($contact)) {
     exit();
 }
 
-if (mb_strlen($rawRequests) > 500) {
-    echo json_encode(['status' => false, 'message' => 'Special requests are too long']);
+if (!Validation::validateSafeText($rawRequests, 500)) {
+    echo json_encode(['status' => false, 'message' => 'Special requests contain invalid characters or are too long']);
     exit();
 }
 

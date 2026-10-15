@@ -29,8 +29,8 @@ if (!Validation::validateText($title, 100)) {
   fail("Title is required (max 100 characters)");
 } elseif (!Validation::validateId($category)) {
   fail("Category is required");
-} elseif (!Validation::validateText($description, 10000)) {
-  fail("Description is required");
+} elseif (!Validation::validateRichText($description, 5000)) {
+  fail("Description is required and must not contain special characters (max 5000 characters)");
 } elseif (!Validation::validateText($address, 255)) {
   fail("Address is required (max 255 characters)");
 } elseif (!Validation::validatePositiveInt($guests, 100)) {
@@ -75,7 +75,7 @@ if (empty($imagePaths)) {
 }
 
 $title = Database::escape($title);
-$description = Database::escape($description);
+$description = Database::escape(Validation::sanitizeRichText($description));
 $address = Database::escape($address);
 
 // Insert property into the database
