@@ -1,0 +1,30 @@
+<!ELEMENT properties (property*)>
+<!ATTLIST properties generated CDATA #REQUIRED
+                     count     CDATA #REQUIRED>
+
+<!ELEMENT property (title, category, description, address, capacity, price, rating, amenities, images)>
+<!ATTLIST property id CDATA #REQUIRED>
+
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT address (#PCDATA)>
+
+<!ELEMENT capacity EMPTY>
+<!ATTLIST capacity guests    CDATA #REQUIRED
+                   bedrooms  CDATA #REQUIRED
+                   beds      CDATA #REQUIRED
+                   bathrooms CDATA #REQUIRED>
+
+<!ELEMENT price (#PCDATA)>
+<!ATTLIST price currency CDATA "LKR"
+                unit     CDATA "night">
+
+<!ELEMENT rating (#PCDATA)>
+<!ATTLIST rating reviews CDATA #REQUIRED>
+
+<!ELEMENT amenities (amenity*)>
+<!ELEMENT amenity (#PCDATA)>
+
+<!ELEMENT images (image*)>
+<!ELEMENT image (#PCDATA)>

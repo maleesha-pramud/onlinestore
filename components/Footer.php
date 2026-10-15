@@ -21,6 +21,7 @@
                     <li><a href="#" class="text-secondary d-block mb-2">Anti-discrimination</a></li>
                     <li><a href="#" class="text-secondary d-block mb-2">Disability support</a></li>
                     <li><a href="#" class="text-secondary d-block mb-2">Cancellation options</a></li>
+                    <li><a href="/properties-feed.php" class="text-secondary d-block mb-2">Property XML feed</a></li>
                 </ul>
             </div>
             <div class="col-lg-2 col-md-6">
